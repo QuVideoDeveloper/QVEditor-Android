@@ -200,8 +200,9 @@ XytInfo xytInfo = XytManager.getXytInfo(xytPath);
 ```
 
 XytInfo参数说明：
+
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | ttidLong | 素材id| long |
 | filePath | 素材路径 | String |
 | title | 素材名称 | String |
