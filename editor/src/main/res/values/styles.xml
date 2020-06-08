@@ -1,0 +1,99 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+  </style>
+
+  <style name="CameraTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowFullscreen">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="colorPrimaryDark">@android:color/black</item>
+  </style>
+
+  <style name="editor_style_choose_dialog">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+  </style>
+
+  <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowFullscreen">true</item>
+  </style>
+
+  <style name="Theme.AppCompat.Light.NoActionBar" parent="@style/Theme.AppCompat.Light">
+    <item name="windowNoTitle">true</item>
+    <item name="windowActionBar">false</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="colorPrimaryDark">@android:color/black</item>
+    <item name="android:windowBackground">@color/gallery_color_101010</item>
+  </style>
+
+
+  <style name="Theme_NoSplash" parent="@style/Theme.AppCompat.Light">
+    <item name="colorPrimaryDark">@color/black</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowFullscreen">false</item>
+    <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+    <item name="android:dither">true</item>
+  </style>
+
+  <style name="LoadingStyle" parent="Theme.AppCompat.Light.Dialog">
+    <!-- Used for the buttons -->
+    <item name="colorAccent">@android:color/black</item>
+    <!-- Used for the title and text -->
+    <item name="android:textColorPrimary">@android:color/white</item>
+    <!-- Used for the background -->
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+  </style>
+
+  <style name="custom_dialog_zoom_theme" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+    <item name="android:windowFrame">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowAnimationStyle">@style/custom_dialog_zoom_animation</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:backgroundDimEnabled">true</item>
+  </style>
+
+  <style name="custom_dialog_zoom_animation" parent="@android:style/Animation.Dialog">
+    <item name="android:windowEnterAnimation">@anim/zoom_enter</item>
+    <item name="android:windowExitAnimation">@anim/zoom_exit</item>
+  </style>
+
+  <style name="tab_text_style">
+    <item name="android:textStyle">bold</item>
+    <item name="android:textSize">16sp</item>
+  </style>
+
+  <style name="FolderChooseAnim" parent="android:Animation">
+    <item name="android:windowEnterAnimation">@anim/gallery_anim_popwindow_show</item>
+    <item name="android:windowExitAnimation">@anim/gallery_anim_popwindow_hide</item>
+  </style>
+
+  <style name="FolderChooseRltAnim" parent="android:Animation">
+    <item name="android:windowEnterAnimation">@anim/gallery_anim_popwindow_rlt_show</item>
+    <item name="android:windowExitAnimation">@anim/gallery_anim_popwindow_rlt_hide</item>
+  </style>
+
+  <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+    <!-- Used for the buttons -->
+    <item name="colorAccent">@color/color_00b300</item>
+    <!-- Used for the title and text -->
+    <item name="android:textColorPrimary">@color/color_3493f2</item>
+    <!-- Used for the background -->
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:windowBackground">@color/transparent</item>
+  </style>
+
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="76dp"
+  android:layout_height="70dp">
+
+  <com.quvideo.application.gallery.widget.RoundImageView
+    android:id="@+id/iv_cover"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:contentDescription="@null"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_default_pic_cover"
+    app:cornerRadius="4dp" />
+
+  <View
+    android:id="@+id/item_shadow"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    app:layout_constraintBottom_toBottomOf="@+id/iv_cover"
+    app:layout_constraintStart_toStartOf="@+id/iv_cover"
+    app:layout_constraintEnd_toEndOf="@+id/iv_cover"
+    android:background="@drawable/gallery_shape_item_shadow" />
+
+  <TextView
+    android:id="@+id/tv_duration"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="@+id/iv_cover"
+    app:layout_constraintBottom_toBottomOf="@+id/iv_cover"
+    android:layout_marginEnd="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="2dp"
+    android:gravity="center"
+    android:text="0:00"
+    android:textColor="@color/white"
+    android:textSize="10sp" />
+
+  <View
+    android:id="@+id/item_hover_stroke"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    app:layout_constraintStart_toStartOf="@+id/iv_cover"
+    app:layout_constraintEnd_toEndOf="@+id/iv_cover"
+    app:layout_constraintTop_toTopOf="@+id/iv_cover"
+    app:layout_constraintBottom_toBottomOf="@+id/iv_cover"
+    android:background="@drawable/gallery_selector_item_hover_stroke"/>
+
+  <TextView
+    android:id="@+id/tv_order"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="2dp"
+    android:background="@drawable/gallery_shape_board_item_order"
+    app:layout_constraintStart_toStartOf="@+id/iv_cover"
+    app:layout_constraintTop_toTopOf="@+id/iv_cover"
+    android:paddingLeft="4dp"
+    android:paddingTop="1dp"
+    android:paddingRight="4dp"
+    android:paddingBottom="1dp"
+    android:text="01"
+    android:textColor="@android:color/white"
+    android:textSize="9sp"
+    android:textStyle="bold"
+    android:visibility="gone"/>
+
+  <ImageButton
+    android:id="@+id/btn_delete"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:background="@color/transparent"
+    android:contentDescription="@null"
+    android:src="@drawable/gallery_board_clip_delete_icon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

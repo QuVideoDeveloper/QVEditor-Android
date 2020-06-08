@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <declare-styleable name="RoundImageView">
+    <attr format="dimension" name="cornerRadius"/>
+  </declare-styleable>
+  <declare-styleable name="VeGallery">
+    <attr name="android:gravity"/>
+    <attr name="android:spacing"/>
+    <attr name="android:unselectedAlpha"/>
+    <attr name="android:animationDuration"/>
+  </declare-styleable>
+
+  <declare-styleable name="VeTrimGallery">
+    <attr format="reference" name="LeftTrimBar"/>
+    <attr format="reference" name="RightTrimBar"/>
+  </declare-styleable>
+
+
+  <declare-styleable name="CropImageView">
+
+    <attr name="guidelines">
+      <enum name="off" value="0"/>
+      <enum name="onTouch" value="1"/>
+      <enum name="on" value="2"/>
+    </attr>
+
+    <attr format="boolean" name="fixAspectRatio"/>
+    <attr format="integer" name="aspectRatioX"/>
+    <attr format="integer" name="aspectRatioY"/>
+
+  </declare-styleable>
+</resources>

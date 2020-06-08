@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+  compileSdkVersion rootProject.ext.android.compileSdkVersion
+  buildToolsVersion rootProject.ext.android.buildToolsVersion
+  defaultConfig {
+    minSdkVersion rootProject.ext.android.minSdkVersion
+    targetSdkVersion rootProject.ext.android.targetSdkVersion
+    versionCode 1
+    versionName "1.0"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+def VERSION_CODE = 1
+greendao {
+  schemaVersion VERSION_CODE //DB version
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  implementation 'androidx.appcompat:appcompat:1.1.0'
+  implementation 'androidx.core:core-ktx:1.2.0'
+
+  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+  implementation "androidx.recyclerview:recyclerview:1.1.0"
+  implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+  implementation "org.greenrobot:greendao:$rootProject.greenDaoVersion"
+
+  implementation "com.github.bumptech.glide:glide:4.8.0"
+  implementation "com.github.bumptech.glide:okhttp3-integration:4.8.0@aar"
+  implementation "com.zlc.glide:webpdecoder:1.6.4.8.0"
+
+  implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
+  implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
+
+  implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
+  implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+  implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit2Version"
+  implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
+  implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttp3Version"
+
+  api  "com.quvideo.mobile.external:sdk-engine:$rootProject.ext.vivaSDKVersion"
+}

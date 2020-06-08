@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/black"
+  android:orientation="vertical" >
+
+  <androidx.viewpager.widget.ViewPager
+    android:id="@+id/viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"/>
+
+  <RelativeLayout
+    android:id="@+id/title_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/gallery_title_height"
+    android:background="@color/color_fa101010">
+
+    <ImageButton
+      android:id="@+id/btn_back"
+      android:layout_width="44dp"
+      android:layout_height="match_parent"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="6dp"
+      android:layout_marginStart="6dp"
+      android:background="@drawable/gallery_simple_ripple"
+      android:contentDescription="@null"
+      android:src="@drawable/gallery_cropper_back_icon"/>
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+      <TextView
+        android:id="@+id/tv_curr_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:padding="0dp"
+        android:singleLine="true"
+        android:text="5"
+        android:textColor="@color/color_9e9ea4"
+        android:textSize="14sp"
+        />
+
+      <TextView
+        android:id="@+id/sep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="0dp"
+        android:text="/"
+        android:textColor="@color/color_9e9ea4"
+        android:textSize="14sp"
+        />
+
+      <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:padding="0dp"
+        android:singleLine="true"
+        android:text="15"
+        android:textColor="@color/color_9e9ea4"
+        android:textSize="14sp"
+        />
+    </LinearLayout>
+
+    <ImageButton
+      android:id="@+id/btn_select"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="10dp"
+      android:layout_marginRight="10dp"
+      android:background="@color/transparent"
+      android:scaleType="centerInside"
+      android:contentDescription="@null"
+      android:src="@drawable/gallery_selector_pic_preview_item"/>
+
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:id="@+id/ops_layout"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/color_fa101010"
+    android:paddingEnd="12dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingStart="12dp"
+    >
+
+    <ImageButton
+      android:id="@+id/btn_rotate"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:background="@color/transparent"
+      android:src="@drawable/gallery_pic_rotate_icon"
+      android:visibility="visible"
+      />
+
+    <TextView
+      android:id="@+id/btn_done"
+      android:layout_width="wrap_content"
+      android:layout_height="32dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:background="@drawable/gallery_shape_finish_btn_bg"
+      android:gravity="center"
+      android:minHeight="32dp"
+      android:minWidth="75dp"
+      android:paddingEnd="24dp"
+      android:paddingLeft="24dp"
+      android:paddingRight="24dp"
+      android:paddingStart="24dp"
+      android:singleLine="true"
+      android:text="@string/mn_gallery_preview_ok_title"
+      android:textColor="@color/white"
+      android:textSize="14sp"
+      />
+  </RelativeLayout>
+
+
+</RelativeLayout>

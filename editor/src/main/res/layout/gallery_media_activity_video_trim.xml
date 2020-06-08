@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/color_fa101010">
+
+  <ImageView
+    android:id="@+id/video_trim_btn_back"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/gallery_title_height"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/gallery_simple_ripple"
+    android:paddingStart="16dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="11dp"
+    android:paddingBottom="11dp"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_cropper_back_icon" />
+
+  <RelativeLayout
+    android:id="@+id/layout_preview_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/video_trim_layout_operation"
+    android:layout_below="@+id/video_trim_btn_back"
+    android:background="@color/black">
+
+    <com.quvideo.application.gallery.widget.PlayerView
+      android:id="@+id/video_trim_playerview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+
+    <com.quvideo.application.gallery.widget.crop.CropImageView
+      android:id="@+id/crop_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_centerInParent="true"
+      android:adjustViewBounds="true"
+      android:scaleType="centerInside"
+      android:visibility="gone" />
+  </RelativeLayout>
+
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/video_trim_layout_operation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginTop="15dp">
+
+    <RelativeLayout
+      android:id="@+id/video_trim_layout_times"
+      android:layout_width="match_parent"
+      android:layout_height="18dp"
+      android:background="@color/transparent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <TextView
+        android:id="@+id/video_trim_left_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:gravity="center"
+        android:shadowColor="@color/opacity_3_black"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:textColor="@color/opacity_8_white"
+        android:textSize="12sp"
+        android:visibility="invisible" />
+
+      <TextView
+        android:id="@+id/video_trim_right_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center"
+        android:shadowColor="@color/opacity_3_black"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:textColor="@color/opacity_8_white"
+        android:textSize="12sp" />
+    </RelativeLayout>
+
+    <com.quvideo.application.gallery.widget.trim.VeAdvanceTrimGallery
+      android:id="@+id/video_trim_tool"
+      android:layout_width="match_parent"
+      android:layout_height="126dp"
+      android:background="@color/transparent"
+      android:gravity="center_vertical"
+      android:spacing="0dp"
+      android:unselectedAlpha="1.0"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/video_trim_layout_times" />
+
+    <ImageView
+      android:id="@+id/video_trim_play_icon"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
+      android:layout_marginStart="9dp"
+      android:layout_marginLeft="9dp"
+      android:scaleType="centerInside"
+      android:src="@drawable/gallery_selector_cropper_play"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+      android:id="@+id/ops_layout"
+      android:layout_width="match_parent"
+      android:layout_height="52dp"
+      android:background="@color/color_fa101010"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/video_trim_tool">
+
+      <RelativeLayout
+        android:id="@+id/layout_rotate"
+        android:layout_width="52dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@color/transparent"
+        android:visibility="visible">
+
+        <ImageButton
+          android:id="@+id/btn_rotate"
+          android:layout_width="22dp"
+          android:layout_height="22dp"
+          android:layout_centerInParent="true"
+          android:background="@color/transparent"
+          android:clickable="false"
+          android:src="@drawable/gallery_pic_rotate_icon" />
+      </RelativeLayout>
+
+      <RelativeLayout
+        android:id="@+id/layout_crop"
+        android:layout_width="52dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/layout_rotate"
+        android:layout_toRightOf="@+id/layout_rotate"
+        android:background="@color/transparent"
+        android:visibility="visible">
+
+        <ImageButton
+          android:id="@+id/btn_crop"
+          android:layout_width="22dp"
+          android:layout_height="22dp"
+          android:layout_centerInParent="true"
+          android:background="@color/transparent"
+          android:clickable="false"
+          android:src="@drawable/gallery_selector_video_trim_crop" />
+
+      </RelativeLayout>
+
+      <TextView
+        android:id="@+id/video_trim_btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/gallery_shape_finish_btn_bg"
+        android:gravity="center"
+        android:minWidth="75dp"
+        android:minHeight="32dp"
+        android:paddingStart="24dp"
+        android:paddingLeft="24dp"
+        android:paddingEnd="24dp"
+        android:paddingRight="24dp"
+        android:singleLine="true"
+        android:text="@string/mn_gallery_preview_confirm_title"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+    </RelativeLayout>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

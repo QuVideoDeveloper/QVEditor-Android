@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item android:drawable="@drawable/gallery_video_trim_crop_btn" android:state_selected="false" />
+  <item android:drawable="@drawable/gallery_video_trim_crop_btn_slc" android:state_selected="true" />
+</selector>

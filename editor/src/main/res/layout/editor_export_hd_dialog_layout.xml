@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="40dp"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/editor_shape_common_dialog_bg"
+      android:orientation="vertical"
+      >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:maxLines="1"
+          android:padding="16dp"
+          android:text="@string/mn_edit_export_resolution"
+          android:textColor="@color/color_585858"
+          android:textSize="14sp"
+          />
+    </RelativeLayout>
+
+    <!-- 4k item -->
+    <RelativeLayout
+        android:id="@+id/hd_4k_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/editor_selector_pub_dialog_list_item_bg_ripple"
+        android:paddingEnd="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingStart="24dp"
+        android:visibility="visible"
+        >
+
+      <TextView
+          android:id="@+id/purchase_hd_4k_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:clickable="false"
+          android:text="超高清 4K"
+          android:textColor="#FF333333"
+          android:textSize="16sp"
+          />
+
+    </RelativeLayout>
+
+    <!-- 2k item -->
+    <RelativeLayout
+        android:id="@+id/hd_2k_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/editor_selector_pub_dialog_list_item_bg_ripple"
+        android:paddingEnd="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingStart="24dp"
+        android:visibility="visible"
+        >
+
+      <TextView
+          android:id="@+id/purchase_hd_2k_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:clickable="false"
+          android:text="超高清 2K"
+          android:textColor="#FF333333"
+          android:textSize="16sp"
+          />
+    </RelativeLayout>
+
+    <!-- 1080P item -->
+    <RelativeLayout
+        android:id="@+id/hd_1080_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/editor_selector_pub_dialog_list_item_bg_ripple"
+        android:paddingEnd="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingStart="24dp"
+        android:visibility="visible"
+        >
+
+      <TextView
+          android:id="@+id/purchase_hd_1080_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:clickable="false"
+          android:text="1080P"
+          android:textColor="#FF333333"
+          android:textSize="16sp"
+          />
+
+    </RelativeLayout>
+    <!-- 720 item -->
+    <RelativeLayout
+        android:id="@+id/hd_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/editor_selector_pub_dialog_list_item_bg_ripple"
+        android:paddingEnd="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingStart="24dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:clickable="false"
+          android:text="720P"
+          android:textColor="#FF333333"
+          android:textSize="16sp"
+          />
+    </RelativeLayout>
+
+    <!-- 480P item -->
+    <RelativeLayout
+        android:id="@+id/normal_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/editor_selector_pub_dialog_list_item_bg_ripple"
+        android:paddingEnd="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingStart="24dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:clickable="false"
+          android:text="480P"
+          android:textColor="#FF333333"
+          android:textSize="16sp"
+          />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        />
+  </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="main_ripple_color">#33FFFFFF</color>
+  <color name="colorPrimary">#008577</color>
+  <color name="colorPrimaryDark">#00574B</color>
+  <color name="colorAccent">#D81B60</color>
+
+  <color name="gallery_color_101010">#101010</color>
+  <color name="gallery_color_0c0c0c">#0c0c0c</color>
+  <color name="gallery_color_999999">#999999</color>
+  <color name="gallery_color_d9d9d9">#FFd9d9d9</color>
+  <color name="gallery_color_363636">#ff363636</color>
+
+
+  <color name="border">#AAFFFFFF</color>
+  <color name="guideline">#AAFFFFFF</color>
+  <color name="surrounding_area">#B0000000</color>
+
+
+  <!--Common-->
+  <color name="black">#000000</color>
+  <color name="opacity_1_black">#1a000000</color>
+  <color name="opacity_2_black">#33000000</color>
+  <color name="opacity_2_5_black">#40000000</color>
+  <color name="opacity_3_black">#4d000000</color>
+  <color name="opacity_4_black">#66000000</color>
+  <color name="opacity_5_black">#80000000</color>
+  <color name="opacity_6_black">#99000000</color>
+  <color name="opacity_6_5_black">#a6000000</color>
+  <color name="opacity_7_black">#b2000000</color>
+  <color name="opacity_7_5_black">#bf000000</color>
+  <color name="opacity_8_black">#cc000000</color>
+  <color name="opacity_9_black">#d2000000</color>
+  <color name="opacity_8_7_black">#de000000</color>
+
+  <color name="opacity_3_gray">#4d4b4755</color>
+  <color name="opacity_2_gray">#cc4b4755</color>
+
+  <color name="white">#ffffff</color>
+  <color name="white_5">#0dffffff</color>
+  <color name="opacity_1_white">#1affffff</color>
+  <color name="opacity_2_white">#33ffffff</color>
+  <color name="opacity_3_white">#4dffffff</color>
+  <color name="opacity_3_5_white">#59ffffff</color>
+  <color name="opacity_4_white">#66ffffff</color>
+  <color name="opacity_5_white">#80ffffff</color>
+  <color name="opacity_6_white">#10ffffff</color>
+  <color name="opacity_6_5_white">#a6ffffff</color>
+  <color name="opacity_7_white">#b3ffffff</color>
+  <color name="opacity_7_5_white">#bfffffff</color>
+  <color name="opacity_8_white">#ccffffff</color>
+  <color name="opacity_9_white">#e6ffffff</color>
+  <color name="opacity_9_5_white">#F2ffffff</color>
+
+  <!--  timeLine-->
+  <color name="timeline_music_spectrum_un_select_color">#ff56565b</color>
+  <color name="timeline_music_spectrum_select_color">#ff7bb88b</color>
+  <color name="timeline_music_bg_un_select_color">#ff373642</color>
+  <color name="timeline_music_bg_select_color">#ff0f2f19</color>
+  <color name="timeline_music_back_color">#ff2C2C2C</color>
+  <color name="timeline_music_add_music_color">#ffABABAB</color>
+  <color name="timeline_music_name_un_select_color">#ffffffff</color>
+  <color name="timeline_music_name_select_color">#ffffffff</color>
+  <color name="timeline_music_divider_color">#ff4B4A56</color>
+  <color name="timeline_back_ground_color">#ff181818</color>
+
+
+  <color name="transparent">#00000000</color>
+  <color name="color_00b300">#ff00b300</color>
+  <color name="color_3493f2">#FF3493f2</color>
+  <color name="color_585858">#FF585858</color>
+  <color name="color_dddddd">#FFDDDDDD</color>
+  <color name="color_ff5e13">#ffff5e13</color>
+  <color name="color_ff2c2c30">#ff2c2c30</color>
+  <color name="color_ff45454d">#ff45454d</color>
+  <color name="color_ffaaaab3">#ffaaaab3</color>
+  <color name="color_fff5f5f7">#fff5f5f7</color>
+  <color name="color_ffe6e6e6">#ffe6e6e6</color>
+  <color name="color_ff212121">#ff212121</color>
+  <color name="color_ff121212">#ff121212</color>
+  <color name="color_fa101010">#fa101010</color>
+  <color name="color_33ffffff">#33FFFFFF</color>
+  <color name="color_9e9ea4">#ff9e9ea4</color>
+  <color name="color_ff7b2e">#ffff7b2e</color>
+  <color name="color_fe3d42">#fe3d42</color>
+  <color name="color_333333">#333333</color>
+
+  <color name="black_p06">#10000000</color>
+  <color name="black_p10">#1A000000</color>
+  <color name="black_p15">#26000000</color>
+  <color name="black_p20">#33000000</color>
+  <color name="black_p25">#40000000</color>
+  <color name="black_p30">#4D000000</color>
+
+  <color name="gallery_main_ripple_color">@color/color_33ffffff</color>
+</resources>

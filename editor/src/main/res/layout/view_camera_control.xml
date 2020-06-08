@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/btnBack"
+    android:layout_width="28dp"
+    android:layout_height="28dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="20dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/com_icon_back" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnAddMusic"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/cam_shape_add_music_bg"
+    android:drawableStart="@drawable/cam_icon_music_nor"
+    android:drawablePadding="10dp"
+    android:paddingStart="14dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="5dp"
+    android:text="@string/mn_cam_func_add_bgm"
+    android:textColor="@android:color/white"
+    android:textSize="12sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnFront"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="20dp"
+    android:drawableTop="@drawable/cam_icon_front_nor"
+    android:gravity="center"
+    android:text="@string/mn_cam_func_camera_id_switch"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnFlash"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:drawableTop="@drawable/cam_sel_btn_flash"
+    android:gravity="center"
+    android:text="@string/mn_cam_func_flash"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintTop_toBottomOf="@+id/btnFront" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnZoom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:drawableTop="@drawable/cam_icon_focus_nor"
+    android:gravity="center"
+    android:text="@string/mn_cam_func_zoom"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintTop_toBottomOf="@+id/btnFlash" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnExposure"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:drawableTop="@drawable/cam_icon_exposure_nor"
+    android:gravity="center"
+    android:text="@string/mn_cam_func_exposure"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintTop_toBottomOf="@+id/btnZoom" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnRatio"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:drawableTop="@drawable/cam_icon_ratio_16_9"
+    android:gravity="center"
+    android:text="@string/mn_edit_title_ratio"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintTop_toBottomOf="@+id/btnExposure" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnFilter"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:drawableTop="@drawable/cam_icon_exposure_nor"
+    android:gravity="center"
+    android:text="@string/mn_edit_title_filter"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintTop_toBottomOf="@+id/btnRatio" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnBeautyFace"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:drawableTop="@drawable/cam_icon_beauty_face_nor"
+    android:gravity="center"
+    android:text="@string/mn_cam_func_face_beauty"
+    android:textColor="@android:color/white"
+    android:textSize="11sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintTop_toBottomOf="@+id/btnFilter" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/btnCapture"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginBottom="30dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:srcCompat="@drawable/cam_shape_capture_bg" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnRecording"
+    android:layout_width="68dp"
+    android:layout_height="68dp"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/cam_shape_recording_bg"
+    android:gravity="center"
+    android:textColor="@android:color/white"
+    android:textSize="16sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+    android:id="@+id/btnDel"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_marginEnd="30dp"
+    android:visibility="invisible"
+    app:layout_constraintBottom_toBottomOf="@id/btnRecording"
+    app:layout_constraintEnd_toStartOf="@+id/btnRecording"
+    app:layout_constraintTop_toTopOf="@+id/btnRecording"
+    app:srcCompat="@drawable/cam_icon_clip_del_nor" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/tvRecorderTime"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:textColor="@android:color/white"
+    android:textSize="16sp"
+    android:visibility="invisible"
+    app:layout_constraintBottom_toTopOf="@+id/btnRecording"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/btnRecorderDone"
+    android:layout_width="60dp"
+    android:layout_height="36dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="36dp"
+    android:background="@drawable/cam_shape_recorder_done_bg"
+    android:gravity="center"
+    android:text="@string/mn_app_done"
+    android:textColor="@android:color/white"
+    android:textSize="12sp"
+    android:visibility="invisible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

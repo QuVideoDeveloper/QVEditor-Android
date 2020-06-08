@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.quvideo.application.gallery.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="1dp">
+
+  <ImageView
+    android:id="@+id/iv_cover"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@null"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_default_pic_cover" />
+
+
+  <LinearLayout
+    android:id="@+id/layout_duration"
+    android:layout_width="match_parent"
+    android:layout_height="28dp"
+    android:layout_alignBottom="@+id/iv_cover"
+    android:background="@drawable/gallery_shape_item_shadow"
+    android:gravity="center_vertical|start">
+
+    <TextView
+      android:id="@+id/tv_video_duration"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="6dp"
+      android:text="00:00"
+      android:textColor="@color/opacity_8_white"
+      android:textSize="12sp" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/order_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cc021930"
+    android:gravity="center"
+    android:visibility="gone">
+
+    <TextView
+      android:id="@+id/tv_order"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="01"
+      android:textColor="@android:color/white"
+      android:textSize="38sp"
+      android:textStyle="bold" />
+  </LinearLayout>
+
+
+  <ImageButton
+    android:id="@+id/preview_icon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignEnd="@+id/iv_cover"
+    android:layout_alignRight="@+id/iv_cover"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginRight="4dp"
+    android:background="@color/transparent"
+    android:contentDescription="@null"
+    android:padding="4dp"
+    android:src="@drawable/gallery_media_video_trim_icon" />
+
+</com.quvideo.application.gallery.widget.SquareRelativeLayout>

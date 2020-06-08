@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center">
+
+  <RelativeLayout
+    android:layout_width="183dp"
+    android:layout_height="190dp"
+    android:background="@drawable/gallery_shape_download_prograss_bg">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:orientation="vertical">
+
+      <com.quvideo.application.gallery.widget.RoundProgressBar
+        android:id="@+id/round_progressBar"
+        android:layout_width="64dp"
+        android:layout_height="64dp" />
+
+      <TextView
+        android:id="@+id/tv_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="2/8"
+        android:textColor="#45454d"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/mn_gallery_file_download_message"
+        android:textColor="#aaaab3"
+        android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <ImageButton
+      android:id="@+id/btn_close"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_marginTop="4dp"
+      android:layout_marginEnd="4dp"
+      android:layout_marginRight="4dp"
+      android:background="@android:color/transparent"
+      android:padding="4dp"
+      android:src="@drawable/gallery_dialog_close_icon" />
+  </RelativeLayout>
+</LinearLayout>

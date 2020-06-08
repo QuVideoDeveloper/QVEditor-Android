@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/imgItem"
+      android:layout_width="64dp"
+      android:layout_height="72dp"
+      android:padding="2dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+      />
+
+  <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/tvTitle"
+      android:layout_width="64dp"
+      android:layout_height="14dp"
+      android:gravity="center"
+      android:textColor="@color/color_ffe6e6e6"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:autoSizeMaxTextSize="10sp"
+      app:autoSizeMinTextSize="6sp"
+      app:autoSizeStepGranularity="1sp"
+      app:autoSizeTextType="uniform"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

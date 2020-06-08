@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".MainActivity">
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="250dp"
+      android:background="@drawable/home_icon_background" />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="210dp"
+      android:layout_gravity="bottom"
+      android:background="@drawable/home_shape_background">
+
+    <ImageView
+        android:id="@+id/img_camera"
+        android:layout_width="155dp"
+        android:layout_height="183dp"
+        android:onClick="gotoCamera"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/img_templte"
+        app:layout_constraintStart_toStartOf="@id/img_templte"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toStartOf="@id/img_edit"
+        android:src="@drawable/home_icon_camera"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mn_app_mode_camera"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/img_camera"
+        app:layout_constraintRight_toRightOf="@id/img_camera"
+        app:layout_constraintTop_toTopOf="@id/img_camera"
+        app:layout_constraintBottom_toBottomOf="@id/img_camera"
+        app:layout_constraintVertical_bias="0.75"
+        android:textColor="@android:color/white"/>
+
+    <ImageView
+        android:id="@+id/img_edit"
+        android:layout_width="155dp"
+        android:layout_height="183dp"
+        android:layout_marginLeft="15dp"
+        android:onClick="gotoEdit"
+        app:layout_constraintTop_toTopOf="@id/img_camera"
+        app:layout_constraintBottom_toBottomOf="@id/img_camera"
+        app:layout_constraintStart_toEndOf="@id/img_camera"
+        app:layout_constraintEnd_toEndOf="@id/img_templte"
+        android:src="@drawable/home_icon_edit"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mn_app_mode_editor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/img_edit"
+        app:layout_constraintRight_toRightOf="@id/img_edit"
+        app:layout_constraintTop_toTopOf="@id/img_edit"
+        app:layout_constraintBottom_toBottomOf="@id/img_edit"
+        app:layout_constraintVertical_bias="0.75"
+        android:textColor="@android:color/white"/>
+
+    <ImageView
+        android:id="@+id/img_templte"
+        android:layout_width="327dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="15dp"
+        android:onClick="gotoTemplate"
+        app:layout_constraintTop_toBottomOf="@id/img_camera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/home_icon_template"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mn_app_mode_template"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/img_templte"
+        app:layout_constraintRight_toRightOf="@id/img_templte"
+        app:layout_constraintTop_toTopOf="@id/img_templte"
+        app:layout_constraintBottom_toBottomOf="@id/img_templte"
+        app:layout_constraintHorizontal_bias="0.85"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/txt_des"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:letterSpacing="0.1"
+        android:textColor="#534E4E"
+        android:text="Design by QuVideo"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="76dp"
+  android:layout_height="wrap_content"
+  android:layoutDirection="rtl">
+
+  <com.quvideo.application.gallery.widget.RoundImageView
+    android:id="@+id/iv_cover"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:contentDescription="@null"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_default_pic_cover"
+    app:cornerRadius="4dp" />
+
+  <com.quvideo.application.gallery.widget.RoundImageView
+    android:id="@+id/iv_def_bg"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:contentDescription="@null"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_default_pic_cover"
+    android:visibility="gone"
+    app:cornerRadius="4dp" />
+
+  <View
+    android:id="@+id/item_hover"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/gallery_shape_item_hover"/>
+
+  <View
+    android:id="@+id/item_hover_stroke"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/gallery_selector_item_hover_stroke"/>
+
+  <ImageView
+    android:id="@+id/item_hover_add"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginTop="28dp"
+    android:layout_marginLeft="28dp"
+    android:visibility="gone"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_board_clip_add_icon" />
+
+  <ImageButton
+    android:id="@+id/btn_delete"
+    android:layout_width="16dp"
+    android:layout_height="16dp"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:background="@color/transparent"
+    android:contentDescription="@null"
+    android:scaleType="centerCrop"
+    android:src="@drawable/gallery_board_clip_delete_icon" />
+
+  <TextView
+    android:id="@+id/tv_duration"
+    android:layout_width="64dp"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginTop="74dp"
+    android:layout_marginLeft="6dp"
+    android:gravity="center"
+    android:text="0:00"
+    android:textColor="@color/white"
+    android:textSize="10sp" />
+
+</RelativeLayout>

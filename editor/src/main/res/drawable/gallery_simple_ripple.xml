@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--无需背景的view 添加ripple-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:color="@color/gallery_main_ripple_color"
+    tools:targetApi="lollipop">
+  <!--有background的把原来的drawable放进去-->
+  <!--<item android:drawable="@drawable/drawable_color_transparent"/>-->
+</ripple>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.quvideo.application">
+
+  <application
+      android:name="com.quvideo.application.EditorApplication"
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
+    <activity
+        android:name="com.quvideo.application.SplashActivity"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity"
+        android:theme="@style/CameraTheme">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+        android:name="com.quvideo.application.MainActivity"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        android:screenOrientation="portrait"
+        android:theme="@style/CameraTheme"
+        android:launchMode="singleTask"
+        tools:ignore="LockedOrientationActivity" />
+
+    <activity
+        android:name=".permission.PermissionProxyActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"
+        android:launchMode="standard"
+        android:theme="@style/permission_activity"
+        android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
+  </application>
+
+</manifest>

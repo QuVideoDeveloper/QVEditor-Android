@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="136dp"
+  android:background="@color/opacity_9_black">
+
+  <RelativeLayout
+    android:id="@+id/title_layout"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:gravity="center_vertical"
+      android:orientation="vertical"
+      android:paddingStart="14dp"
+      android:paddingLeft="14dp">
+
+      <com.quvideo.application.gallery.widget.SpannableTextView
+        android:id="@+id/txt_clip_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mn_gallery_template_selected_count_description"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+      <TextView
+        android:id="@+id/tv_move_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="@string/mn_gallery_template_selected_change_position_tip"
+        android:textColor="@color/opacity_4_white"
+        android:textSize="10sp" />
+
+    </LinearLayout>
+
+
+    <TextView
+      android:id="@+id/btn_next"
+      android:layout_width="wrap_content"
+      android:layout_height="32dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:background="@drawable/gallery_shape_done_btn"
+      android:gravity="center"
+      android:textStyle="bold"
+      android:minWidth="36dp"
+      android:paddingLeft="15dp"
+      android:paddingTop="6dp"
+      android:paddingRight="15dp"
+      android:paddingBottom="6dp"
+      android:text="@string/mn_gallery_selected_import"
+      android:textColor="@color/white"
+      android:textSize="14sp" />
+
+  </RelativeLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rc_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/title_layout"
+    android:layout_centerVertical="true" />
+
+
+</RelativeLayout>

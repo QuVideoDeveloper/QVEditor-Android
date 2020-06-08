@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <View
+      android:id="@+id/root_bg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:background="@color/transparent"
+      />
+
+  <View
+      android:id="@+id/viewBg"
+      android:layout_width="0dp"
+      android:layout_height="239dp"
+      android:background="#101112"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <include
+      layout="@layout/view_edit_dialog_bottom"
+      android:id="@+id/layout_bottom"
+      android:layout_width="0dp"
+      android:layout_height="46dp"
+      app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+
+  <include
+      layout="@layout/view_edit_seekbar"
+      android:id="@+id/seekbar_end"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="52dp"
+      android:layout_marginEnd="20dp"
+      android:layout_marginStart="20dp"
+      app:layout_constraintBottom_toTopOf="@id/layout_bottom"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+
+  <include
+      layout="@layout/view_edit_seekbar"
+      android:id="@+id/seekbar_start"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="20dp"
+      android:layout_marginStart="20dp"
+      app:layout_constraintBottom_toTopOf="@+id/seekbar_end"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

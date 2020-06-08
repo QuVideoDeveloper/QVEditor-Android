@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:background="@color/transparent"
+    >
+
+  <RelativeLayout
+      android:id="@+id/simple_dialog_layout"
+      android:layout_width="88dp"
+      android:layout_height="88dp"
+      android:layout_centerInParent="true"
+      android:layout_gravity="center"
+      android:background="@drawable/viva_gallery_check_update_bg"
+      >
+
+      <ProgressBar
+          android:id="@+id/progressBar1"
+          android:layout_width="60.3dp"
+          android:layout_height="60.3dp"
+          android:layout_centerInParent="true"
+          android:indeterminateDrawable="@drawable/viva_gallery_check_update_loading_progress"
+          android:indeterminateDuration="2000"
+          />
+
+      <TextView
+          android:id="@+id/progress_percent"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:maxLines="1"
+          android:singleLine="true"
+          android:textColor="@color/white"
+          android:textSize="12sp"
+          android:visibility="gone"
+          />
+
+      <TextView
+          android:id="@+id/check_update_dialog_txt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/progressBar1"
+          android:layout_centerHorizontal="true"
+          android:maxLines="1"
+          android:paddingEnd="4dp"
+          android:paddingLeft="4dp"
+          android:paddingRight="4dp"
+          android:paddingStart="4dp"
+          android:paddingTop="10dp"
+          android:singleLine="true"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:visibility="gone"
+          />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="fill_parent"
+      android:layout_height="60dp"
+      android:layout_below="@+id/simple_dialog_layout"
+      android:layout_gravity="center"
+      />
+</RelativeLayout>
