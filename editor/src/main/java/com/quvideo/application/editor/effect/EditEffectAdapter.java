@@ -96,14 +96,10 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
       }
       if (thumbRes != 0) {
         Glide.with(holder.mImageView).load(thumbRes).into(holder.mImageView);
-      } else {
-        holder.mImageView.setImageResource(R.drawable.home_icon_edit);
       }
     } else if (!TextUtils.isEmpty(item.mEffectPath)) {
       EffectThumbParams effectThumbParams = new EffectThumbParams(item.mEffectPath, thumbWidth, thumbHeight);
       Glide.with(holder.mImageView).load(effectThumbParams).into(holder.mImageView);
-    } else {
-      holder.mImageView.setImageResource(R.drawable.home_icon_edit);
     }
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override

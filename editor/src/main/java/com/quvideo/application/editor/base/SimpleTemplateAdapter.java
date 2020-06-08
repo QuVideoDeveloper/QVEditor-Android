@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
 import com.bumptech.glide.load.DataSource;
@@ -31,7 +29,6 @@ import com.quvideo.application.utils.FileUtils;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import com.quvideo.mobile.engine.template.XytUtil;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

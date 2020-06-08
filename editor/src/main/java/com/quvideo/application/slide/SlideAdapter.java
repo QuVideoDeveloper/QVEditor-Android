@@ -67,8 +67,6 @@ public class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.TemplateHold
     holder.mImageView.setSelected(false);
     if (!TextUtils.isEmpty(item.filePath)) {
       Glide.with(mActivity).load(item.filePath).into(holder.mImageView);
-    } else {
-      holder.mImageView.setImageResource(R.drawable.home_icon_edit);
     }
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override

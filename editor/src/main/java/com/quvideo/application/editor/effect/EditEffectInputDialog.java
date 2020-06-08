@@ -69,7 +69,7 @@ public class EditEffectInputDialog extends RelativeLayout {
 
     BaseEffect baseEffect = workSpace.getEffectAPI().getEffect(groupId, effectIndex);
     if (baseEffect instanceof SubtitleEffect) {
-      curText = ((SubtitleEffect) baseEffect).getTextBubbleInfo().getText();
+      curText = ((SubtitleEffect) baseEffect).getTextBubbleInfo().getFirstText();
       if (curText != null) {
         mEditText.setText(curText);
       }

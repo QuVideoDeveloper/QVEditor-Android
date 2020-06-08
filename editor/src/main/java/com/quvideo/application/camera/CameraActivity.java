@@ -6,11 +6,9 @@ import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
 import com.quvideo.application.FileCopyHelper;
 import com.quvideo.application.TimeFormatUtil;
@@ -19,13 +17,10 @@ import com.quvideo.application.camera.recorder.RecorderClipInfo;
 import com.quvideo.application.editor.EditorActivity;
 import com.quvideo.application.editor.R;
 import com.quvideo.mobile.engine.camera.XYCameraConst;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
-
+import org.jetbrains.annotations.NotNull;
 import xiaoying.utils.LogUtils;
 
 public class CameraActivity extends AppCompatActivity {

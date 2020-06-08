@@ -6,12 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.quvideo.application.EditorConst;
@@ -46,10 +44,8 @@ import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPRatio;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import xiaoying.utils.LogUtils;
 
 /**

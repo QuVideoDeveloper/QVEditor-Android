@@ -6,13 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.quvideo.application.EditorConst;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.export.ExportChooseDialog;
@@ -38,7 +36,6 @@ import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPMove;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPReplace;
-
 import java.util.ArrayList;
 
 public class SlideShowActivity extends AppCompatActivity {

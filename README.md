@@ -64,7 +64,19 @@ destRange：出入区间，效果在工程上的起始点和长度。
 位置信息使用的坐标系，统一按左上角位原点，横向向右为正，纵向向下为正。以工程比例宽高的万分比建立坐标系。如工程分辨率为720*1080，则左上角为（0，0），右上角为（10000，0），左下角为（0，10000），右下角为（10000，10000）。
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="594" height="547" align="center">
 
-#### 6. 剪辑队列和剪辑操作符
+#### 6. 剪辑操作符
+由于剪辑需要始终保持单线程操作，所以在工程剪辑时，我们将每个操作定义为一个剪辑操作符BaseOperate。剪辑操作符有sdk已经预设的大量操作符，开发者也可以自行组合实现新的操作符。执行时，开发者只需要创建操作符，并将操作符交给workspace执行即可，接下来就是等待执行完成的回调。
+```
+BaseOperate operate = new BaseOperate();
+workspace.handleOperation(operate)；
+```
+为满足开发者可能存在的特殊需求，操作符也可以进行同步操作，使用代码：
+```
+BaseOperate operate = new BaseOperate();
+workspace.syncOperation(operate)；
+```
+由于工程操作时，必须保证只有单个操作正在执行，所以操作符建议只使用一种方式，或者在异步操作完成时，再进行同步操作。
+需要注意的是，同步操作暂不支持【高级玩法-对撤销/重做的支持】，强烈建议尽量使用操作符的异步编辑方式。以免出现不必要的并发问题。
 
 
 ### 三、项目搭建
@@ -114,12 +126,13 @@ android {
 	    main {
 	      jniLibs.srcDirs = ['libs']
 	    }
+	}
   }
 }
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.6"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.8"
 }
 ```
 
@@ -137,11 +150,53 @@ QEInitData参数说明：
 | projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除 | number | 非必须 |
 | hwCodecCapPath | 设备软硬件配置文件 | string | 非必须 |
 | corruptImgPath | clip错误时显示图片地址 | string | 非必须 |
-| isUseStuffClip | 是否末尾补黑帧,默认false | boolean | 非必须 |
+| isUseStuffClip | 是否末尾补黑帧,默认false（详解【高级玩法-自由黑帧模式】一章说明） | boolean | 非必须 |
 | iTextPrepareListener | 默认文本宏替换数据 | ITextPrepareListener | 非必须 |
 
+### 四、素材管理开发接入
+#### 1. 素材安装
+```
+/** 安装单个素材文件 */
+XytManager.install(xytZipPath, xytInstallListener);
+/** 安装多个素材文件 */
+XytManager.asyncBatchInstall(xytZipPath, fromType, xytInstallListener);
+/** 安装多个asset目录下的素材文件 */
+XytManager.installAsset(assetPathList, xytInstallListener);
+```
+XytInstallListener接口信息：
+```
+public interface XytInstallListener {
 
-### 四、剪辑工程功能开发接入
+  void onSuccess();
+
+  void onFailed(int errorCode);
+}
+```
+
+#### 2. 素材信息查询
+```
+/**
+* 通过素材id查询素材信息
+*/
+XytInfo xytInfo = XytManager.getXytInfo(ttidLong);
+
+/**
+* 通过素材路径查询素材信息
+*/
+XytInfo xytInfo = XytManager.getXytInfo(xytPath);
+```
+XytInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| ttidLong | 素材id| long |
+| filePath | 素材路径 | String |
+| title | 素材名称 | String |
+
+### 五、拍摄视频开发接入
+
+
+
+### 六、剪辑工程功能开发接入
 #### 1. 剪辑工程
 ##### 创建和加载
 ```
@@ -170,6 +225,23 @@ QEInitData参数说明：
    * 删除工程
    */
   IQEWorkSpace.deleteProject(String projectPath)
+```
+
+##### 工程释放
+工程编辑结束，需要完整释放工程。
+```
+  /**
+   * 释放工程缓存
+   */
+  IQEWorkSpace.destory()
+```
+如果只是想临时释放工程注册的各项监听器，则调用：
+```
+  /**
+   * 销毁播放器和注册的监听器，播放器监听和操作队列监听
+   * 当需要重新使用时，需要重新绑定播放器和各种监听器
+   */
+  IQEWorkSpace.unbindUI()
 ```
 
 #### 2. 播放器
@@ -229,9 +301,320 @@ public interface IPlayerController {
 ```
 
 #### 3. 获取剪辑工程信息
+##### 获取工程相关信息
+```
+  /** 获取工程路径 */
+  mWorkSpace.getProjectUrl();
+  /** 获取工程目录 */
+  mWorkSpace.getProjectDir();
+  /** 获取更多工程信息 */
+  StoryboardAPI storyboardAPI = mWorkSpace.getStoryboardAPI();
+  /** 获取片段信息 */
+  ClipAPI clipAPI = mWorkSpace.getClipAPI();
+  /** 获取效果信息 */
+  EffectAPI effectAPI = mWorkSpace.getEffectAPI();
+```
+StoryboardAPI信息:
+```
+public interface StoryboardAPI {
+  /** 获取分辨率 */
+  VeMSize getStreamSize();
 
+  /** 获取总时长 */
+  int getDuration();
+
+  /** 获取主题id */
+  long getThemeId();
+
+  /** 获取是否mv主题相册工程 */
+  boolean isMVProject();
+
+  /** 获取主题片头 */
+  ClipData getCover();
+
+  /** 获取主题片尾 */
+  ClipData getBackCover();
+
+  /** 获取主题字幕列表 */
+  List<ThemeSubtitleEffect> getThemeTitleInfoList();
+}
+```
+ClipAPI信息:
+```
+public interface ClipAPI {
+
+  /** 获取所有clip信息 */
+  List<ClipData> getClipList();
+
+  /** 根据索引，clip的开始播放点 */
+  int getClipStartPosition(int index);
+
+  /** 通过当前时间，获取Clip的index */
+  int getClipIndexByTime(int curTime);
+}
+```
+
+EffectAPI信息:
+```
+public interface EffectAPI {
+  /** 获取所有效果信息并按groupid分组 */
+  SparseArray<List<BaseEffect>> getAllEffect();
+
+  /** 获取groupid的所有效果信息 */
+  List<BaseEffect> getEffectList(int groupId);
+
+  /** 根据groupId和effectIndex所有获取效果信息 */
+  BaseEffect getEffect(int groupId, int effectIndex);
+}
+```
+备注：由于StoryboardAPI、ClipAPI和EffectAPI返回的数据都是clone数据，所有直接对返回的数据修改，是不起作用的。
+
+##### 数据结构说明
+1) 片段Clip相关
+ClipData参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| uniqueId | clip的唯一识别码 | String |
+| mType | 类型{@see ClipData.ClipType}  | ClipType |
+| mClipFilePath | 片段文件路径 | String |
+| isVideo | 是否视频 | boolean |
+| srcRange | 源文件区间 | VeRange |
+| trimRange | 片段裁切区间 | VeRange |
+| destRange | 片段出入区间 | VeRange |
+| cropRect | 裁剪区域 | Rect |
+| sourceSize | 源文件分辨率 | VeMSize |
+| rotateAngle | 旋转角度 | int |
+| isMute | 是否静音 | boolean |
+| audioVolume | 音量，默认100 | int |
+| soundTone | 变声，-60~60，正常0。{@see QEDftSoundTone}类中有提供的特定音调 | float |
+| timeScale | 变速值，默认1.0f，设置变速时，也会对音调产生影响 | float |
+| mirror | 镜像{@see ClipData.Mirror} | Mirror |
+| bReversed | 是否倒放 | boolean |
+| isPicAnimOn | 是否开启图片动画，只允许对图片clip设置 | boolean |
+| crossInfo | 转场，null表示无。当前片段和下一个片段的转场数据{@see CrossInfo} | CrossInfo |
+| filterInfo | 滤镜信息，null表示无{@see FilterInfo} | FilterInfo |
+| fxFilterInfo | 特效滤镜信息，null表示无{@see FxFilterInfo} | FxFilterInfo |
+| mClipParamAdjust | 参数调节信息{@see ClipParamAdjust} | ClipParamAdjust |
+| mClipPosInfo | 片段位置信息{@see ClipPosInfo} | ClipPosInfo |
+| mClipBgData | 片段背景信息{@see ClipBgData} | ClipBgData |
+
+
+ClipData.ClipType参数说明：
+| 名称  | 解释 |
+| :-: | :-: |
+| NORMAL | 正常clip |
+| THEME_COVER | 主题片头 |
+| THEME_BACKCOVER | 主题片尾 |
+
+ClipData.Mirror参数说明：
+| 名称  | 解释  |
+| :-: | :-: |
+| CLIP_FLIP_NONE | 正常 |
+| CLIP_FLIP_X | 沿X方向镜像 |
+| CLIP_FLIP_Y | 沿Y方向镜像 |
+| CLIP_FLIP_XY | 沿XY方向镜像 |
+
+CrossInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| crossPath | 转场路径 | String |
+| duration | 转场时长 | int |
+| cfgIndex | 转场效果样式，有些素材包含多种效果，表示使用第几个效果，默认0 | int |
+
+FilterInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| filterPath | 滤镜路径 | String |
+| filterLevel | 滤镜程度,0~100 | int  |
+
+FxFilterInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| filterPath | 特效滤镜路径 | String |
+
+ClipParamAdjust参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| luminance | 亮度,0~100,默认50 | int |
+| contrast | 对比度,0~100,默认50 | int  |
+| saturation | 饱和度,0~100,默认50 | int|
+| sharpness | 锐度,0~100,默认50 | int |
+| colourTemp | 色温,0~100,默认50 | int |
+| vignette | 暗角,0~100,默认50| int |
+| hue | 色调,0~100,默认50| int |
+| shadow | 阴影,0~100,默认50| int |
+| highlight | 高光,0~100,默认50| int |
+| fade | 褪色,0~100,默认0| int |
+
+ClipPosInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| centerPosX | 中心点-X | float |
+| centerPosY | 中心点-Y | float  |
+| width | width | float|
+| height | height | float |
+| degree | 旋转角度，0~359度 | float |
+
+ClipBgData参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| clipBgType | 背景类型 | ClipBgType |
+| colorArray | color,最多可以支持三色渐变 | int[] |
+| colorAngle | 颜色渐变角度：默认0-水平方向。0~360 | int |
+| blurLen | 模糊程度：0~100 | int |
+| imagePath | 图片背景，自定义图片背景使用 | String |
+
+ClipBgData.ClipBgType参数说明：
+| 名称  | 解释  |
+| :-: | :-: |
+| BLUR | 模糊背景 |
+| COLOR | 纯色背景 |
+| PICTURE | 图片背景 |
+
+2) 效果Effect相关
+效果类继承结构：
+<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_effect.png" width="633" height="261" align="center">
+
+
+BaseEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| uniqueId | effect的唯一识别码 | String |
+| groupId | 效果Group分类id | int|
+| mEffectPath | 效果素材文件路径 | String |
+| isApplyByTheme | 是否主题添加 | boolean |
+| srcRange | 源文件区间 | VeRange |
+| trimRange | 效果裁切区间 | VeRange |
+| destRange | 效果出入区间 | VeRange |
+| effectLayerId | 效果图层id，数字越大 层级越高 | float |
+| isHadAudio | 效果是否带有音频数据 | boolean |
+| audioVolume | 音量 | int |
+
+AudioEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| mAudioInfo | 音频数据信息 {@see EffectAudioInfo} | EffectAudioInfo |
+
+EffectAudioInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| isRepeat | 是否循环,默认开始 | boolean |
+| soundTone | 变声，-60~60，正常0。{@see QEDftSoundTone}类中有提供的特定音调 | float |
+| audioFadeIn | 渐入，只对背景音乐有效 {@see AudioFade} | AudioFade |
+| audioFadeOut | 渐出，只对背景音乐有效 {@see AudioFade} | AudioFade |
+| musicMsg | 音乐信息,开发者可以用于存储音乐相关的信息 | String |
+
+AudioFade参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| type | 渐入渐入类型 {@see AudioFade.Type} | AudioFade.Type |
+| duration | 渐变时长,0则无效果 | int |
+
+AudioFade.Type参数说明：
+| 名称  | 解释  |
+| :-: | :-: |
+| FadeIn | 渐入 |
+| FadeOut | 渐出 |
+
+FloatEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| alpha | 透明度 0~100 | int |
+| anchor | 锚点,(0,0)为效果的左上角位置，（5000，5000）表示效果的中心，默认是(5000,5000)  | VeMSize |
+| mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
+
+EffectPosInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| centerPosX | 中心点-X | float |
+| centerPosY | 中心点-Y | float |
+| width | 宽 | float |
+| height | 高 | float |
+| degree | 旋转角度， 0~360 | float |
+| isHorFlip | 水平反转 | boolean |
+| isVerFlip | 垂直反转 | boolean |
+
+MosaicEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| mosaicInfo | 马赛克模糊程度数据信息 {@see MosaicInfo} | MosaicInfo |
+
+MosaicInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: | :-: |
+| horValue | 水平模糊程度 | int |
+| verValue | 垂直模糊程度 | int |
+
+SubtitleEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| textBubbleInfo | 字幕数据信息 {@see TextBubbleInfo} | TextBubbleInfo |
+
+TextBubbleInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| bSupportAnim | 是否支持动画 | boolean |
+| isAnimOn | 是否开启字幕动画 | boolean |
+| isDftTemplate | 是否默认字幕 | boolean |
+| dftDuration | 字幕默认时长 | int |
+| mTextBubbleList | 字幕数据信息 {@see TextBubble} | List(TextBubble) |
+
+
+TextBubble参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| bSupportAnim | 是否支持动画 | boolean |
+| isAnimOn | 是否开启字幕动画 | boolean |
+| isDftTemplate | 是否默认字幕 | boolean |
+| mDftText | 默认文字 | String |
+| mTextColor | 颜色，如0xFFFFFFFF,即ARGB | int |
+| mText | 文字 | String |
+| mTextAlignment | 对齐方式，在{@class TextBuble} 中定义，可以进行 '|' 位运算合并。 | int |
+| mFontPath | 字体文件路径 | String |
+| mDftTextColor | 默认颜色，如0xFFFFFFFF,即ARGB | int |
+| mShadowInfo | 字幕阴影信息 {@see ShadowInfo} | ShadowInfo |
+| mStrokeInfo | 字幕描边信息 {@see StrokeInfo} | StrokeInfo |
+
+ShadowInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| enable | 是否开启阴影 | boolean |
+| shadowXShift | 横向阴影偏移，百分比小数值，0表示无偏移，0~1，不可小于0 | float |
+| shadowYShift | 垂直阴影偏移，百分比小数值，0表示无偏移，0~1，不可小于0 | float |
+| shadowColor | 阴影颜色，如0xAA000000,即ARGB | int |
+| shadowBlurRadius | 阴影宽度，百分比小数值，0表示无阴影，0~1，不可小于0 | float |
+
+StrokeInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| strokeWPersent | 描边，百分比小数值,0表示无描边,1表示描边宽度和文字高度相同，不可小于0 | float |
+| strokeColor | 描边的颜色，如0xFFFFFFFF,即ARGB | int |
 
 #### 4. 主题剪辑功能接口
+由于剪辑操作都是在线程中异步进行的，所以操作结束后，如果需要获取成功失败信息。可以向工程注册剪辑操作监听器。
+```
+  /** 注册操作符监听器 */
+	mWorkSpace.addObserver(BaseObserver);
+```
+不再需要监听时，可以取消监听：
+```
+  /** 注销操作符监听器 */
+	mWorkSpace.removeObserver(BaseObserver);
+```
+BaseObserver说明：
+```
+public interface BaseObserver {
+
+  void onChange(BaseOperate operate);
+}
+```
+BaseOperate说明：
+```
+// 是否操作成功
+operate.success();
+```
+
+
 1）应用/切换主题
 ```
 	// themePath表示主题素材路径
@@ -339,13 +722,6 @@ ClipAddItem参数说明：
 	ClipOPMirror clipOPMirror = new ClipOPMirror(clipIndex, mirror);
 	mWorkSpace.handleOperation(clipOPMirror);
 ```
-ClipData.Mirror参数说明：
-| 名称  | 解释  |
-| :-: | :-: |
-| CLIP_FLIP_NONE | 正常 |
-| CLIP_FLIP_X | 沿X方向镜像 |
-| CLIP_FLIP_Y | 沿Y方向镜像 |
-| CLIP_FLIP_XY | 沿XY方向镜像 |
 
 
 9）旋转
@@ -364,8 +740,6 @@ ClipData.Mirror参数说明：
 	ClipOPSplit clipOPSplit = new ClipOPSplit(clipIndex, splitTime);
 	mWorkSpace.handleOperation(clipOPSplit);
 ```
-
-
 
 11）变速
 ```
@@ -435,15 +809,6 @@ ClipData.Mirror参数说明：
 	mWorkSpace.handleOperation(clipOPBackground);
 ```
 
-ClipBgData参数说明：
-| 名称  | 解释 | 类型 | 是否必须 |
-| :-: | :-: | :-: | :-: |
-| clipBgType | 背景类型 | ClipBgType | 必须 |
-| colorArray | color,最多可以支持三色渐变 | int[] | 非必须 |
-| colorAngle | 颜色渐变角度：默认0-水平方向。0~360 | int | 非必须 |
-| blurLen | 模糊程度：0~100 | int | 非必须 |
-| imagePath | 图片背景，自定义图片背景使用 | String | 非必须 |
-
 ClipBgData构造器
 ```
   /**
@@ -474,15 +839,6 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPPosInfo);
 ```
 
-ClipPosInfo参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
-| centerPosX | 中心点-X | float |
-| centerPosY | 中心点-Y | float  |
-| width | width | float|
-| height | height | float |
-| degree | 旋转角度，0~359度 | float |
-
 20）镜头参数调节
 ```
 	// clipIndex表示第几个片段，从0开始
@@ -491,21 +847,6 @@ ClipPosInfo参数说明：
 	mWorkSpace.handleOperation(clipOPParamAdjust);
 ```
 
-ClipParamAdjust参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
-| luminance | 亮度,0~100,默认50 | int |
-| contrast | 对比度,0~100,默认50 | int  |
-| saturation | 饱和度,0~100,默认50 | int|
-| sharpness | 锐度,0~100,默认50 | int |
-| colourTemp | 色温,0~100,默认50 | int |
-| vignette | 暗角,0~100,默认50| int |
-| hue | 色调,0~100,默认50| int |
-| shadow | 阴影,0~100,默认50| int |
-| highlight | 高光,0~100,默认50| int |
-| fade | 褪色,0~100,默认0| int |
-
-
 21）滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
@@ -513,12 +854,6 @@ ClipParamAdjust参数说明：
 	ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
 	mWorkSpace.handleOperation(clipOPFilter);
 ```
-FilterInfo参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
-| filterPath | 滤镜路径 | String |
-| filterLevel | 滤镜程度,0~100 | int  |
-
 
 22）特效滤镜
 ```
@@ -527,11 +862,6 @@ FilterInfo参数说明：
 	ClipOPFxFilter clipOPFxFilter = new ClipOPFxFilter(clipIndex, fxFilterInfo);
 	mWorkSpace.handleOperation(clipOPFxFilter);
 ```
-FxFilterInfo参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
-| filterPath | 特效滤镜路径 | String |
-
 
 23）转场
 ```
@@ -540,13 +870,6 @@ FxFilterInfo参数说明：
 	ClipOPTrans clipOPTrans = new ClipOPTrans(clipIndex, crossInfo);
 	mWorkSpace.handleOperation(clipOPTrans);
 ```
-CrossInfo参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
-| crossPath | 转场路径 | String |
-| duration | 转场时长 | int |
-| cfgIndex | 转场效果样式，有些素材包含多种效果，表示使用第几个效果，默认0 | int |
-
 
 #### 6. Effect剪辑功能接口
 1）添加
@@ -566,17 +889,6 @@ EffectAddItem参数说明：
 | effectLayerId | 效果的层级信息，是一个浮点数，数字越大 层级越高 | float | 非必须 |
 | mEffectPosInfo | 素材位置数据,基于steamsize的，使用的话EffectPosInfo有关于surfacesize的转化 | EffectPosInfo | 非必须 |
 
-
-EffectPosInfo参数说明：
-| 名称  | 解释 | 类型 | 是否必须 |
-| :-: | :-: | :-: | :-: |
-| centerPosX | 中心点-X | degree | 必须 |
-| centerPosY | 中心点-Y | degree | 必须 |
-| width | 宽 | degree | 必须 |
-| height | 高 | degree | 必须 |
-| degree | 旋转角度， 0~360 | degree | 非必须 |
-| isHorFlip | 水平反转 | boolean | 非必须 |
-| isVerFlip | 垂直反转 | boolean | 非必须 |
 
 2）复制
 ```
@@ -667,11 +979,6 @@ EffectPosInfo参数说明：
 	EffectOPAudioFade effectOPAudioFade = new EffectOPAudioFade(groupId, effectIndex, audioFade);
 	mWorkSpace.handleOperation(effectOPAudioFade);
 ```
-AudioFade参数说明：
-| 名称  | 解释 | 类型 | 是否必须 |
-| :-: | :-: | :-: | :-: |
-| type | 类型，渐入或渐出 | AudioFade.Type | 必须 |
-| duration | 渐变时长,0则无效果 | int | 必须 |
 
 11）音频循环
 ```
@@ -737,7 +1044,17 @@ AudioFade参数说明：
 ```
 快速刷新用于快速刷新播放器，提高播放器刷新性能使用，不会保存到工程中，所以快速刷新操作结束后，需要再进行一次非快速刷新的修改，才能真实起作用。需要结合EffectOPLock操作使用，锁定播放器中的素材刷新。
 
-17）显示静态图片
+
+
+17）锚点修改
+```
+	// clipIndex表示第几个片段，从0开始
+	// anchor锚点位置数据
+	EffectOPAnchor effectOPAnchor = new EffectOPAnchor(clipIndex, anchor);
+	mWorkSpace.handleOperation(anchor);
+```
+
+18）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -748,7 +1065,7 @@ AudioFade参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-18）马赛克模糊程度
+19）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -756,15 +1073,9 @@ AudioFade参数说明：
 	EffectOPMosaicInfo effectOPMosaicInfo = new EffectOPMosaicInfo(effectIndex, mosaicInfo);
 	mWorkSpace.handleOperation(effectOPMosaicInfo);
 ```
-MosaicInfo参数说明：
-| 名称  | 解释 | 类型 | 是否必须 |
-| :-: | :-: | :-: | :-: |
-| horValue | 水平模糊程度 | int | 必须 |
-| verValue | 垂直模糊程度 | int | 必须 |
 
 
-
-19）字幕动画开关
+20）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -773,7 +1084,7 @@ MosaicInfo参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-20）字幕文本
+21）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -792,7 +1103,7 @@ MosaicInfo参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-21）字幕字体
+22）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -812,7 +1123,7 @@ MosaicInfo参数说明：
 ```
 
 
-22）字幕文本颜色
+23）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -831,9 +1142,7 @@ MosaicInfo参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-
-
-23）字幕文本对齐方式
+24）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -869,7 +1178,7 @@ MosaicInfo参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-24）字幕文本阴影
+25）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -884,26 +1193,17 @@ MosaicInfo参数说明：
 	// effectIndex为同类型中第几个效果
 	// textIndex表示组合字幕中的第几个字幕
 	// shadowInfo表示文本阴影信息 {@see ShadowInfo}
-	EffectOPMultiSubtitleShadow effectOPMultiSubtitleShadow = new EffectOPMultiSubtitleShadow(effectIndex, textIndex, color);
+	EffectOPMultiSubtitleShadow effectOPMultiSubtitleShadow = new EffectOPMultiSubtitleShadow(effectIndex, textIndex, shadowInfo);
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
-MosaicInfo参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: |
-| enable | 是否开启阴影 | boolean |
-| shadowXShift | 横向阴影偏移，百分比小数值，0表示无偏移，0~1，不可小于0 | float |
-| shadowYShift | 垂直阴影偏移，百分比小数值，0表示无偏移，0~1，不可小于0 | float |
-| shadowColor | 阴影颜色，如0xAA000000,即ARGB | int |
-| shadowBlurRadius | 阴影宽度，百分比小数值，0表示无阴影，0~1，不可小于0 | float |
 
-
-25）字幕文本描边
+26）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
 	// strokeInfo表示文本描边信息 {@see StrokeInfo}
-	EffectOPSubtitleStroke effectOPSubtitleStroke = new EffectOPSubtitleStroke(effectIndex, shadowInfo);
+	EffectOPSubtitleStroke effectOPSubtitleStroke = new EffectOPSubtitleStroke(effectIndex, strokeInfo);
 	mWorkSpace.handleOperation(effectOPSubtitleStroke);
 ```
 组合字幕：
@@ -912,14 +1212,9 @@ MosaicInfo参数说明：
 	// effectIndex为同类型中第几个效果
 	// textIndex表示组合字幕中的第几个字幕
 	// strokeInfo表示文本描边信息 {@see StrokeInfo}
-	EffectOPMultiSubtitleStroke effectOPMultiSubtitleStroke = new EffectOPMultiSubtitleStroke(effectIndex, textIndex, color);
+	EffectOPMultiSubtitleStroke effectOPMultiSubtitleStroke = new EffectOPMultiSubtitleStroke(effectIndex, textIndex, strokeInfo);
 	mWorkSpace.handleOperation(effectOPMultiSubtitleStroke);
 ```
-StrokeInfo参数说明：
-| 名称  | 解释 | 类型 |
-| :-: | :-: | :-: |
-| strokeWPersent | 描边，百分比小数值,0表示无描边,1表示描边宽度和文字高度相同，不可小于0 | float |
-| strokeColor | 描边的颜色，如0xFFFFFFFF,即ARGB | int |
 
 #### 7. 导出
 ```
@@ -988,7 +1283,7 @@ public interface IExportListener {
 ```
 
 #### 8. 高级玩法-剪辑操作拓展功能
-由于各开发者对剪辑玩法的期望不同，为了支持开发者在玩法上的创意想法，剪辑操作允许开发者进行自定义组合。
+由于各开发者对剪辑玩法关联的期望不同，为了支持开发者在玩法上的创意想法，剪辑操作允许开发者进行自定义组合。
 如：开发者期望对Clip倒放后立刻对Clip进行静音。则开发者可以自定义操作符：
 ```
 public class ClipOPReverseMute extends BaseOperate {
@@ -1000,10 +1295,13 @@ public class ClipOPReverseMute extends BaseOperate {
   }
 
   @Override public boolean operateRun(IEngine engine) {
+    // 编辑倒放
     ClipOPReverse clipOPReverse = new ClipOPReverse(clipIndex, true);
     clipOPReverse.operateRun(engine);
+    // 编辑静音
     ClipOPMute clipOPMute = new ClipOPMute(clipIndex, true);
     clipOPMute.operateRun(engine);
+    // 返回最终的成功/失败
     return true;
   }
 }
@@ -1014,10 +1312,70 @@ ClipOPReverseMute clipOPReverseMute = new ClipOPReverseMute(clipIndex);
 workspace.handleOperation(clipOPReverseMute);
 ```
 
-#### 9. 高级玩法-对撤销/重做的支持
+#### 9. 高级玩法-对撤销/重做的支持（此功能开发中，如遇问题，可以联系我们）
+当开发者想进行一些撤销/重做的玩法时，可以在进行剪辑操作前，对需要支持撤销的剪辑设置是否支持undo。即：
+```
+	// 设置支持undo
+	baseOperate.setSupportUndo(true);
+```
+设置后，workspace将对当前操作前的状态，记录一个状态点。(注：目前最多支持30个undo/redo的记录点)
+
+当需要返回上一个记录点时，执行撤销：
+```
+	// 执行撤销
+	workspace.undo();
+```
+当需要取消撤销动作时时，可以返回上一次执行撤销前的状态。执行重做：
+```
+	// 执行重做
+	workspace.redo();
+```
+由于撤销/重做都有数量，所以可以通过注册监听器的方式，获取undo/redo的数量回调。
+```
+	workspace.setDequeCountListener(IDequeCountListener);
+```
+IDequeCountListener说明：
+```
+public interface IDequeCountListener {
+  // undoSize为数量变化时的目前可以支持的undo()操作数量
+  // redoSize为数量变化时的目前可以支持的redo()操作数量
+  void onDequeCountChange(int undoSize, int redoSize);
+}
+```
+
+执行Undo/Redo时，对通知出去的Operate将会进行包装。Undo通知的为UndoOperate，Redo通知的为RedoOperate。获取源操作符的方式为：
+```
+UndoOperate.getSrcOperate();
+
+RedoOperate.getSrcOperate();
+```
+BaseOperate中关于Undo/Redo的信息：
+```
+// 是否处理过undo
+operate.isUndoHandled();
+// 是否处理undo
+operate.isDoingUndo();
+// 获取操作类型
+BaseOperate.EngineWorkType type = operate.getOperateType();
+```
+BaseOperate.EngineWorkType参数说明：
+| 名称  | 解释 |
+| :-: | :-: |
+| normal | 正常|
+| undo | 撤销 |
+| redo | 重做 |
 
 
-### 五、卡点视频工程功能开发接入
+#### 10. 高级玩法-自由黑帧模式
+当初始化时设置isUseStuffClip为true时，即开启自由黑帧模式。自由黑帧模式和普通剪辑模式的主要区别，即在对效果出入区间的限制上。
+##### 普通剪辑模式
+如果片段clip的播放效果总时长在60s，而贴纸效果的出入区间是在55s~70s。则导出时，视频总长度只会是60s，贴纸时间为55s~60s，60s以后的内容将自动截断。
+普通剪辑模式下，导出视频的总长度，由片段的最终时长决定。
+##### 自有黑帧模式
+如果片段clip的播放效果总时长在60s，而贴纸效果的出入区间是在55s~70s。则导出时，视频总长度将会是70s，贴纸时间为55s~70s，60s以后的片段内容将是黑帧画面，但是不影响贴纸的内容展示。
+自有黑帧模式下，导出视频的总长度，由效果和片段的最终时长共同决定。
+
+### 七、卡点视频工程功能开发接入
 
 #### 1. 卡点视频工程
 ##### 创建和加载
@@ -1041,7 +1399,23 @@ workspace.handleOperation(clipOPReverseMute);
 【详情请参看剪辑工程播放器相关。】
 
 #### 3. 获取片段节点信息
+```
+ArrayList<SlideInfo> slideInfos = workspace.getSlideInfoList();
+```
+SlideInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| filePath | 片段文件路径 | String |
+| sourceType | 文件类型{@see Type} | SlideInfo.Type |
+| index | 索引 | int |
+| duration | 片段时长 | int |
+| previewPos | 预览位置 | int |
 
+SlideInfo.Type参数说明：
+| 名称  | 解释 |
+| :-: | :-: |
+| Image | 图片|
+| Video | 视频 |
 
 #### 4. 卡点视频剪辑功能接口
 1）排序
@@ -1063,7 +1437,7 @@ workspace.handleOperation(clipOPReverseMute);
 【详情请参看剪辑工程导出相关。】
 
 
-### 六、 缩略图获取
+### 八、 缩略图获取
 ##### 1. 工程相关缩略图获取
 ```
   /**
@@ -1110,7 +1484,7 @@ workspace.handleOperation(clipOPReverseMute);
   Bitmap bitmap = QEThumbnailTools.getVideoThumbnail(String filePath, int width, int height, int offset);
 ```
 
-### 七、 工具类QETools
+### 九、 工具类QETools
 ```
   /**
    * 视频倒放

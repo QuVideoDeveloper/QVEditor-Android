@@ -2,9 +2,7 @@ package com.quvideo.application;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.quvideo.application.utils.FileUtils;
-
 import java.io.File;
 
 /**

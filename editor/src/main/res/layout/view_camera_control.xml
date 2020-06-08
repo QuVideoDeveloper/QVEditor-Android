@@ -57,6 +57,7 @@
     android:text="@string/mn_cam_func_flash"
     android:textColor="@android:color/white"
     android:textSize="11sp"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnFront" />
 
@@ -70,6 +71,7 @@
     android:text="@string/mn_cam_func_zoom"
     android:textColor="@android:color/white"
     android:textSize="11sp"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnFlash" />
 
@@ -83,6 +85,7 @@
     android:text="@string/mn_cam_func_exposure"
     android:textColor="@android:color/white"
     android:textSize="11sp"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnZoom" />
 
@@ -96,6 +99,7 @@
     android:text="@string/mn_edit_title_ratio"
     android:textColor="@android:color/white"
     android:textSize="11sp"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnExposure" />
 
@@ -109,6 +113,7 @@
     android:text="@string/mn_edit_title_filter"
     android:textColor="@android:color/white"
     android:textSize="11sp"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnRatio" />
 
@@ -122,6 +127,7 @@
     android:text="@string/mn_cam_func_face_beauty"
     android:textColor="@android:color/white"
     android:textSize="11sp"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnFilter" />
 

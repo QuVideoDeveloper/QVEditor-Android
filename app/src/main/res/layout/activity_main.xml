@@ -43,16 +43,18 @@
         android:textColor="@android:color/white"/>
 
     <ImageView
-        android:id="@+id/img_edit"
-        android:layout_width="155dp"
-        android:layout_height="183dp"
-        android:layout_marginLeft="15dp"
-        android:onClick="gotoEdit"
-        app:layout_constraintTop_toTopOf="@id/img_camera"
-        app:layout_constraintBottom_toBottomOf="@id/img_camera"
-        app:layout_constraintStart_toEndOf="@id/img_camera"
-        app:layout_constraintEnd_toEndOf="@id/img_templte"
-        android:src="@drawable/home_icon_edit"/>
+      android:id="@+id/img_edit"
+      android:layout_width="155dp"
+      android:layout_height="183dp"
+      android:layout_marginLeft="15dp"
+      android:onClick="gotoEdit"
+      android:src="@drawable/home_icon_edit"
+      app:layout_constraintBottom_toBottomOf="@id/img_camera"
+      app:layout_constraintEnd_toEndOf="@id/img_templte"
+      app:layout_constraintStart_toEndOf="@id/img_camera"
+      app:layout_constraintTop_toTopOf="@id/img_camera"
+      app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

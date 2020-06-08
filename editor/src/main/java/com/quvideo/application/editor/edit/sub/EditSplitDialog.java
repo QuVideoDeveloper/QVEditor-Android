@@ -2,9 +2,8 @@ package com.quvideo.application.editor.edit.sub;
 
 import android.content.Context;
 import android.view.View;
-
-import com.quvideo.application.TimeFormatUtil;
 import com.quvideo.application.editor.R;
+import com.quvideo.application.TimeFormatUtil;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
@@ -12,7 +11,6 @@ import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPSplit;
-
 import xiaoying.utils.LogUtils;
 
 public class EditSplitDialog extends BaseMenuView {

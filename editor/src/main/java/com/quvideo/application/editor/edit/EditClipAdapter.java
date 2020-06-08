@@ -109,7 +109,7 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
       if (position < clipSize) {
         changeSelect(position);
         if (workSpace != null && workSpace.getPlayerAPI() != null && workSpace.getPlayerAPI().getPlayerControl() != null) {
-          int time = workSpace.getClipAPI().getClipRealStartPosition(position);
+          int time = workSpace.getClipAPI().getClipStartPosition(position);
           workSpace.getPlayerAPI().getPlayerControl().seek(time);
         }
       } else if (onAddClipListener != null) {
