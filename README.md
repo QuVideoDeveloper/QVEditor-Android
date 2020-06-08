@@ -41,7 +41,7 @@
 剪辑SDK核心模块包括剪辑工程、片段、音频、效果、播放器等。
 
 剪辑工程是SDK中最基础的模块，它负责生成、保存并维护SDK引擎剪辑的上下文环境。片段是工程的基础，是导出视频的组成元素。效果包括贴纸、画中画、字幕、特效、水印、马赛克等，各种效果、音频和片段共同组合形成最终的视频输出。片段上可以添加各种滤镜，片段之间可以设置不同的转场效果。
-![Alt text](./1591460467429.png)
+![image](https://github.com/QuVideoDeveloper/QVEditor-Android/master/IMG/image_module.png)
 
 #### 3. 图层轨道
 效果和音频可以在指定区间设置自己的图层（水印和背景音乐除外），高图层的效果可以对低图层的效果起作用或遮挡低图层效果。当两个效果在同一图层时，如果出入点时间不覆盖，则不互相影响；如果出入点时间覆盖，则覆盖时间区间的效果将无法预期。所以尽量给每个效果设定独立的图层，以免最终视频效果不符合预期。
@@ -59,12 +59,12 @@ srcRange:：源文件区间，视频源文件选择的时间区间。
 trimRange：裁剪区间，裁剪片段的起始点和长度。
 destRange：出入区间，效果在工程上的起始点和长度。
 
-![Alt text](./1591532893111.png)
+![image](https://github.com/QuVideoDeveloper/QVEditor-Android/master/IMG/image_range.png)
 
 
 #### 5. 坐标系：
 位置信息使用的坐标系，统一按左上角位原点，横向向右为正，纵向向下为正。以工程比例宽高的万分比建立坐标系。如工程分辨率为720*1080，则左上角为（0，0），右上角为（10000，0），左下角为（0，10000），右下角为（10000，10000）。
-![Alt text](./1591532583705.png)
+![image](https://github.com/QuVideoDeveloper/QVEditor-Android/master/IMG/image_xyz.png)
 
 #### 6. 剪辑队列和剪辑操作符
 
@@ -81,7 +81,7 @@ destRange：出入区间，效果在工程上的起始点和长度。
 1）剪辑SDK使用的minSdkVersion是21。为了保证兼容性，请在创建工程时将minSdkVersion设置为21。
 
 打开Android Studio，新建工程如下，填写Application name和Company Domain。点击Next。将minimum SDK更改为API 21:Android 5.0(Lollipop)。点击Finish。
-![Alt text](./1590631465069.png)
+![image](https://github.com/QuVideoDeveloper/QVEditor-Android/master/IMG/image_create.png)
 
 2）在项目根目录的build.gradle文件中，添加配置
 
