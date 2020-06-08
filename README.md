@@ -416,25 +416,25 @@ ClipData.Mirror参数说明：
 
 CrossInfo参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | crossPath | 转场路径 | String |
 | duration | 转场时长 | int |
 | cfgIndex | 转场效果样式，有些素材包含多种效果，表示使用第几个效果，默认0 | int |
 
 FilterInfo参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | filterPath | 滤镜路径 | String |
 | filterLevel | 滤镜程度,0~100 | int  |
 
 FxFilterInfo参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | filterPath | 特效滤镜路径 | String |
 
 ClipParamAdjust参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | luminance | 亮度,0~100,默认50 | int |
 | contrast | 对比度,0~100,默认50 | int  |
 | saturation | 饱和度,0~100,默认50 | int|
@@ -448,7 +448,7 @@ ClipParamAdjust参数说明：
 
 ClipPosInfo参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | centerPosX | 中心点-X | float |
 | centerPosY | 中心点-Y | float  |
 | width | width | float|
@@ -525,7 +525,7 @@ FloatEffect参数说明：
 
 EffectPosInfo参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | centerPosX | 中心点-X | float |
 | centerPosY | 中心点-Y | float |
 | width | 宽 | float |
@@ -541,7 +541,7 @@ MosaicEffect参数说明：
 
 MosaicInfo参数说明：
 | 名称  | 解释 | 类型 |
-| :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: |
 | horValue | 水平模糊程度 | int |
 | verValue | 垂直模糊程度 | int |
 
