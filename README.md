@@ -26,43 +26,52 @@
 ####  1. 支持格式
 * 输入规范：
 
-视频格式：MP4、MOV、WMV
-音频格式：MP3、AAC、M4A
-图片格式：JPG、PNG
-视频编码：H264、WMV、MPEG4
-音频编码：MP3、AAC
+	视频格式：MP4、MOV、WMV。
+	音频格式：MP3、AAC、M4A。
+	图片格式：JPG、PNG。
+	视频编码：H264、WMV、MPEG4。
+	音频编码：MP3、AAC。
+
 * 输出规范：
 
-视频格式：MP4、MOV
-视频编码：H264
-音频编码：AAC
+	视频格式：MP4、MOV
+	视频编码：H264
+	音频编码：AAC
 
 #### 2. 模块结构
 剪辑SDK核心模块包括剪辑工程、片段、音频、效果、播放器等。
 
 剪辑工程是SDK中最基础的模块，它负责生成、保存并维护SDK引擎剪辑的上下文环境。片段是工程的基础，是导出视频的组成元素。效果包括贴纸、画中画、字幕、特效、水印、马赛克等，各种效果、音频和片段共同组合形成最终的视频输出。片段上可以添加各种滤镜，片段之间可以设置不同的转场效果。
+
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_module.png" width="631" height="655" align="center">
 
 #### 3. 图层轨道
 效果和音频可以在指定区间设置自己的图层（水印和背景音乐除外），高图层的效果可以对低图层的效果起作用或遮挡低图层效果。当两个效果在同一图层时，如果出入点时间不覆盖，则不互相影响；如果出入点时间覆盖，则覆盖时间区间的效果将无法预期。所以尽量给每个效果设定独立的图层，以免最终视频效果不符合预期。
 
 图层限制区间：
-音效/录音图层：[10,10000)，左边闭区间，右边开区间。
-效果图层：[10000,1000000)，左边闭区间，右边开区间。(贴纸、字幕、画中画、特效、马赛克)
+	音效/录音图层：[10,10000)，左边闭区间，右边开区间。
+	效果图层：[10000,1000000)，左边闭区间，右边开区间。(贴纸、字幕、画中画、特效、马赛克)
 
 例：
-1）贴纸1在图层100000，贴纸2在图层90000，如果贴纸1和贴纸2的位置和时间相同时，则贴纸1会遮挡贴纸2。
-2）特效1在图层100000，贴纸1在图层90000，贴纸2在图层110000，如果特效1、贴纸1和贴纸2的时间相同，则特效对贴纸1产生影响，不对贴纸2产生影响。
+	1）贴纸1在图层100000，贴纸2在图层90000，如果贴纸1和贴纸2的位置和时间相同时，则贴纸1会遮挡贴纸2。
+	2）特效1在图层100000，贴纸1在图层90000，贴纸2在图层110000，如果特效1、贴纸1和贴纸2的时间相同，则特效对贴纸1产生影响，不对贴纸2产生影响。
 
 #### 4. 区间Range相关：
-srcRange:：源文件区间，视频源文件选择的时间区间。
-trimRange：裁剪区间，裁剪片段的起始点和长度。
-destRange：出入区间，效果在工程上的起始点和长度。
+
+  srcRange:：源文件区间，视频源文件选择的时间区间。
+  trimRange：裁剪区间，裁剪片段的起始点和长度。
+  destRange：出入区间，效果在工程上的起始点和长度。
+
+
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_range.png" width="637" height="441" align="center">
+
 
 #### 5. 坐标系：
 位置信息使用的坐标系，统一按左上角位原点，横向向右为正，纵向向下为正。以工程比例宽高的万分比建立坐标系。如工程分辨率为720*1080，则左上角为（0，0），右上角为（10000，0），左下角为（0，10000），右下角为（10000，10000）。
+
+
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="594" height="547" align="center">
+
 
 #### 6. 剪辑操作符
 由于剪辑需要始终保持单线程操作，所以在工程剪辑时，我们将每个操作定义为一个剪辑操作符BaseOperate。剪辑操作符有sdk已经预设的大量操作符，开发者也可以自行组合实现新的操作符。执行时，开发者只需要创建操作符，并将操作符交给workspace执行即可，接下来就是等待执行完成的回调。
@@ -85,13 +94,17 @@ workspace.syncOperation(operate)；
 
 #### 1. 前期准备
 请向趣维公司申请允许使用剪辑SDK的license文件，该文件具备有效期。如有升级需要，请自行实现更新系统。
+
 对剪辑SDK文档中的名词解释和基础结构与概念先做了解。
 
 #### 2. 创建一个Android Studio工程
 1）剪辑SDK使用的minSdkVersion是21。为了保证兼容性，请在创建工程时将minSdkVersion设置为21。
 
 打开Android Studio，新建工程如下，填写Application name和Company Domain。点击Next。将minimum SDK更改为API 21:Android 5.0(Lollipop)。点击Finish。
+
+
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_create.png" width="633" height="474" align="center">
+
 
 2）在项目根目录的build.gradle文件中，添加配置
 
@@ -185,6 +198,7 @@ XytInfo xytInfo = XytManager.getXytInfo(ttidLong);
 */
 XytInfo xytInfo = XytManager.getXytInfo(xytPath);
 ```
+
 XytInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: | :-: |
@@ -371,8 +385,10 @@ public interface EffectAPI {
 
 ##### 数据结构说明
 1) 片段Clip相关
+
+
 ClipData参数说明：
-| 名称  | 解释 | 类型 |
+| 名称 | 解释 | 类型 |
 | :-: | :-: | :-: |
 | uniqueId | clip的唯一识别码 | String |
 | mType | 类型{@see ClipData.ClipType}  | ClipType |
@@ -472,7 +488,9 @@ ClipBgData.ClipBgType参数说明：
 | PICTURE | 图片背景 |
 
 2) 效果Effect相关
+
 效果类继承结构：
+
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_effect.png" width="633" height="261" align="center">
 
 
