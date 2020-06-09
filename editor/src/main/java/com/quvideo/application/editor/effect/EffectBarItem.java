@@ -16,6 +16,7 @@ public class EffectBarItem {
   public static final int ACTION_MIRROR = 8;
   public static final int ACTION_ROTATE = 9;
   public static final int ACTION_DEL = 10;
+  public static final int ACTION_POSITION = 11;
 
   private int action;
   private int resId;

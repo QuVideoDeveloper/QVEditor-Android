@@ -24,6 +24,7 @@ import com.quvideo.application.gallery.provider.IGalleryProvider;
 import com.quvideo.application.utils.RandomUtil;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.model.AudioEffect;
@@ -58,7 +59,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
 
   private int currentTime = 0;
 
-  public EditEffectDialog(Context context, MenuContainer container, IQEWorkSpace workSpace, int groupId) {
+  public EditEffectDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
+      int groupId) {
     super(context, workSpace);
     this.groupId = groupId;
     workSpace.getPlayerAPI().getPlayerControl().pause();
@@ -73,7 +75,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
           || operate instanceof EffectOPDel
           || operate instanceof EffectOPAudioReplace) {
         // 刷新数据
-        if (mWorkSpace.getPlayerAPI() != null && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+        if (mWorkSpace.getPlayerAPI() != null
+            && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
           mWorkSpace.getPlayerAPI().getPlayerControl().pause();
         }
         List<BaseEffect> dataList = mWorkSpace.getEffectAPI().getEffectList(groupId);
@@ -82,7 +85,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
         if (selectIndex >= 0) {
           BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);
           if (baseEffect != null) {
-            if (mWorkSpace.getPlayerAPI() != null && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+            if (mWorkSpace.getPlayerAPI() != null
+                && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
               mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
             }
           }
@@ -106,7 +110,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
     mEffectAdapter = new EditEffectAdapter(getActivity(), groupId, mOnEffectlickListener);
     // effect
     mRecyclerView = view.findViewById(R.id.clip_recyclerview);
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+    mRecyclerView.setLayoutManager(
+        new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
     mRecyclerView.setAdapter(mEffectAdapter);
     List<BaseEffect> dataList = mWorkSpace.getEffectAPI().getEffectList(groupId);
     mEffectAdapter.updateList(dataList);
@@ -119,7 +124,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
     }
     // 操作view
     RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
-    editRecyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+    editRecyclerView.setLayoutManager(
+        new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
     mEffectOperateAdapter = new EffectOperateAdapter(getOperateList(), mItemOnClickListener);
     editRecyclerView.setAdapter(mEffectOperateAdapter);
   }
@@ -134,12 +140,14 @@ public class EditEffectDialog extends BaseEffectMenuView {
     @Override public void onClick(View view, EffectBarItem operate) {
       int index = mEffectAdapter.getSelectIndex();
       if (index < 0) {
-        ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
+        ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+            R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
         return;
       }
       BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
       if (baseEffect == null) {
-        ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
+        ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+            R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
         return;
       }
       switch (operate.getAction()) {
@@ -147,7 +155,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
           if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
             new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_TRIM:
@@ -157,14 +167,18 @@ public class EditEffectDialog extends BaseEffectMenuView {
           if (baseEffect instanceof SubtitleEffect) {
             new EditEffectInputDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_VOLUME:
           if (baseEffect.isHadAudio) {
-            new EditEffectVolumeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, null);
+            new EditEffectVolumeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
+                null);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_ALPHA:
@@ -175,14 +189,17 @@ public class EditEffectDialog extends BaseEffectMenuView {
             EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
             effectPosInfo.width *= 1.1f;
             effectPosInfo.height *= 1.1f;
-            if (effectPosInfo.width > 30000 || effectPosInfo.height > 30000) {
-              ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
+            if (effectPosInfo.width > 3000 || effectPosInfo.height > 3000) {
+              ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                  R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
               return;
             }
             EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
             mWorkSpace.handleOperation(effectOPPosInfo);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_SCALE_LESS:
@@ -190,21 +207,27 @@ public class EditEffectDialog extends BaseEffectMenuView {
             EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
             effectPosInfo.width *= 0.9f;
             effectPosInfo.height *= 0.9f;
-            if (effectPosInfo.width < 100 || effectPosInfo.height < 100) {
-              ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
+            if (effectPosInfo.width < 5 || effectPosInfo.height < 5) {
+              ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                  R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
               return;
             }
             EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
             mWorkSpace.handleOperation(effectOPPosInfo);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_MAGIC:
           if (baseEffect instanceof AudioEffect) {
-            new EditEffectToneDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, null);
+            new EditEffectToneDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
+                null);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_MIRROR:
@@ -218,7 +241,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
             EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
             mWorkSpace.handleOperation(effectOPPosInfo);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_ROTATE:
@@ -229,48 +254,57 @@ public class EditEffectDialog extends BaseEffectMenuView {
             EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
             mWorkSpace.handleOperation(effectOPPosInfo);
           } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_support), Toast.LENGTH_LONG);
+            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+                getContext().getString(R.string.mn_edit_tips_no_support),
+                Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
           mWorkSpace.handleOperation(effectOPDel);
           break;
+        case EffectBarItem.ACTION_POSITION:
+          new EditEffectPositionDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
+              null);
+          break;
         default:
-          ToastUtils.show(EditorApp.Companion.getInstance().getApp(), getContext().getString(R.string.mn_edit_tips_no_define), Toast.LENGTH_LONG);
+          ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+              getContext().getString(R.string.mn_edit_tips_no_define),
+              Toast.LENGTH_LONG);
           break;
       }
     }
   };
 
-  private EditEffectAdapter.OnEffectlickListener mOnEffectlickListener = new EditEffectAdapter.OnEffectlickListener() {
-    @Override public void onClick(int index, BaseEffect item) {
-      if (item == null || index < 0) {
-        // TODO 添加
-        if (XYSdkConstants.GROUP_ID_COLLAGES == groupId) {
-          currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
-          go2choosePhoto();
-        } else if (XYSdkConstants.GROUP_ID_BGMUSIC == groupId
-            || XYSdkConstants.GROUP_ID_DUBBING == groupId) {
-          new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
-        } else if (XYSdkConstants.GROUP_ID_RECORD == groupId) {
-          if (hasPermissionsGranted(getActivity())) {
-            new EditDubDialog(getContext(), mMenuContainer, mWorkSpace, null);
+  private EditEffectAdapter.OnEffectlickListener mOnEffectlickListener =
+      new EditEffectAdapter.OnEffectlickListener() {
+        @Override public void onClick(int index, BaseEffect item) {
+          if (item == null || index < 0) {
+            // TODO 添加
+            if (XYSdkConstants.GROUP_ID_COLLAGES == groupId) {
+              currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+              go2choosePhoto();
+            } else if (XYSdkConstants.GROUP_ID_BGMUSIC == groupId
+                || XYSdkConstants.GROUP_ID_DUBBING == groupId) {
+              new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
+            } else if (XYSdkConstants.GROUP_ID_RECORD == groupId) {
+              if (hasPermissionsGranted(getActivity())) {
+                new EditDubDialog(getContext(), mMenuContainer, mWorkSpace, null);
+              } else {
+                ActivityCompat.requestPermissions(getActivity(), AUDIO_RECORD_PERMISSIONS, 1);
+              }
+            } else {
+              new EffectAddDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
+            }
           } else {
-            ActivityCompat.requestPermissions(getActivity(), AUDIO_RECORD_PERMISSIONS, 1);
+            BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
+            if (baseEffect != null) {
+              mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
+              currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+            }
           }
-        } else {
-          new EffectAddDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
         }
-      } else {
-        BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
-        if (baseEffect != null) {
-          mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
-          currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
-        }
-      }
-    }
-  };
+      };
 
   private boolean hasPermissionsGranted(Activity activity) {
     for (String permission : AUDIO_RECORD_PERMISSIONS) {
@@ -307,9 +341,10 @@ public class EditEffectDialog extends BaseEffectMenuView {
           EffectAddItem effectAddItem = new EffectAddItem();
           effectAddItem.mEffectPath = mediaList.get(0).getFilePath();
           effectAddItem.destRange = new VeRange(currentTime, 0);
+          VeMSize streamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
           EffectPosInfo effectPosInfo = new EffectPosInfo();
-          effectPosInfo.centerPosX = RandomUtil.randInt(1000, 9000);
-          effectPosInfo.centerPosY = RandomUtil.randInt(1000, 9000);
+          effectPosInfo.centerPosX = streamSize.width * RandomUtil.randInt(1000, 9000) / 10000f;
+          effectPosInfo.centerPosY = streamSize.height * RandomUtil.randInt(1000, 9000) / 10000f;
           effectAddItem.mEffectPosInfo = effectPosInfo;
           EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, 0, effectAddItem);
           mWorkSpace.handleOperation(effectOPAdd);
@@ -340,14 +375,26 @@ public class EditEffectDialog extends BaseEffectMenuView {
 
   private List<EffectBarItem> getOperateList() {
     List<EffectBarItem> list = new ArrayList<>();
+    if (groupId == XYSdkConstants.GROUP_ID_STICKER
+        || groupId == XYSdkConstants.GROUP_ID_MOSAIC
+        || groupId == XYSdkConstants.GROUP_ID_COLLAGES
+        || groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_POSITION, R.drawable.edit_icon_edit_nor, "位置"));
+    }
     if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_EDIT, R.drawable.edit_icon_edit_nor, getContext().getString(R.string.mn_edit_bgm_edit)));
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_EDIT, R.drawable.edit_icon_edit_nor,
+              getContext().getString(R.string.mn_edit_bgm_edit)));
     }
     if (groupId != XYSdkConstants.GROUP_ID_BGMUSIC) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n, getContext().getString(R.string.mn_edit_title_trim)));
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
+              getContext().getString(R.string.mn_edit_title_trim)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_INPUT, R.drawable.edit_icon_key_nor, getContext().getString(R.string.mn_edit_subtitle_input)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_INPUT, R.drawable.edit_icon_key_nor,
+          getContext().getString(R.string.mn_edit_subtitle_input)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC
         || groupId == XYSdkConstants.GROUP_ID_DUBBING
@@ -355,40 +402,50 @@ public class EditEffectDialog extends BaseEffectMenuView {
         || groupId == XYSdkConstants.GROUP_ID_STICKER
         || groupId == XYSdkConstants.GROUP_ID_STICKER_FX
         || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_VOLUME, R.drawable.edit_icon_muteoff_n, getContext().getString(R.string.mn_edit_title_volume)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_VOLUME, R.drawable.edit_icon_muteoff_n,
+          getContext().getString(R.string.mn_edit_title_volume)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_STICKER
         || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
         || groupId == XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK
         || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_ALPHA, R.drawable.edit_icon_alpha_nor, getContext().getString(R.string.mn_edit_alpha_change)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_ALPHA, R.drawable.edit_icon_alpha_nor,
+          getContext().getString(R.string.mn_edit_alpha_change)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_STICKER
         || groupId == XYSdkConstants.GROUP_ID_MOSAIC
         || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
         || groupId == XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK
         || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_SCALE_MORE, R.drawable.edit_icon_scale_more_nor, getContext().getString(R.string.mn_edit_zoom_in)));
-      list.add(new EffectBarItem(EffectBarItem.ACTION_SCALE_LESS, R.drawable.edit_icon_scale_less_nor, getContext().getString(R.string.mn_edit_zoom_out)));
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_SCALE_MORE, R.drawable.edit_icon_scale_more_nor,
+              getContext().getString(R.string.mn_edit_zoom_in)));
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_SCALE_LESS, R.drawable.edit_icon_scale_less_nor,
+              getContext().getString(R.string.mn_edit_zoom_out)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC
         || groupId == XYSdkConstants.GROUP_ID_DUBBING
         || groupId == XYSdkConstants.GROUP_ID_RECORD) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_MAGIC, R.drawable.edit_icon_changevoice_nor, getContext().getString(R.string.mn_edit_title_change_voice)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_MAGIC, R.drawable.edit_icon_changevoice_nor,
+          getContext().getString(R.string.mn_edit_title_change_voice)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_STICKER
         || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
         || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_MIRROR, R.drawable.edit_icon_mirror_nor, getContext().getString(R.string.mn_edit_title_mirror)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_MIRROR, R.drawable.edit_icon_mirror_nor,
+          getContext().getString(R.string.mn_edit_title_mirror)));
     }
     if (groupId == XYSdkConstants.GROUP_ID_STICKER
         || groupId == XYSdkConstants.GROUP_ID_MOSAIC
         || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
         || groupId == XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK
         || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_ROTATE, R.drawable.edit_icon_rotate_nor, getContext().getString(R.string.mn_edit_title_rotate)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_ROTATE, R.drawable.edit_icon_rotate_nor,
+          getContext().getString(R.string.mn_edit_title_rotate)));
     }
-    list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor, getContext().getString(R.string.mn_edit_title_delete)));
+    list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
+        getContext().getString(R.string.mn_edit_title_delete)));
     return list;
   }
 }

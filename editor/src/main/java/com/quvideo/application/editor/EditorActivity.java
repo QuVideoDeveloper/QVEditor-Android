@@ -182,7 +182,6 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   @Override
   public void onClick(View view, EditOperate operate) {
-    Toast.makeText(this, operate.getTitle(), Toast.LENGTH_SHORT).show();
     if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
       new EditEditDialog(this, mMenuLayout, mWorkSpace, this);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {

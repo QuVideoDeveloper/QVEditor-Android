@@ -37,7 +37,7 @@
   </style>
 
 
-  <style name="Theme_NoSplash" parent="@style/Theme.AppCompat.Light">
+  <style name="Theme_NoSplash" parent="@style/Theme.AppCompat.Light.NoActionBar">
     <item name="colorPrimaryDark">@color/black</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowContentOverlay">@null</item>

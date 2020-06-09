@@ -18,6 +18,7 @@ import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.clip.FilterInfo;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
@@ -76,9 +77,10 @@ public class EffectAddDialog extends BaseMenuView {
     effectAddItem.mEffectPath = info.filePath;
     effectAddItem.destRange
         = new VeRange(mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime(), 0);
+    VeMSize streamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
     EffectPosInfo effectPosInfo = new EffectPosInfo();
-    effectPosInfo.centerPosX = RandomUtil.randInt(1000, 9000);
-    effectPosInfo.centerPosY = RandomUtil.randInt(1000, 9000);
+    effectPosInfo.centerPosX = streamSize.width * RandomUtil.randInt(1000, 9000) / 10000f;
+    effectPosInfo.centerPosY = streamSize.height * RandomUtil.randInt(1000, 9000) / 10000f;
     effectAddItem.mEffectPosInfo = effectPosInfo;
     EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, 0, effectAddItem);
     mWorkSpace.handleOperation(effectOPAdd);

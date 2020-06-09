@@ -12,6 +12,7 @@ import com.quvideo.mobile.component.template.XytInstallListener
 import com.quvideo.mobile.component.template.XytManager
 import com.quvideo.mobile.engine.QEEngineClient
 import com.quvideo.mobile.engine.QEInitData.Builder
+import com.quvideo.mobile.engine.QELogger
 import com.quvideo.mobile.engine.utils.QEFileUtils
 import java.io.File
 import java.util.ArrayList
@@ -33,6 +34,7 @@ class EditorApp private constructor() {
     app = ctx
 
     QEEngineClient.init(app, Builder(licensePath).build())
+    QELogger.setLogLevel(QELogger.LogLevel.DEBUG)
     val lastCersionCode = DemoSharedPref.getInstance()
         .lastVersionCode
     val currentVersion: Long = getVersionCode(app)

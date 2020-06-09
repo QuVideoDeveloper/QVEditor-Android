@@ -66,14 +66,7 @@
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_range.png" width="637" height="441" align="center">
 
 
-#### 5. 坐标系：
-位置信息使用的坐标系，统一按左上角位原点，横向向右为正，纵向向下为正。以工程比例宽高的万分比建立坐标系。如工程分辨率为720*1080，则左上角为（0，0），右上角为（10000，0），左下角为（0，10000），右下角为（10000，10000）。
-
-
-<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="594" height="547" align="center">
-
-
-#### 6. 剪辑操作符
+#### 5. 剪辑操作符
 由于剪辑需要始终保持单线程操作，所以在工程剪辑时，我们将每个操作定义为一个剪辑操作符BaseOperate。剪辑操作符有sdk已经预设的大量操作符，开发者也可以自行组合实现新的操作符。执行时，开发者只需要创建操作符，并将操作符交给workspace执行即可，接下来就是等待执行完成的回调。
 ```
 BaseOperate operate = new BaseOperate();
@@ -145,8 +138,13 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.8"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.11"
 }
+```
+
+4）由于android文件系统权限在targetSdkVersion = 29之后有分区和沙盒概念，sdk对此暂无兼容。所以如果targetSdkVersion设置的是29以上，请在app的AndroidManifest.xml文件的application中，新增以下设置
+```
+    android:requestLegacyExternalStorage="true"
 ```
 
 #### 3. 剪辑SDK初始化
@@ -204,12 +202,285 @@ XytInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | ttidLong | 素材id| long |
+| ttidHexStr | 素材id的十六进制 如：0x06000000000000D9| String |
 | filePath | 素材路径 | String |
 | title | 素材名称 | String |
 
-### 五、拍摄视频开发接入
+### 五、录制功能开发接入
+#### 1. 录制视频
+1）初始化。
+
+创建XYCamreaEngine实例。
+```
+XYCameraEngine mXYCamera = new XYCameraEngine(activity, screenSize, ICameraEventCallback);
+```
+ICameraEventCallback说明：
+```
+public interface ICameraEventCallback {
+
+  /**
+   * 拍照完成
+   * @param filePath 文件路径
+   */
+  void onCaptureDone(String filePath);
+
+  /**
+   * 录制中回调
+   * @param duration 录制时长
+   */
+  void onRecorderRunning(long duration);
+
+  /**
+   * 停止录制
+   */
+  void onRecorderStop(WorkThreadTaskItem workThreadTaskItem);
+
+  /**
+   * 暂停录制
+   */
+  void onRecorderPaused();
+
+  /**
+   * 录制准备完成
+   */
+  void onRecorderReady();
+
+  /**
+   * 录制时长溢出
+   */
+  void onRecorderDurationExceeded();
+
+  /**
+   * 录制文件大小溢出
+   */
+  void onRecorderSizeExceeded();
+
+  /**
+   * 人脸检测结果
+   * 暂时不可用
+   * @param isDetected 是否检测到人脸
+   */
+  void onFaceDetectResult(boolean isDetected);
+
+  /**
+   * 相机连接结果
+   * @param isConnected 是否成功
+   */
+  void onConnectResult(boolean isConnected);
+
+  /**
+   * 相机断开连接
+   */
+  void onDisConnect();
+
+  /**
+   * 开始预览
+   */
+  void onPreviewStart();
+
+  /**
+   * 停止预览
+   */
+  void onPreviewStop();
+
+  void onPipSrcObjEnd();
+
+  void onPasterDisplayStatusChanged(QExpressionPasterStatus status);
+}
+```
 
 
+2）搭建Camera预览
+
+初始化Preview
+需要传入FrameLayout作为SurfaceView的父布局，内部会自动创建SurfaceView  add到FrameLayout中
+```
+mXYCamera.initPreview(mSurfaceContainer);
+```
+
+连接Camera
+```
+mXYCamera.openCamera();
+```
+
+注意：连接Camera之前需要确保已申请过Camera权限，如果没有需要向用户申请
+```
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
+启动预览
+在Camera连接成功的回调中启动预览
+```
+@Override public void onConnectResult(boolean isConnected) {
+  if (isConnected) {
+    mXYCamera.setDeviceIsPortrait(true,
+XYCameraConst.CameraDegrees.DEGREES_PORTRAIT);
+    // 启动预览
+    mXYCamera.startPreview();
+  }
+}
+```
+
+关闭Camera
+```
+mXYCamera.closeCamera();
+```
+
+停止预览，在Camera断开连接的回调中停止预览
+```
+@Override public void onDisConnect() {
+  mXYCamera.stopPreview();
+}
+```
+
+3) Camera 录制
+
+开始录制需要传递XYRecorderParam参数，该参数可以自定义一些录制参数。
+```
+mXYCamera.startRecording(new      XYRecorderParam(filePath,mXYCamera.getOutPutSize(),mXYCamera.getCurCameraId() == XYCameraConst.CameraId.CAMERA_FRONT));
+```
+
+暂停录制会返回当次录制的start位置与end位置，这样可以知道本次录制在mp4文件中的range
+```
+int[] range = mXYCamera.pauseRecording();
+```
+
+继续录制
+```
+mXYCamera.resumeRecording();
+```
+
+停止录制
+停止录制同样会返回当次录制的start位置与end位置，如果在当前本来就是暂停录制状态，则可以忽略该range
+```
+int[] range = mXYCamera.stopRecording();
+```
+
+设置录制方向
+需要固定Activity的屏幕方向android:screenOrientation="portrait"
+如果需要横屏录制，可以用以下接口设置。参考XYCameraConst.CameraDegrees
+```
+mXYCamera.setDeviceIsPortrait(true, XYCameraConst.CameraDegrees.DEGREES_PORTRAIT);
+```
+
+4) Camera设置
+
+切换镜头，参数参见XYCameraConst. CameraId
+```
+mXYCamera.switchCameraId(XYCameraConst.CameraId.CAMERA_FRONT);
+```
+
+闪光灯，参数参见XYCameraConst.FlashMode
+```
+mXYCamera.getCameraDevice().setFlashMode(XYCameraConst.FlashMode.FLASH_TORCH);
+```
+
+对焦
+```
+mXYCamera.getCameraDevice().autoFocus(new Camera.AutoFocusCallback() {
+  @Override public void onAutoFocus(boolean success, Camera camera) {
+
+  }
+});
+```
+
+焦距调节
+```
+mXYCamera.getCameraDevice().setCameraZoom(zoomValue);
+```
+焦距范围0～max
+```
+mXYCamera.getCameraDevice().getCameraZoomMax();
+```
+
+曝光调节
+```
+mXYCamera.getCameraDevice().setCameraExposure(value);
+```
+曝光参数获取
+```
+mXYCamera.getCameraDevice().getCameraExposureStep();
+mXYCamera.getCameraDevice().getCameraExposureMin();
+mXYCamera.getCameraDevice().getCameraExposureMax();
+```
+
+比例调节
+参数参见XYCameraConst.RatioMode，第2个参数为距离屏幕上边的距离，用于调节SurfaceView的区域
+```
+mXYCamera.setRatio(XYCameraConst.RatioMode.RATIO_4_3, 200);
+```
+
+其他Camera设置，可以使用Camera Parameters来设置
+```
+mXYCamera.getCameraDevice().getParameters();
+mXYCamera.getCameraDevice().setParameters();
+```
+
+5) Camera预览效果设置
+
+滤镜设置
+```
+mXYCamera.setEffect(effectPath);
+```
+
+美颜设置
+开启美颜，value为默认指。范围为0～100
+```
+mXYCamera.initFaceBeautyMode(value);
+```
+美颜参数调节
+```
+mXYCamera.setFaceBeautyParam(value);
+```
+关闭美颜
+```
+mXYCamera.clearFaceBeautyParam();
+```
+
+6)  拍照
+
+传入照片保存路径。
+注意：该照片分辨率为preview size。
+```
+mXYCamera.takePicture(filePath);
+```
+接收拍照完成回调
+```
+@Override public void onCaptureDone(String filePath) {
+}
+```
+
+7) 音乐镜头
+音乐镜头需要结合开发者晚饭，实现逻辑如下：
+- 使用MediaPlayer加载音乐
+- 在开始录制时，同时播放音乐，录制过程中，音乐会同时录制进去
+- 选取一段音乐就是加载音乐后，seek到start位置，并在end位置停止录制。
+详情参见demo中的实现逻辑
+
+
+#### 2. 音频录制
+
+初始化
+```
+XYAudioRecorder.init()
+```
+
+开始录制
+```
+// audioFilePath表示录音文件路径
+XYAudioRecorder.startRecord(audioFilePath);
+```
+
+停止录制
+```
+XYAudioRecorder.stopRecord();
+```
+
+获取录制时长
+```
+XYAudioRecorder.getRecordDuration()
+```
 
 ### 六、剪辑工程功能开发接入
 #### 1. 剪辑工程
@@ -270,14 +541,11 @@ XytInfo参数说明：
 ```
 2）在工程加载成功后，可以绑定工程和播放器
 ```
- mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
+ //
+ // initTime为初始博翻墙需要定位的时间点，默认0即可
+ mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, initTime);
 ```
 3）获取播放器控制器
-方式一：EditorPlayerView绑定播放器后，可以通过以下方式获取播放器控制器
-```
-IPlayerController playerController = editorPlayerView.getPlayerController();
-```
-方式二：
 ```
 IPlayerController playerController = mWorkSpace.getPlayerAPI().getPlayerController();
 ```
@@ -312,6 +580,36 @@ public interface IPlayerController {
   int setPlayRange(int start, int length);
   /** 获取播放区域 */
   VeRange getPlayerRange();
+}
+```
+
+4）注册播放器监听器
+注册：
+```
+mWorkSpace.getPlayerAPI().registerListener(QEPlayerListener);
+```
+注销：
+```
+mWorkSpace.getPlayerAPI().unregisterListener(QEPlayerListener);
+```
+QEPlayerListener说明：
+```
+public interface QEPlayerListener {
+
+  enum PlayerStatus {
+    STATUS_READY,
+    STATUS_PLAYING,
+    STATUS_SEEKING,
+    STATUS_PAUSE,
+    STATUS_STOP
+  }
+
+  /** 播放器状态回调 */
+  void onPlayerCallback(PlayerStatus playerStatus, int progress);
+  /** 播放器刷新 */
+  void onPlayerRefresh();
+  /** 播放器尺寸变化 */
+  void onSizeChanged(Rect resultRect);
 }
 ```
 
@@ -399,7 +697,7 @@ ClipData参数说明：
 | trimRange | 片段裁切区间 | VeRange |
 | destRange | 片段出入区间 | VeRange |
 | cropRect | 裁剪区域 | Rect |
-| sourceSize | 源文件分辨率 | VeMSize |
+| sourceSize | 源视频宽高，相对streamSize的尺寸 | VeMSize |
 | rotateAngle | 旋转角度 | int |
 | isMute | 是否静音 | boolean |
 | audioVolume | 音量，默认100 | int |
@@ -466,10 +764,10 @@ ClipParamAdjust参数说明：
 ClipPosInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| centerPosX | 中心点-X | float |
-| centerPosY | 中心点-Y | float  |
-| width | width | float|
-| height | height | float |
+| centerPosX | 中心点-X，在streamSize的坐标系中 | int |
+| centerPosY | 中心点-Y，在streamSize的坐标系中 | int  |
+| widthScale | 宽放大倍数，默认1 | float|
+| heightScale | 高放大倍数，默认1 | float |
 | degree | 旋转角度，0~359度 | float |
 
 ClipBgData参数说明：
@@ -539,16 +837,16 @@ FloatEffect参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | alpha | 透明度 0~100 | int |
-| anchor | 锚点,(0,0)为效果的左上角位置，（5000，5000）表示效果的中心，默认是(5000,5000)  | VeMSize |
+| anchor | 锚点,(0,0)为效果的左上角位置，（5000，5000）表示效果的中心，（10000，10000）表示效果的右下角。默认是(5000,5000) 。相当于把0~1的比例放大10000倍 | VeMSize |
 | mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
 
 EffectPosInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| centerPosX | 中心点-X | float |
-| centerPosY | 中心点-Y | float |
-| width | 宽 | float |
-| height | 高 | float |
+| centerPosX | 中心点-X，在streamSize的坐标系中 | float |
+| centerPosY | 中心点-Y，在streamSize的坐标系中 | float |
+| width | 宽 | float，在streamSize的坐标系中 |
+| height | 高 | float，在streamSize的坐标系中 |
 | degree | 旋转角度， 0~360 | float |
 | isHorFlip | 水平反转 | boolean |
 | isVerFlip | 垂直反转 | boolean |
@@ -1078,7 +1376,7 @@ EffectAddItem参数说明：
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
 	// showStaticPic表示是否显示静态图片
-	EffectOPStaticPic effectOPStaticPic = new EffectOPStaticPic(groupId, effectIndex, effectPosInfo);
+	EffectOPStaticPic effectOPStaticPic = new EffectOPStaticPic(groupId, effectIndex, showStaticPic);
 	mWorkSpace.handleOperation(effectOPStaticPic);
 ```
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
