@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Thu, 04 Jun 2020 11:08:15 +0800
+ Exported at: Tue, 09 Jun 2020 17:20:58 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -39,6 +39,9 @@
     <string name="mn_edit_alpha_change">Alpha</string>
     <string name="mn_edit_back_home">Home</string>
     <string name="mn_edit_bgm_edit">Edit</string>
+    <string name="mn_edit_change_style">Change Style</string>
+    <string name="mn_edit_change_zoom">Zoom</string>
+    <string name="mn_edit_effect_position">Position</string>
     <string name="mn_edit_export_resolution">Resolution</string>
     <string name="mn_edit_split_progress_title">Split</string>
     <string name="mn_edit_subtitle_input">Input</string>
@@ -82,6 +85,7 @@
     <string name="mn_edit_title_trim">Trim</string>
     <string name="mn_edit_title_volume">Volume</string>
     <string name="mn_edit_title_watermark">Watermark</string>
+    <string name="mn_edit_total_time">total time</string>
     <string name="mn_edit_zoom_in">Zoom in</string>
     <string name="mn_edit_zoom_out">Zoom out</string>
     <string name="mn_gallery_camera_album_title">Camera Album</string>

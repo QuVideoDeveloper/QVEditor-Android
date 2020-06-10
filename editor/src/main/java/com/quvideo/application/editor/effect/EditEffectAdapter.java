@@ -15,7 +15,7 @@ import com.quvideo.application.EditorApp;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.sound.AudioTemplate;
 import com.quvideo.application.glidedecoder.EffectThumbParams;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +41,12 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
   public EditEffectAdapter(LifecycleOwner activity, int groupId, OnEffectlickListener effectlickListener) {
     this.mOnEffectlickListener = effectlickListener;
     this.groupId = groupId;
-    addOffset = XYSdkConstants.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
+    addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
   }
 
   public void updateList(List<BaseEffect> dataList) {
     this.mDataList = dataList;
-    addOffset = XYSdkConstants.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
+    addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
     selectIndex = dataList.size() > 0 ? 0 : -1;
     notifyDataSetChanged();
   }
@@ -76,10 +76,10 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
     boolean isSelected = position == selectIndex + addOffset;
     holder.mImageView.setSelected(isSelected);
     final BaseEffect item = mDataList.get(position - addOffset);
-    if (item.groupId == XYSdkConstants.GROUP_ID_COLLAGES && !TextUtils.isEmpty(item.mEffectPath)) {
+    if (item.groupId == QEGroupConst.GROUP_ID_COLLAGES && !TextUtils.isEmpty(item.mEffectPath)) {
       Glide.with(EditorApp.Companion.getInstance().getApp()).load(item.mEffectPath).into(holder.mImageView);
-    } else if (item.groupId == XYSdkConstants.GROUP_ID_BGMUSIC
-        || item.groupId == XYSdkConstants.GROUP_ID_DUBBING) {
+    } else if (item.groupId == QEGroupConst.GROUP_ID_BGMUSIC
+        || item.groupId == QEGroupConst.GROUP_ID_DUBBING) {
       // 音乐/音效
       int thumbRes = 0;
       for (AudioTemplate audio : AssetConstants.TEST_MUSIC_TID) {

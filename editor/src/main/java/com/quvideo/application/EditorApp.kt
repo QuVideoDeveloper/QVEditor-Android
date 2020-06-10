@@ -34,7 +34,6 @@ class EditorApp private constructor() {
     app = ctx
 
     QEEngineClient.init(app, Builder(licensePath).build())
-    QELogger.setLogLevel(QELogger.LogLevel.DEBUG)
     val lastCersionCode = DemoSharedPref.getInstance()
         .lastVersionCode
     val currentVersion: Long = getVersionCode(app)

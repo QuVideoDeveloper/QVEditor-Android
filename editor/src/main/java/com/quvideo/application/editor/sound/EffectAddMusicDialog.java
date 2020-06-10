@@ -9,7 +9,7 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.clip.FilterInfo;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
@@ -57,7 +57,7 @@ public class EffectAddMusicDialog extends BaseMenuView {
     EffectAddItem effectAddItem = new EffectAddItem();
     effectAddItem.mEffectPath = template.getAudioPath();
     effectAddItem.destRange = new VeRange(mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime(), 0);
-    if (groupId == XYSdkConstants.GROUP_ID_DUBBING) {
+    if (groupId == QEGroupConst.GROUP_ID_DUBBING) {
       EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, 0, effectAddItem);
       mWorkSpace.handleOperation(effectOPAdd);
     } else {
@@ -79,9 +79,9 @@ public class EffectAddMusicDialog extends BaseMenuView {
 
   private List<AudioTemplate> getDataList() {
     AudioTemplate[] templates = null;
-    if (groupId == XYSdkConstants.GROUP_ID_DUBBING) {
+    if (groupId == QEGroupConst.GROUP_ID_DUBBING) {
       templates = AssetConstants.TEST_DUB_TID;
-    } else if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
+    } else if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
       templates = AssetConstants.TEST_MUSIC_TID;
     }
     if (templates != null) {
@@ -92,9 +92,9 @@ public class EffectAddMusicDialog extends BaseMenuView {
 
   @Override
   protected String getBottomTitle() {
-    if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
       return getContext().getString(R.string.mn_edit_title_bgm);
-    } else if (groupId == XYSdkConstants.GROUP_ID_DUBBING) {
+    } else if (groupId == QEGroupConst.GROUP_ID_DUBBING) {
       return getContext().getString(R.string.mn_edit_title_dubbing);
     }
     return getContext().getString(R.string.mn_edit_title_edit);

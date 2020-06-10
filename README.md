@@ -138,7 +138,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.11"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.12"
 }
 ```
 
@@ -166,14 +166,23 @@ QEInitData参数说明：
 
 ### 四、素材管理开发接入
 #### 1. 素材安装
+同一个素材，只需要安装一次即可，后续直接通过素材id即可查询素材信息。
+
+注意，assets目录下的素材安装，每次需要完整列表重新安装，会进行增删处理。对于asset目录下的素材，升级时如有需要，可以完整重新安装一次，用于素材变更。
 ```
-/** 安装单个素材文件 */
+/** 安装单个素材文件,zip包或者xyt文件 */
 XytManager.install(xytZipPath, xytInstallListener);
-/** 安装多个素材文件 */
-XytManager.asyncBatchInstall(xytZipPath, fromType, xytInstallListener);
-/** 安装多个asset目录下的素材文件 */
+
+/** List<String> xytZipPaths,zip包或者xyt文件列表 */
+XytManager.install(xytZipPaths, xytInstallListener);
+
+/** 安装多个asset目录下的素材文件，只能是xyt文件列表 */
 XytManager.installAsset(assetPathList, xytInstallListener);
+
+/** 卸载单个素材，只能是xyt文件列表，ttid为素材id */
+XytManager.unInstall(ttid, xytInstallListener);
 ```
+
 XytInstallListener接口信息：
 ```
 public interface XytInstallListener {
@@ -205,6 +214,23 @@ XytInfo参数说明：
 | ttidHexStr | 素材id的十六进制 如：0x06000000000000D9| String |
 | filePath | 素材路径 | String |
 | title | 素材名称 | String |
+
+
+#### 3. 素材id工具
+```
+ /**
+   * Long转成16进制ttid字符串
+   * 如：1225031875203433521-->"0x1100300000080431"
+   */
+  String hexStr = XytManager.ttidLongToHex(ttidLong);
+
+  /**
+   * 16进制ttid转成Long
+   * 如：""0x1100300000080431"-->1225031875203433521
+   */
+   long ttid = XytManager.ttidHexStrToLong(ttidHexStr);
+```
+
 
 ### 五、录制功能开发接入
 #### 1. 录制视频
@@ -613,6 +639,26 @@ public interface QEPlayerListener {
 }
 ```
 
+5) 关于PlayerAPI
+
+通过mWorkSpace.getPlayerAPI()可以获取PlayerAPI播放器相关接口
+```
+public interface PlayerAPI {
+  /** 绑定播放器 */
+  void bindPlayerView(EditorPlayerView editorPlayerView, int initTime);
+  /** 注册播放器监听 */
+  void registerListener(QEPlayerListener listener);
+  /** 注销播放器监听 */
+  void unregisterListener(QEPlayerListener listener);
+  /** 获取播放器控制器 */
+  IPlayerController getPlayerControl();
+  /** 获取预览区尺寸 */
+  VeMSize getSurfaceSize();
+  /** 获取播放器view尺寸 */
+  VeMSize getPreviewSize();
+}
+```
+
 #### 3. 获取剪辑工程信息
 ##### 获取工程相关信息
 ```
@@ -681,6 +727,30 @@ public interface EffectAPI {
 }
 ```
 备注：由于StoryboardAPI、ClipAPI和EffectAPI返回的数据都是clone数据，所有直接对返回的数据修改，是不起作用的。
+
+##### 效果分类groupId说明
+```
+public class QEGroupConst {
+  /** 背景音乐 */
+  public static final int GROUP_ID_BGMUSIC = 1;
+  /** 音效 */
+  public static final int GROUP_ID_DUBBING = 4;
+  /** 录音 **/
+  public static final int GROUP_ID_RECORD = 11;
+  /** 字幕 */
+  public static final int GROUP_ID_SUBTITLE = 3;
+  /** 特效, 和特效滤镜不同 */
+  public static final int GROUP_ID_STICKER_FX = 6;
+  /** 贴纸 */
+  public static final int GROUP_ID_STICKER = 8;
+  /** 画中画 */
+  public static final int GROUP_ID_COLLAGES = 20;
+  /** 马赛克 */
+  public static final int GROUP_ID_MOSAIC = 40;
+  /** 自定义水印 */
+  public static final int GROUP_ID_WATERMARK = 50;
+}
+```
 
 ##### 数据结构说明
 1) 片段Clip相关
@@ -1830,3 +1900,4 @@ SlideInfo.Type参数说明：
    */
   int iRes = QETools.extractAudioWave(String audioPath, VeRange srcRange, IAudioDataListener audioDataListener);
 ```
+### 十、 高阶剪辑工程编辑能力接入

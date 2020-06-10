@@ -131,6 +131,6 @@ public class EditEffectPositionDialog extends BaseMenuView {
 
   @Override
   protected String getBottomTitle() {
-    return "位置";
+    return getContext().getString(R.string.mn_edit_effect_position);
   }
 }

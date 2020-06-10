@@ -7,7 +7,7 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.EditEffectDialog;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 
 public class EditSoundMainDialog extends BaseMenuView {
@@ -27,13 +27,13 @@ public class EditSoundMainDialog extends BaseMenuView {
     View btnDub = view.findViewById(R.id.btnDub);
 
     btnAddMusic.setOnClickListener(v -> {
-      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, XYSdkConstants.GROUP_ID_BGMUSIC);
+      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_BGMUSIC);
     });
     btnAddSoundEffect.setOnClickListener(v -> {
-      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, XYSdkConstants.GROUP_ID_DUBBING);
+      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_DUBBING);
     });
     btnDub.setOnClickListener(v -> {
-      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, XYSdkConstants.GROUP_ID_RECORD);
+      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_RECORD);
     });
   }
 

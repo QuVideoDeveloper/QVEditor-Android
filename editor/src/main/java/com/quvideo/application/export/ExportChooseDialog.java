@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import com.quvideo.application.editor.R;
-import com.quvideo.mobile.engine.editor.utils.HDVideoUtils;
+import com.quvideo.mobile.engine.QEEngineClient;
 import com.quvideo.mobile.engine.model.export.ExportParams;
 
 public class ExportChooseDialog extends Dialog implements View.OnClickListener {
@@ -47,13 +47,13 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
     mLayout720HD.setOnClickListener(this);
     mLayout1080PItem.setVisibility(View.VISIBLE);
     mLayout1080PItem.setOnClickListener(this);
-    if (HDVideoUtils.isHD2KSupport()) {
+    if (QEEngineClient.isHD2KSupport()) {
       mLayout2K.setVisibility(View.VISIBLE);
       mLayout2K.setOnClickListener(this);
     } else {
       mLayout2K.setVisibility(View.GONE);
     }
-    if (HDVideoUtils.isHD4KSupport()) {
+    if (QEEngineClient.isHD4KSupport()) {
       mLayout4K.setVisibility(View.VISIBLE);
       mLayout4K.setOnClickListener(this);
     } else {

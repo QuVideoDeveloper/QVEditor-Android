@@ -17,7 +17,7 @@ import com.quvideo.application.utils.RandomUtil;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.clip.FilterInfo;
@@ -92,13 +92,13 @@ public class EffectAddDialog extends BaseMenuView {
 
   private List<SimpleTemplate> getDataList() {
     EditFilterTemplate[] templates = null;
-    if (groupId == XYSdkConstants.GROUP_ID_MOSAIC) {
+    if (groupId == QEGroupConst.GROUP_ID_MOSAIC) {
       templates = AssetConstants.TEST_MOSIC_TID;
-    } else if (groupId == XYSdkConstants.GROUP_ID_STICKER) {
+    } else if (groupId == QEGroupConst.GROUP_ID_STICKER) {
       templates = AssetConstants.TEST_STICKER_TID;
-    } else if (groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
+    } else if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       templates = AssetConstants.TEST_SUBTITLE_TID;
-    } else if (groupId == XYSdkConstants.GROUP_ID_STICKER_FX) {
+    } else if (groupId == QEGroupConst.GROUP_ID_STICKER_FX) {
       templates = AssetConstants.TEST_FX_TID;
     }
     if (templates != null) {
@@ -109,13 +109,13 @@ public class EffectAddDialog extends BaseMenuView {
 
   @Override
   protected String getBottomTitle() {
-    if (groupId == XYSdkConstants.GROUP_ID_MOSAIC) {
+    if (groupId == QEGroupConst.GROUP_ID_MOSAIC) {
       return getContext().getString(R.string.mn_edit_title_mosaic);
-    } else if (groupId == XYSdkConstants.GROUP_ID_STICKER) {
+    } else if (groupId == QEGroupConst.GROUP_ID_STICKER) {
       return getContext().getString(R.string.mn_edit_title_sticker);
-    } else if (groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
+    } else if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       return getContext().getString(R.string.mn_edit_title_subtitle);
-    } else if (groupId == XYSdkConstants.GROUP_ID_STICKER_FX) {
+    } else if (groupId == QEGroupConst.GROUP_ID_STICKER_FX) {
       return getContext().getString(R.string.mn_edit_title_fx);
     }
     return getContext().getString(R.string.mn_edit_title_edit);

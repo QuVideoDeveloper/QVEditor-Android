@@ -30,6 +30,8 @@ public class AssetConstants {
   public static ArrayList<String> mSubtitleTemplateList = new ArrayList<>();
   // 组合字幕
   public static ArrayList<String> mMultiSubtitleTemplateList = new ArrayList<>();
+  // 马赛克
+  public static ArrayList<String> mMosaicTemplateList = new ArrayList<>();
 
   // 音乐
   public static ArrayList<String> mMusicTemplateList = new ArrayList<>();
@@ -81,6 +83,7 @@ public class AssetConstants {
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000483.xyt");
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000484.xyt");
     // subtitle
+    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000000.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000AF.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B0.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B1.xyt");
@@ -94,7 +97,9 @@ public class AssetConstants {
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000138.zip");
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000139.zip");
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000000013A.zip");
-
+    // 马赛克
+    mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300001.xyt");
+    mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300002.xyt");
     // 音乐
     mMusicTemplateList.add("assets_android://quvideo/music/dub_1.mp3");
     mMusicTemplateList.add("assets_android://quvideo/music/dub_2.mp3");
@@ -162,6 +167,7 @@ public class AssetConstants {
   };
 
   public static final EditFilterTemplate[] TEST_SUBTITLE_TID = new EditFilterTemplate[] {
+      new EditFilterTemplate(0x0900000000000000L),
       new EditFilterTemplate(0x09000000000000AFL),
       new EditFilterTemplate(0x09000000000000B0L),
       new EditFilterTemplate(0x09000000000000B1L),
@@ -177,8 +183,8 @@ public class AssetConstants {
   };
 
   public static final EditFilterTemplate[] TEST_MOSIC_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(DefaultTemplateConstant.EFFECT_DEFAULT_MOSAIC_GUASSIAN_ID),
-      new EditFilterTemplate(DefaultTemplateConstant.EFFECT_DEFAULT_MOSAIC_PIXEL_ID)
+      new EditFilterTemplate(0x0500000000300001L),
+      new EditFilterTemplate(0x0500000000300002L)
   };
 
   public static final AudioTemplate[] TEST_DUB_TID = new AudioTemplate[] {

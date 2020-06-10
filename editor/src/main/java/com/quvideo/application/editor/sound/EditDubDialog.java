@@ -13,7 +13,7 @@ import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.camera.XYAudioRecorder;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -123,7 +123,7 @@ public class EditDubDialog extends BaseMenuView {
     effectAddItem.srcRange = new VeRange(0, recordLength);
     LogUtils.d("EditDubDialog", "startPos = " + startPos + ", recordLength = " + recordLength);
 
-    EffectOPAdd effectOPAdd = new EffectOPAdd(XYSdkConstants.GROUP_ID_RECORD, 0, effectAddItem);
+    EffectOPAdd effectOPAdd = new EffectOPAdd(QEGroupConst.GROUP_ID_RECORD, 0, effectAddItem);
     mWorkSpace.handleOperation(effectOPAdd);
   }
 

@@ -28,7 +28,6 @@ import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.application.utils.FileUtils;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
-import com.quvideo.mobile.engine.template.XytUtil;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,8 +97,7 @@ public class SimpleTemplateAdapter
     if (!TextUtils.isEmpty(item.getTitle())) {
       holder.mTextView.setText(item.getTitle());
     } else {
-      holder.mTextView.setText(XytUtil.getTitleFromXytTitle(xytInfo.title,
-          mActivity.getResources().getConfiguration().locale));
+      holder.mTextView.setText(xytInfo.getTitle(mActivity.getResources().getConfiguration().locale));
     }
     boolean isSelected = position == mSelected.getValue().get(mSelected.getValue().size() - 1);
     if (item.getThumbnailResId() <= 0) {

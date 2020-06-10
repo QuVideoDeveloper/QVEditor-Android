@@ -25,7 +25,6 @@ import com.quvideo.application.glidedecoder.EffectThumbParams;
 import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
-import com.quvideo.mobile.engine.template.XytUtil;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,8 +71,7 @@ public class EffectAddAdapter extends RecyclerView.Adapter<EffectAddAdapter.Temp
       holder.mTextView.setText(item.getTitle());
     } else {
       XytInfo xytInfo = XytManager.getXytInfo(item.getTemplateId());
-      holder.mTextView.setText(XytUtil.getTitleFromXytTitle(xytInfo.title,
-          mContext.getResources().getConfiguration().locale));
+      holder.mTextView.setText(xytInfo.getTitle(mContext.getResources().getConfiguration().locale));
     }
     boolean isSelected = false;
     if (item.getThumbnailResId() <= 0) {

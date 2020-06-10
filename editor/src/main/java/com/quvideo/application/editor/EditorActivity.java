@@ -27,7 +27,7 @@ import com.quvideo.application.player.PlayerControllerView;
 import com.quvideo.application.utils.FileUtils;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.QEEngineClient;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.clip.ClipAddItem;
@@ -185,27 +185,27 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
       new EditEditDialog(this, mMenuLayout, mWorkSpace, this);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, XYSdkConstants.GROUP_ID_STICKER);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER);
     } else if (operate.getResId() == R.drawable.edit_icon_effect_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, XYSdkConstants.GROUP_ID_STICKER_FX);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER_FX);
     } else if (operate.getResId() == R.drawable.edit_icon_midpic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, XYSdkConstants.GROUP_ID_COLLAGES);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_COLLAGES);
     } else if (operate.getResId() == R.drawable.edit_icon_watermark_nor) {// 水印
-      if (mWorkSpace.getEffectAPI().getEffect(XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK, 0)
+      if (mWorkSpace.getEffectAPI().getEffect(QEGroupConst.GROUP_ID_WATERMARK, 0)
           != null) {
-        EffectOPDel effectOPDel = new EffectOPDel(XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK, 0);
+        EffectOPDel effectOPDel = new EffectOPDel(QEGroupConst.GROUP_ID_WATERMARK, 0);
         mWorkSpace.handleOperation(effectOPDel);
       } else {
         EffectAddItem effectAddItem = new EffectAddItem();
         effectAddItem.mEffectPath = "assets_android://quvideo/watermark/water_mark_logo.png";
         EffectOPAdd effectOPAdd =
-            new EffectOPAdd(XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK, 0, effectAddItem);
+            new EffectOPAdd(QEGroupConst.GROUP_ID_WATERMARK, 0, effectAddItem);
         mWorkSpace.handleOperation(effectOPAdd);
       }
     } else if (operate.getResId() == R.drawable.edit_icon_mosaic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, XYSdkConstants.GROUP_ID_MOSAIC);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_MOSAIC);
     } else if (operate.getResId() == R.drawable.edit_icon_text_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, XYSdkConstants.GROUP_ID_SUBTITLE);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_SUBTITLE);
     } else if (operate.getResId() == R.drawable.edit_icon_theme_nor) {
       new EditThemeDialog(this, mMenuLayout, mWorkSpace, this);
     } else if (operate.getResId() == R.drawable.edit_icon_music_nor) {

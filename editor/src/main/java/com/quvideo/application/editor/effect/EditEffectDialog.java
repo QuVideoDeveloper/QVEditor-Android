@@ -23,7 +23,7 @@ import com.quvideo.application.gallery.model.MediaModel;
 import com.quvideo.application.gallery.provider.IGalleryProvider;
 import com.quvideo.application.utils.RandomUtil;
 import com.quvideo.application.utils.ToastUtils;
-import com.quvideo.mobile.engine.constant.XYSdkConstants;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.error.SDKErrCode;
@@ -91,7 +91,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
             }
           }
         }
-        if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC && mEffectOperateAdapter != null) {
+        if (groupId == QEGroupConst.GROUP_ID_BGMUSIC && mEffectOperateAdapter != null) {
           mEffectOperateAdapter.updateList(getOperateList());
         }
       }
@@ -152,7 +152,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
       }
       switch (operate.getAction()) {
         case EffectBarItem.ACTION_EDIT:
-          if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
+          if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
             new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
           } else {
             ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
@@ -281,13 +281,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
         @Override public void onClick(int index, BaseEffect item) {
           if (item == null || index < 0) {
             // TODO 添加
-            if (XYSdkConstants.GROUP_ID_COLLAGES == groupId) {
+            if (QEGroupConst.GROUP_ID_COLLAGES == groupId) {
               currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
               go2choosePhoto();
-            } else if (XYSdkConstants.GROUP_ID_BGMUSIC == groupId
-                || XYSdkConstants.GROUP_ID_DUBBING == groupId) {
+            } else if (QEGroupConst.GROUP_ID_BGMUSIC == groupId
+                || QEGroupConst.GROUP_ID_DUBBING == groupId) {
               new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
-            } else if (XYSdkConstants.GROUP_ID_RECORD == groupId) {
+            } else if (QEGroupConst.GROUP_ID_RECORD == groupId) {
               if (hasPermissionsGranted(getActivity())) {
                 new EditDubDialog(getContext(), mMenuContainer, mWorkSpace, null);
               } else {
@@ -355,19 +355,19 @@ public class EditEffectDialog extends BaseEffectMenuView {
 
   @Override
   protected String getBottomTitle() {
-    if (groupId == XYSdkConstants.GROUP_ID_MOSAIC) {
+    if (groupId == QEGroupConst.GROUP_ID_MOSAIC) {
       return getContext().getString(R.string.mn_edit_title_mosaic);
-    } else if (groupId == XYSdkConstants.GROUP_ID_STICKER) {
+    } else if (groupId == QEGroupConst.GROUP_ID_STICKER) {
       return getContext().getString(R.string.mn_edit_title_sticker);
-    } else if (groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
+    } else if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       return getContext().getString(R.string.mn_edit_title_subtitle);
-    } else if (groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
+    } else if (groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       return getContext().getString(R.string.mn_edit_title_collages);
-    } else if (groupId == XYSdkConstants.GROUP_ID_STICKER_FX) {
+    } else if (groupId == QEGroupConst.GROUP_ID_STICKER_FX) {
       return getContext().getString(R.string.mn_edit_title_fx);
-    } else if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
+    } else if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
       return getContext().getString(R.string.mn_edit_title_bgm);
-    } else if (groupId == XYSdkConstants.GROUP_ID_DUBBING) {
+    } else if (groupId == QEGroupConst.GROUP_ID_DUBBING) {
       return getContext().getString(R.string.mn_edit_title_dubbing);
     }
     return getContext().getString(R.string.mn_edit_title_edit);
@@ -375,48 +375,49 @@ public class EditEffectDialog extends BaseEffectMenuView {
 
   private List<EffectBarItem> getOperateList() {
     List<EffectBarItem> list = new ArrayList<>();
-    if (groupId == XYSdkConstants.GROUP_ID_STICKER
-        || groupId == XYSdkConstants.GROUP_ID_MOSAIC
-        || groupId == XYSdkConstants.GROUP_ID_COLLAGES
-        || groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_MOSAIC
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       list.add(
-          new EffectBarItem(EffectBarItem.ACTION_POSITION, R.drawable.edit_icon_edit_nor, "位置"));
+          new EffectBarItem(EffectBarItem.ACTION_POSITION, R.drawable.edit_icon_edit_nor,
+              getContext().getString(R.string.mn_edit_effect_position)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC) {
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_EDIT, R.drawable.edit_icon_edit_nor,
               getContext().getString(R.string.mn_edit_bgm_edit)));
     }
-    if (groupId != XYSdkConstants.GROUP_ID_BGMUSIC) {
+    if (groupId != QEGroupConst.GROUP_ID_BGMUSIC) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
               getContext().getString(R.string.mn_edit_title_trim)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_SUBTITLE) {
+    if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_INPUT, R.drawable.edit_icon_key_nor,
           getContext().getString(R.string.mn_edit_subtitle_input)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC
-        || groupId == XYSdkConstants.GROUP_ID_DUBBING
-        || groupId == XYSdkConstants.GROUP_ID_RECORD
-        || groupId == XYSdkConstants.GROUP_ID_STICKER
-        || groupId == XYSdkConstants.GROUP_ID_STICKER_FX
-        || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
+        || groupId == QEGroupConst.GROUP_ID_DUBBING
+        || groupId == QEGroupConst.GROUP_ID_RECORD
+        || groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_STICKER_FX
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_VOLUME, R.drawable.edit_icon_muteoff_n,
           getContext().getString(R.string.mn_edit_title_volume)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_STICKER
-        || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
-        || groupId == XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK
-        || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_WATERMARK
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_ALPHA, R.drawable.edit_icon_alpha_nor,
           getContext().getString(R.string.mn_edit_alpha_change)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_STICKER
-        || groupId == XYSdkConstants.GROUP_ID_MOSAIC
-        || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
-        || groupId == XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK
-        || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_MOSAIC
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_WATERMARK
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_SCALE_MORE, R.drawable.edit_icon_scale_more_nor,
               getContext().getString(R.string.mn_edit_zoom_in)));
@@ -424,23 +425,23 @@ public class EditEffectDialog extends BaseEffectMenuView {
           new EffectBarItem(EffectBarItem.ACTION_SCALE_LESS, R.drawable.edit_icon_scale_less_nor,
               getContext().getString(R.string.mn_edit_zoom_out)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_BGMUSIC
-        || groupId == XYSdkConstants.GROUP_ID_DUBBING
-        || groupId == XYSdkConstants.GROUP_ID_RECORD) {
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
+        || groupId == QEGroupConst.GROUP_ID_DUBBING
+        || groupId == QEGroupConst.GROUP_ID_RECORD) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_MAGIC, R.drawable.edit_icon_changevoice_nor,
           getContext().getString(R.string.mn_edit_title_change_voice)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_STICKER
-        || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
-        || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_MIRROR, R.drawable.edit_icon_mirror_nor,
           getContext().getString(R.string.mn_edit_title_mirror)));
     }
-    if (groupId == XYSdkConstants.GROUP_ID_STICKER
-        || groupId == XYSdkConstants.GROUP_ID_MOSAIC
-        || groupId == XYSdkConstants.GROUP_ID_SUBTITLE
-        || groupId == XYSdkConstants.GROUP_ID_CUSTOM_WATERMARK
-        || groupId == XYSdkConstants.GROUP_ID_COLLAGES) {
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_MOSAIC
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_WATERMARK
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_ROTATE, R.drawable.edit_icon_rotate_nor,
           getContext().getString(R.string.mn_edit_title_rotate)));
     }
