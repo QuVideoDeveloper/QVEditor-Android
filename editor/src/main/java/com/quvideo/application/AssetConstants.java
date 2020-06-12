@@ -4,7 +4,6 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.edit.EditFilterTemplate;
 import com.quvideo.application.editor.sound.AudioTemplate;
 import com.quvideo.application.slide.SlideTemplate;
-import com.quvideo.mobile.engine.template.DefaultTemplateConstant;
 import java.util.ArrayList;
 
 public class AssetConstants {
@@ -84,19 +83,11 @@ public class AssetConstants {
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000484.xyt");
     // subtitle
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000000.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000AF.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B0.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B1.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028A.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028B.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000133.xyt");
     // multisubtitle
-    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000135.zip");
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000136.zip");
-    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000137.zip");
-    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000138.zip");
-    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000139.zip");
-    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000000013A.zip");
     // 马赛克
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300001.xyt");
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300002.xyt");
@@ -113,6 +104,7 @@ public class AssetConstants {
     mScanTemplateList.addAll(mTransTemplateList);
     mScanTemplateList.addAll(mSubtitleTemplateList);
     mScanTemplateList.addAll(mStickerTemplateList);
+    mScanTemplateList.addAll(mMosaicTemplateList);
 
     mScanZipTemplateList.addAll(mSlideTemplateList);
     mScanZipTemplateList.addAll(mThemeTemplateList);
@@ -168,18 +160,10 @@ public class AssetConstants {
 
   public static final EditFilterTemplate[] TEST_SUBTITLE_TID = new EditFilterTemplate[] {
       new EditFilterTemplate(0x0900000000000000L),
-      new EditFilterTemplate(0x09000000000000AFL),
-      new EditFilterTemplate(0x09000000000000B0L),
-      new EditFilterTemplate(0x09000000000000B1L),
       new EditFilterTemplate(0x090000000000028AL),
       new EditFilterTemplate(0x090000000000028BL),
       new EditFilterTemplate(0x0900000000000133L),
-      new EditFilterTemplate(0x0900000000000135L),
-      new EditFilterTemplate(0x0900000000000136L),
-      new EditFilterTemplate(0x0900000000000137L),
-      new EditFilterTemplate(0x0900000000000138L),
-      new EditFilterTemplate(0x0900000000000139L),
-      new EditFilterTemplate(0x090000000000013AL)
+      new EditFilterTemplate(0x0900000000000136L)
   };
 
   public static final EditFilterTemplate[] TEST_MOSIC_TID = new EditFilterTemplate[] {
@@ -188,14 +172,19 @@ public class AssetConstants {
   };
 
   public static final AudioTemplate[] TEST_DUB_TID = new AudioTemplate[] {
-      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/dub_1.mp3", "音效1", R.drawable.dub_1),
-      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/dub_2.mp3", "音效2", R.drawable.dub_2)
+      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/dub_1.mp3",
+          "音效1", R.drawable.dub_1),
+      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/dub_2.mp3",
+          "音效2", R.drawable.dub_2)
   };
 
   public static final AudioTemplate[] TEST_MUSIC_TID = new AudioTemplate[] {
-      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_1.mp3", "音乐1", R.drawable.music_1),
-      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_2.mp3", "音乐2", R.drawable.music_2),
-      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_3.mp3", "音乐3", R.drawable.music_3)
+      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_1.mp3",
+          "音乐1", R.drawable.music_1),
+      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_2.mp3",
+          "音乐2", R.drawable.music_2),
+      new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_3.mp3",
+          "音乐3", R.drawable.music_3)
   };
 
   public static final EditFilterTemplate[] TEST_EDIT_FILTER_TID = new EditFilterTemplate[] {

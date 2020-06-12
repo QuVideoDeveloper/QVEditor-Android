@@ -65,8 +65,15 @@
 
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_range.png" width="637" height="441" align="center">
 
+#### 5. 坐标系
+剪辑中使用的坐标系，统一使用视频流(stream)的坐标系，即视频流的左上角为（0, 0），右下角为（stream.width，stream.height）。角度水平向右为0度，顺时针为增大。
 
-#### 5. 剪辑操作符
+
+<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="574" height="542" align="center">
+
+
+
+#### 6. 剪辑操作符
 由于剪辑需要始终保持单线程操作，所以在工程剪辑时，我们将每个操作定义为一个剪辑操作符BaseOperate。剪辑操作符有sdk已经预设的大量操作符，开发者也可以自行组合实现新的操作符。执行时，开发者只需要创建操作符，并将操作符交给workspace执行即可，接下来就是等待执行完成的回调。
 ```
 BaseOperate operate = new BaseOperate();
@@ -138,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.12"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.14"
 }
 ```
 
@@ -216,7 +223,7 @@ XytInfo参数说明：
 | title | 素材名称 | String |
 
 
-#### 3. 素材id工具
+#### 3. 素材工具
 ```
  /**
    * Long转成16进制ttid字符串
@@ -229,6 +236,27 @@ XytInfo参数说明：
    * 如：""0x1100300000080431"-->1225031875203433521
    */
    long ttid = XytManager.ttidHexStrToLong(ttidHexStr);
+
+  /**
+   * 是否mv主题
+   */
+  boolean isMvTheme = XytManager.isMVTheme(ttidLong);
+
+  /**
+   * 获取主题上配置的 获取封面的最佳时间点
+   */
+  int timePos = XytManager.getThemeCoverPos(themePath);
+
+  /**
+   * 获取转场配置时长
+   */
+  int duration = XytManager.getTranDuration(transPath);
+
+  /**
+   * 获取转场时长是否可编辑
+   */
+  boolean isEditable = XytManager.getTranEditable(transPath);
+
 ```
 
 
@@ -889,6 +917,7 @@ EffectAudioInfo参数说明：
 | soundTone | 变声，-60~60，正常0。{@see QEDftSoundTone}类中有提供的特定音调 | float |
 | audioFadeIn | 渐入，只对背景音乐有效 {@see AudioFade} | AudioFade |
 | audioFadeOut | 渐出，只对背景音乐有效 {@see AudioFade} | AudioFade |
+| audioLyric | 歌曲字幕信息 {@see AudioLyric} | AudioLyric |
 | musicMsg | 音乐信息,开发者可以用于存储音乐相关的信息 | String |
 
 AudioFade参数说明：
@@ -903,23 +932,53 @@ AudioFade.Type参数说明：
 | FadeIn | 渐入 |
 | FadeOut | 渐出 |
 
+AudioLyric参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| lyricPath | 歌曲字幕lyric文件路径 | string |
+| lyricTtid | 歌词模板的素材id | long |
+
 FloatEffect参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | alpha | 透明度 0~100 | int |
-| anchor | 锚点,(0,0)为效果的左上角位置，（5000，5000）表示效果的中心，（10000，10000）表示效果的右下角。默认是(5000,5000) 。相当于把0~1的比例放大10000倍 | VeMSize |
+| anchor | 锚点,(0,0)为效果的左上角位置，（0.5，0.5）表示效果的中心，（1.0，1.0）表示效果的右下角。默认是(0.5,0.5) 。取值范围是0~1 | PointF |
 | mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
+| mEffectMaskInfo | 蒙版位置信息数据 {@see EffectMaskInfo} | EffectMaskInfo |
 
 EffectPosInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | centerPosX | 中心点-X，在streamSize的坐标系中 | float |
 | centerPosY | 中心点-Y，在streamSize的坐标系中 | float |
-| width | 宽 | float，在streamSize的坐标系中 |
-| height | 高 | float，在streamSize的坐标系中 |
+| width | 宽，在streamSize的坐标系中 | float |
+| height | 高，在streamSize的坐标系中 | float |
 | degree | 旋转角度， 0~360 | float |
 | isHorFlip | 水平反转 | boolean |
 | isVerFlip | 垂直反转 | boolean |
+
+
+
+EffectMaskInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| maskType | 蒙版类型{@see EffectMaskInfo.MaskType} | MaskType |
+| centerX | 中心点-X，在streamSize的坐标系中，中心点尽量保持在素材位置内 | float |
+| centerY | 中心点-Y，在streamSize的坐标系中，中心点尽量保持在素材位置内 | float |
+| radiusY | 垂直方向半径，在streamSize的坐标系中 | float |
+| radiusX | 水平方向半径，在streamSize的坐标系中 | float |
+| rotation | 旋转角度， 0~360 | float |
+| softness | 羽化程度，取值范围：[0~10000] | int |
+| reverse | 是否反选 | boolean |
+
+EffectMaskInfo.MaskType
+| 名称  | 解释 |
+| :-: | :-: |
+| MASK_NONE | 无蒙版 |
+| MASK_LINEAR | 线性蒙版 |
+| MASK_MIRROR | 镜像蒙版 |
+| MASK_RADIAL | 径向蒙版 |
+| MASK_RECTANGLE | 矩形蒙版 |
 
 MosaicEffect参数说明：
 | 名称  | 解释 | 类型 |
@@ -1397,6 +1456,15 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPAudioReplace);
 ```
 
+14）音频歌词字幕设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// audioLyric表示引擎歌词字幕信息 {@see AudioLyric}
+	EffectOPAudioLyric effectOPAudioLyric = new EffectOPAudioLyric(groupId, effectIndex, audioLyric);
+	mWorkSpace.handleOperation(effectOPAudioLyric);
+```
+
 14）音频信息
 ```
 	// groupId为effect的类型
@@ -1432,16 +1500,26 @@ EffectAddItem参数说明：
 快速刷新用于快速刷新播放器，提高播放器刷新性能使用，不会保存到工程中，所以快速刷新操作结束后，需要再进行一次非快速刷新的修改，才能真实起作用。需要结合EffectOPLock操作使用，锁定播放器中的素材刷新。
 
 
-
-17）锚点修改
+17）画中画蒙版设置
 ```
-	// clipIndex表示第几个片段，从0开始
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// effectMaskInfo表示蒙版信息 {@see EffectMaskInfo}
+	EffectOPMaskInfo effectOPMaskInfo = new EffectOPMaskInfo(groupId, effectIndex, effectMaskInfo);
+	mWorkSpace.handleOperation(effectMaskInfo);
+```
+
+
+18）锚点修改
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
 	// anchor锚点位置数据
-	EffectOPAnchor effectOPAnchor = new EffectOPAnchor(clipIndex, anchor);
-	mWorkSpace.handleOperation(anchor);
+	EffectOPAnchor effectOPAnchor = new EffectOPAnchor(groupId, effectIndex, anchor);
+	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
-18）显示静态图片
+19）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1452,7 +1530,7 @@ EffectAddItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-19）马赛克模糊程度
+20）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1462,7 +1540,7 @@ EffectAddItem参数说明：
 ```
 
 
-20）字幕动画开关
+21）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1471,7 +1549,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-21）字幕文本
+22）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1490,7 +1568,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-22）字幕字体
+23）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1510,7 +1588,7 @@ EffectAddItem参数说明：
 ```
 
 
-23）字幕文本颜色
+24）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1529,7 +1607,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-24）字幕文本对齐方式
+25）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1565,7 +1643,7 @@ EffectAddItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-25）字幕文本阴影
+26）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1584,7 +1662,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-26）字幕文本描边
+27）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
