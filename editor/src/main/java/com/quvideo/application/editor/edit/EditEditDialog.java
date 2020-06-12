@@ -92,7 +92,7 @@ public class EditEditDialog extends BaseMenuView {
       if (playerStatus == PlayerStatus.STATUS_PAUSE
           || playerStatus == PlayerStatus.STATUS_PLAYING
           || playerStatus == PlayerStatus.STATUS_SEEKING) {
-        int selectIndex = mWorkSpace.getClipAPI().getClipIndexByTime(progress);
+        int selectIndex = getClipIndexByTime(progress);
         if (clipAdapter.getSelClipIndex() != selectIndex) {
           clipAdapter.changeSelect(selectIndex);
         }
@@ -104,7 +104,7 @@ public class EditEditDialog extends BaseMenuView {
           && mWorkSpace.getPlayerAPI() != null
           && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
         int currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
-        int selectIndex = mWorkSpace.getClipAPI().getClipIndexByTime(currentTime);
+        int selectIndex = getClipIndexByTime(currentTime);
         if (clipAdapter.getSelClipIndex() != selectIndex) {
           clipAdapter.changeSelect(selectIndex);
         }
@@ -115,6 +115,21 @@ public class EditEditDialog extends BaseMenuView {
 
     }
   };
+
+  public int getClipIndexByTime(int curTime) {
+    List<ClipData> clipList = mWorkSpace.getClipAPI().getClipList();
+    int count = clipList.size();
+    if (count <= 0) {
+      return 0;
+    }
+    for (int index = 0; index < count; index++) {
+      int endTime = clipList.get(index).getDestRange().getLimitValue();
+      if (endTime > curTime) {
+        return index;
+      }
+    }
+    return count - 1;
+  }
 
   private BaseObserver mBaseObserver = new BaseObserver() {
     @Override public void onChange(BaseOperate operate) {

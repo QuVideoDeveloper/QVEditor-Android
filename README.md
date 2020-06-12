@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.14"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.15"
 }
 ```
 
@@ -726,6 +726,7 @@ public interface StoryboardAPI {
   List<ThemeSubtitleEffect> getThemeTitleInfoList();
 }
 ```
+
 ClipAPI信息:
 ```
 public interface ClipAPI {
@@ -733,11 +734,8 @@ public interface ClipAPI {
   /** 获取所有clip信息 */
   List<ClipData> getClipList();
 
-  /** 根据索引，clip的开始播放点 */
-  int getClipStartPosition(int index);
-
-  /** 通过当前时间，获取Clip的index */
-  int getClipIndexByTime(int curTime);
+  /** 获取指定位置的clip信息 */
+  ClipData getClipByIndex(int clipIndex);
 }
 ```
 
@@ -945,6 +943,7 @@ FloatEffect参数说明：
 | anchor | 锚点,(0,0)为效果的左上角位置，（0.5，0.5）表示效果的中心，（1.0，1.0）表示效果的右下角。默认是(0.5,0.5) 。取值范围是0~1 | PointF |
 | mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
 | mEffectMaskInfo | 蒙版位置信息数据 {@see EffectMaskInfo} | EffectMaskInfo |
+| mEffectOverlayInfo | 混合模式信息数据 {@see EffectOverlayInfo} | EffectOverlayInfo |
 
 EffectPosInfo参数说明：
 | 名称  | 解释 | 类型 |
@@ -956,7 +955,6 @@ EffectPosInfo参数说明：
 | degree | 旋转角度， 0~360 | float |
 | isHorFlip | 水平反转 | boolean |
 | isVerFlip | 垂直反转 | boolean |
-
 
 
 EffectMaskInfo参数说明：
@@ -971,6 +969,7 @@ EffectMaskInfo参数说明：
 | softness | 羽化程度，取值范围：[0~10000] | int |
 | reverse | 是否反选 | boolean |
 
+
 EffectMaskInfo.MaskType
 | 名称  | 解释 |
 | :-: | :-: |
@@ -979,6 +978,14 @@ EffectMaskInfo.MaskType
 | MASK_MIRROR | 镜像蒙版 |
 | MASK_RADIAL | 径向蒙版 |
 | MASK_RECTANGLE | 矩形蒙版 |
+
+
+EffectOverlayInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| overlayPath | 混合模式素材路径 | String |
+| level | 混合程度，改参数和透明度一个效果 | 0~100 |
+
 
 MosaicEffect参数说明：
 | 名称  | 解释 | 类型 |
@@ -1510,7 +1517,18 @@ EffectAddItem参数说明：
 ```
 
 
-18）锚点修改
+
+18）画中画混合模式设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// effectOverlayInfo表示混合模式信息 {@see EffectOverlayInfo}
+	EffectOPOverlayInfo effectOPOverlayInfo = new EffectOPOverlayInfo(groupId, effectIndex, effectOverlayInfo);
+	mWorkSpace.handleOperation(effectOPOverlayInfo);
+```
+
+
+19）锚点修改
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1519,7 +1537,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
-19）显示静态图片
+20）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1530,7 +1548,7 @@ EffectAddItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-20）马赛克模糊程度
+21）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1540,7 +1558,7 @@ EffectAddItem参数说明：
 ```
 
 
-21）字幕动画开关
+22）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1549,7 +1567,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-22）字幕文本
+23）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1568,7 +1586,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-23）字幕字体
+24）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1588,7 +1606,7 @@ EffectAddItem参数说明：
 ```
 
 
-24）字幕文本颜色
+25）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1607,7 +1625,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-25）字幕文本对齐方式
+26）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1643,7 +1661,7 @@ EffectAddItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-26）字幕文本阴影
+27）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1662,7 +1680,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-27）字幕文本描边
+28）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE

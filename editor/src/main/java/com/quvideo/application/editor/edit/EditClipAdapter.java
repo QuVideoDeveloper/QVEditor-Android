@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.DPUtils;
 import com.quvideo.application.editor.R;
+import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -109,7 +110,11 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
       if (position < clipSize) {
         changeSelect(position);
         if (workSpace != null && workSpace.getPlayerAPI() != null && workSpace.getPlayerAPI().getPlayerControl() != null) {
-          int time = workSpace.getClipAPI().getClipStartPosition(position);
+          ClipData item = workSpace.getClipAPI().getClipByIndex(position);
+          int time = 0;
+          if (item != null) {
+            time = item.getDestRange().getPosition();
+          }
           workSpace.getPlayerAPI().getPlayerControl().seek(time);
         }
       } else if (onAddClipListener != null) {
