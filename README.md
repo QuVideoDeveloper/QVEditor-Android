@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.15"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.16"
 }
 ```
 
@@ -805,7 +805,7 @@ ClipData参数说明：
 | crossInfo | 转场，null表示无。当前片段和下一个片段的转场数据{@see CrossInfo} | CrossInfo |
 | filterInfo | 滤镜信息，null表示无{@see FilterInfo} | FilterInfo |
 | fxFilterInfo | 特效滤镜信息，null表示无{@see FxFilterInfo} | FxFilterInfo |
-| mClipParamAdjust | 参数调节信息{@see ClipParamAdjust} | ClipParamAdjust |
+| mParamAdjust | 参数调节信息{@see ParamAdjust} | ParamAdjust |
 | mClipPosInfo | 片段位置信息{@see ClipPosInfo} | ClipPosInfo |
 | mClipBgData | 片段背景信息{@see ClipBgData} | ClipBgData |
 
@@ -843,7 +843,7 @@ FxFilterInfo参数说明：
 | :-: | :-: | :-: |
 | filterPath | 特效滤镜路径 | String |
 
-ClipParamAdjust参数说明：
+ParamAdjust参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | luminance | 亮度,0~100,默认50 | int |
@@ -942,8 +942,7 @@ FloatEffect参数说明：
 | alpha | 透明度 0~100 | int |
 | anchor | 锚点,(0,0)为效果的左上角位置，（0.5，0.5）表示效果的中心，（1.0，1.0）表示效果的右下角。默认是(0.5,0.5) 。取值范围是0~1 | PointF |
 | mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
-| mEffectMaskInfo | 蒙版位置信息数据 {@see EffectMaskInfo} | EffectMaskInfo |
-| mEffectOverlayInfo | 混合模式信息数据 {@see EffectOverlayInfo} | EffectOverlayInfo |
+
 
 EffectPosInfo参数说明：
 | 名称  | 解释 | 类型 |
@@ -955,6 +954,16 @@ EffectPosInfo参数说明：
 | degree | 旋转角度， 0~360 | float |
 | isHorFlip | 水平反转 | boolean |
 | isVerFlip | 垂直反转 | boolean |
+
+
+AnimEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| mEffectMaskInfo | 蒙版位置信息数据 {@see EffectMaskInfo} | EffectMaskInfo |
+| mEffectOverlayInfo | 混合模式信息数据 {@see EffectOverlayInfo} | EffectOverlayInfo |
+| mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
+| mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
+| mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
 
 
 EffectMaskInfo参数说明：
@@ -986,6 +995,15 @@ EffectOverlayInfo参数说明：
 | overlayPath | 混合模式素材路径 | String |
 | level | 混合程度，改参数和透明度一个效果 | 0~100 |
 
+
+
+
+EffectSubFx参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| subFxPath | 子特效素材路径 | String |
+| subType | 子特效索引，不可修改 | 1000~2000 |
+| destRange | 子特效出入点区间，相对效果的时间 | VeRange |
 
 MosaicEffect参数说明：
 | 名称  | 解释 | 类型 |
@@ -1295,8 +1313,8 @@ ClipBgData构造器
 20）镜头参数调节
 ```
 	// clipIndex表示第几个片段，从0开始
-	// clipPosInfo镜头位置数据 {@see ClipParamAdjust}
-	ClipOPParamAdjust clipOPParamAdjust = new ClipOPParamAdjust(clipIndex, clipParamAdjust);
+	// paramAdjust镜头参数调节数据 {@see ParamAdjust}
+	ClipOPParamAdjust clipOPParamAdjust = new ClipOPParamAdjust(clipIndex, paramAdjust);
 	mWorkSpace.handleOperation(clipOPParamAdjust);
 ```
 
@@ -1528,7 +1546,61 @@ EffectAddItem参数说明：
 ```
 
 
-19）锚点修改
+19）画中画滤镜设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// FilterInfo表示滤镜信息 {@see FilterInfo}
+	EffectOPFilterInfo effectOPFilterInfo = new EffectOPFilterInfo(groupId, effectIndex, filterInfo);
+	mWorkSpace.handleOperation(effectOPFilterInfo);
+```
+
+
+20）画中画参数调节设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// ParamAdjust表示参数调节信息 {@see ParamAdjust}
+	EffectOPParamAdjust effectOPParamAdjust = new EffectOPParamAdjust(groupId, effectIndex, paramAdjust);
+	mWorkSpace.handleOperation(effectOPParamAdjust);
+```
+
+
+
+21）画中画添加子特效
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// subFxPath表示特效素材路径
+	// destRange表示特效出入相对时间区间
+	EffectOPSubFxAdd effectOPSubFxAdd = new EffectOPSubFxAdd(groupId, effectIndex, subFxPath, destRange);
+	mWorkSpace.handleOperation(effectOPSubFxAdd);
+```
+
+
+
+22）画中画修改子特效出入点时间区间
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// subType表示子特效索引{@see EffectSubFx}
+	// destRange表示特效出入相对时间区间
+	EffectOPSubFxDestRange effectOPSubFxDestRange = new EffectOPSubFxDestRange(groupId, effectIndex, subType, destRange);
+	mWorkSpace.handleOperation(effectOPSubFxDestRange);
+```
+
+
+23）画中画删除子特效
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// subType表示子特效索引{@see EffectSubFx}
+	EffectOPSubFxDel effectOPSubFxDel = new EffectOPSubFxDel(groupId, effectIndex, subType);
+	mWorkSpace.handleOperation(effectOPSubFxDel);
+```
+
+
+24）锚点修改
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1537,7 +1609,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
-20）显示静态图片
+25）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1548,7 +1620,7 @@ EffectAddItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-21）马赛克模糊程度
+26）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1558,7 +1630,7 @@ EffectAddItem参数说明：
 ```
 
 
-22）字幕动画开关
+27）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1567,7 +1639,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-23）字幕文本
+28）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1586,7 +1658,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-24）字幕字体
+29）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1606,7 +1678,7 @@ EffectAddItem参数说明：
 ```
 
 
-25）字幕文本颜色
+30）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1625,7 +1697,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-26）字幕文本对齐方式
+31）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1661,7 +1733,7 @@ EffectAddItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-27）字幕文本阴影
+32）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1680,7 +1752,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-28）字幕文本描边
+33）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE

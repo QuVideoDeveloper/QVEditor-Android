@@ -14,7 +14,7 @@ import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.mobile.engine.model.ClipData;
-import com.quvideo.mobile.engine.model.clip.ClipParamAdjust;
+import com.quvideo.mobile.engine.model.clip.ParamAdjust;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPParamAdjust;
 
@@ -74,7 +74,7 @@ public class EditAdjustDialog extends BaseMenuView {
       initAdjustProgress(holder, position);
       holder.seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
         @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+          onAdjustChanged(ADJUST_ITEM_TITLE_RES[position], seekBar.getProgress());
         }
 
         @Override public void onStartTrackingTouch(SeekBar seekBar) {
@@ -82,7 +82,6 @@ public class EditAdjustDialog extends BaseMenuView {
         }
 
         @Override public void onStopTrackingTouch(SeekBar seekBar) {
-          onAdjustChanged(ADJUST_ITEM_TITLE_RES[position], seekBar.getProgress());
         }
       });
     }
@@ -94,63 +93,63 @@ public class EditAdjustDialog extends BaseMenuView {
     private void initAdjustProgress(ItemViewHolder holder, int position) {
       ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
       if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_luminance) {
-        int luminance = clipData.getClipParamAdjust().luminance;
+        int luminance = clipData.getParamAdjust().luminance;
         holder.seekBarController.setSeekBarProgress(luminance);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_contrast) {
-        int contrast = clipData.getClipParamAdjust().contrast;
+        int contrast = clipData.getParamAdjust().contrast;
         holder.seekBarController.setSeekBarProgress(contrast);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_saturation) {
-        int saturation = clipData.getClipParamAdjust().saturation;
+        int saturation = clipData.getParamAdjust().saturation;
         holder.seekBarController.setSeekBarProgress(saturation);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_sharpness) {
-        int sharpness = clipData.getClipParamAdjust().sharpness;
+        int sharpness = clipData.getParamAdjust().sharpness;
         holder.seekBarController.setSeekBarProgress(sharpness);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_colortemp) {
-        int colourTemp = clipData.getClipParamAdjust().colourTemp;
+        int colourTemp = clipData.getParamAdjust().colourTemp;
         holder.seekBarController.setSeekBarProgress(colourTemp);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_vignette) {
-        int vignette = clipData.getClipParamAdjust().vignette;
+        int vignette = clipData.getParamAdjust().vignette;
         holder.seekBarController.setSeekBarProgress(vignette);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_shadow) {
-        int shadow = clipData.getClipParamAdjust().shadow;
+        int shadow = clipData.getParamAdjust().shadow;
         holder.seekBarController.setSeekBarProgress(shadow);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_hue) {
-        int hue = clipData.getClipParamAdjust().hue;
+        int hue = clipData.getParamAdjust().hue;
         holder.seekBarController.setSeekBarProgress(hue);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_highlight) {
-        int highlight = clipData.getClipParamAdjust().highlight;
+        int highlight = clipData.getParamAdjust().highlight;
         holder.seekBarController.setSeekBarProgress(highlight);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_fade) {
-        int fade = clipData.getClipParamAdjust().fade;
+        int fade = clipData.getParamAdjust().fade;
         holder.seekBarController.setSeekBarProgress(fade);
       }
     }
 
     private void onAdjustChanged(int titleRes, int value) {
-      ClipParamAdjust clipParamAdjust =
-          mWorkSpace.getClipAPI().getClipList().get(clipIndex).getClipParamAdjust();
+      ParamAdjust paramAdjust =
+          mWorkSpace.getClipAPI().getClipList().get(clipIndex).getParamAdjust();
       if (titleRes == R.string.mn_edit_adjust_luminance) {
-        clipParamAdjust.luminance = value;
+        paramAdjust.luminance = value;
       } else if (titleRes == R.string.mn_edit_adjust_contrast) {
-        clipParamAdjust.contrast = value;
+        paramAdjust.contrast = value;
       } else if (titleRes == R.string.mn_edit_adjust_saturation) {
-        clipParamAdjust.saturation = value;
+        paramAdjust.saturation = value;
       } else if (titleRes == R.string.mn_edit_adjust_sharpness) {
-        clipParamAdjust.sharpness = value;
+        paramAdjust.sharpness = value;
       } else if (titleRes == R.string.mn_edit_adjust_colortemp) {
-        clipParamAdjust.colourTemp = value;
+        paramAdjust.colourTemp = value;
       } else if (titleRes == R.string.mn_edit_adjust_vignette) {
-        clipParamAdjust.vignette = value;
+        paramAdjust.vignette = value;
       } else if (titleRes == R.string.mn_edit_adjust_shadow) {
-        clipParamAdjust.shadow = value;
+        paramAdjust.shadow = value;
       } else if (titleRes == R.string.mn_edit_adjust_hue) {
-        clipParamAdjust.hue = value;
+        paramAdjust.hue = value;
       } else if (titleRes == R.string.mn_edit_adjust_highlight) {
-        clipParamAdjust.highlight = value;
+        paramAdjust.highlight = value;
       } else if (titleRes == R.string.mn_edit_adjust_fade) {
-        clipParamAdjust.fade = value;
+        paramAdjust.fade = value;
       }
-      ClipOPParamAdjust clipOPParamAdjust = new ClipOPParamAdjust(clipIndex, clipParamAdjust);
+      ClipOPParamAdjust clipOPParamAdjust = new ClipOPParamAdjust(clipIndex, paramAdjust);
       mWorkSpace.handleOperation(clipOPParamAdjust);
     }
   }

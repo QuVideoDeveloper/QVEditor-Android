@@ -19,7 +19,7 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 public class FileUtils {
-  private static final String TAG = "QEFileUtils";
+  private static final String TAG = "FileUtils";
 
   public static final String ASSETS_THEME = "assets_android://";
 

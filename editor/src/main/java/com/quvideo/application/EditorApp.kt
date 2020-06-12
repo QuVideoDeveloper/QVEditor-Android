@@ -8,12 +8,12 @@ import com.bumptech.glide.Glide
 import com.quvideo.application.glidedecoder.EffectThumbParams
 import com.quvideo.application.glidedecoder.XytModelLoaderFactory
 import com.quvideo.application.sp.DemoSharedPref
+import com.quvideo.application.utils.FileUtils
 import com.quvideo.mobile.component.template.XytInstallListener
 import com.quvideo.mobile.component.template.XytManager
 import com.quvideo.mobile.engine.QEEngineClient
 import com.quvideo.mobile.engine.QEInitData.Builder
 import com.quvideo.mobile.engine.QELogger
-import com.quvideo.mobile.engine.utils.QEFileUtils
 import java.io.File
 import java.util.ArrayList
 
@@ -83,11 +83,11 @@ class EditorApp private constructor() {
         "assets_android://",
         StorageUtils.getTemplatePath(app)
     )
-    if (!QEFileUtils.isFileExisted(newFilePath)) {
+    if (!FileUtils.isFileExisted(newFilePath)) {
       //copy from assets
       val fileParentPath = File(newFilePath)
-      QEFileUtils.createMultilevelDirectory(fileParentPath.parent)
-      QEFileUtils.copyFileFromAssets(
+      FileUtils.createMultilevelDirectory(fileParentPath.parent)
+      FileUtils.copyFileFromAssets(
           strFile.substring("assets_android://".length), newFilePath, app.assets
       )
     }
