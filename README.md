@@ -965,6 +965,7 @@ AnimEffect参数说明：
 | mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
 | mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
 | mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
+| keyFrameRanges | 关键帧信息数据 {@see EffectKeyFrameInfo} | EffectKeyFrameInfo |
 
 
 
@@ -1006,13 +1007,24 @@ EffectChromaInfo参数说明：
 | accuracy | 抠色的精度（0~5000） | int|
 
 
-
 EffectSubFx参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | subFxPath | 子特效素材路径 | String |
 | subType | 子特效索引，不可修改 | 1000~2000 |
 | destRange | 子特效出入点区间，相对效果的时间 | VeRange |
+
+
+EffectKeyFrameInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| relativeTime | 相对时间，相对于效果入点时间 | int |
+| centerX | 中心点x，在streamSize的坐标系中 | int |
+| centerY | 中心点y，在streamSize的坐标系中 | int |
+| widthRatio | 宽缩放倍率 | float |
+| heightRatio | 高缩放倍率 | float |
+| rotation | 旋转角度 | int |
+
 
 MosaicEffect参数说明：
 | 名称  | 解释 | 类型 |
@@ -1790,6 +1802,18 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleStroke);
 ```
 
+
+
+35）关键帧设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// keyFrameRange表示关键帧列表，每次都需要设置完整列表 {@see EffectKeyFrameInfo}
+	EffectOPKeyFrame effectOPKeyFrame = new EffectOPKeyFrame(groupId, effectIndex, keyFrameRange);
+	mWorkSpace.handleOperation(effectOPKeyFrame);
+```
+
+
 #### 7. 导出
 ```
   /**
@@ -2087,4 +2111,3 @@ SlideInfo.Type参数说明：
    */
   int iRes = QETools.extractAudioWave(String audioPath, VeRange srcRange, IAudioDataListener audioDataListener);
 ```
-### 十、 高阶剪辑工程编辑能力接入
