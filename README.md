@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.16"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.0.17"
 }
 ```
 
@@ -959,11 +959,20 @@ EffectPosInfo参数说明：
 AnimEffect参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| mEffectMaskInfo | 蒙版位置信息数据 {@see EffectMaskInfo} | EffectMaskInfo |
 | mEffectOverlayInfo | 混合模式信息数据 {@see EffectOverlayInfo} | EffectOverlayInfo |
+| mEffectMaskInfo | 蒙版位置信息数据 {@see EffectMaskInfo} | EffectMaskInfo |
+| mEffectChromaInfo | 抠色信息数据（绿幕） {@see EffectChromaInfo} | EffectChromaInfo |
 | mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
 | mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
 | mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
+
+
+
+EffectOverlayInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| overlayPath | 混合模式素材路径 | String |
+| level | 混合程度，改参数和透明度一个效果,0~100 | int |
 
 
 EffectMaskInfo参数说明：
@@ -989,12 +998,12 @@ EffectMaskInfo.MaskType
 | MASK_RECTANGLE | 矩形蒙版 |
 
 
-EffectOverlayInfo参数说明：
+EffectChromaInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| overlayPath | 混合模式素材路径 | String |
-| level | 混合程度，改参数和透明度一个效果 | 0~100 |
-
+| enable | 是否开启 | boolean |
+| color | 抠色的颜色值, 如0xFFFFFF | int|
+| accuracy | 抠色的精度（0~5000） | int|
 
 
 
@@ -1525,18 +1534,8 @@ EffectAddItem参数说明：
 快速刷新用于快速刷新播放器，提高播放器刷新性能使用，不会保存到工程中，所以快速刷新操作结束后，需要再进行一次非快速刷新的修改，才能真实起作用。需要结合EffectOPLock操作使用，锁定播放器中的素材刷新。
 
 
-17）画中画蒙版设置
-```
-	// groupId为effect的类型
-	// effectIndex为同类型中第几个效果
-	// effectMaskInfo表示蒙版信息 {@see EffectMaskInfo}
-	EffectOPMaskInfo effectOPMaskInfo = new EffectOPMaskInfo(groupId, effectIndex, effectMaskInfo);
-	mWorkSpace.handleOperation(effectMaskInfo);
-```
 
-
-
-18）画中画混合模式设置
+17）画中画混合模式设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1546,7 +1545,27 @@ EffectAddItem参数说明：
 ```
 
 
-19）画中画滤镜设置
+18）画中画蒙版设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// effectMaskInfo表示蒙版信息 {@see EffectMaskInfo}
+	EffectOPMaskInfo effectOPMaskInfo = new EffectOPMaskInfo(groupId, effectIndex, effectMaskInfo);
+	mWorkSpace.handleOperation(effectMaskInfo);
+```
+
+
+19）画中画抠色设置（绿幕）
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// chromaInfo表示抠色信息 {@see EffectChromaInfo}
+	EffectOPChroma effectOPChroma = new EffectOPChroma(groupId, effectIndex, chromaInfo);
+	mWorkSpace.handleOperation(effectOPChroma);
+```
+
+
+20）画中画滤镜设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1556,7 +1575,7 @@ EffectAddItem参数说明：
 ```
 
 
-20）画中画参数调节设置
+21）画中画参数调节设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1567,7 +1586,7 @@ EffectAddItem参数说明：
 
 
 
-21）画中画添加子特效
+22）画中画添加子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1579,7 +1598,7 @@ EffectAddItem参数说明：
 
 
 
-22）画中画修改子特效出入点时间区间
+23）画中画修改子特效出入点时间区间
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1590,7 +1609,7 @@ EffectAddItem参数说明：
 ```
 
 
-23）画中画删除子特效
+24）画中画删除子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1600,7 +1619,7 @@ EffectAddItem参数说明：
 ```
 
 
-24）锚点修改
+25）锚点修改
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1609,7 +1628,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
-25）显示静态图片
+26）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1620,7 +1639,7 @@ EffectAddItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-26）马赛克模糊程度
+27）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1630,7 +1649,7 @@ EffectAddItem参数说明：
 ```
 
 
-27）字幕动画开关
+28）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1639,7 +1658,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-28）字幕文本
+29）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1658,7 +1677,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-29）字幕字体
+30）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1678,7 +1697,7 @@ EffectAddItem参数说明：
 ```
 
 
-30）字幕文本颜色
+31）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1697,7 +1716,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-31）字幕文本对齐方式
+32）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1733,7 +1752,7 @@ EffectAddItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-32）字幕文本阴影
+33）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1752,7 +1771,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-33）字幕文本描边
+34）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
