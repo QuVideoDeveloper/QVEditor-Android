@@ -62,7 +62,4 @@ public class CamEventCallbackImpl implements ICameraEventCallback {
     LogUtils.d(TAG, "onPipSrcObjEnd ... ");
   }
 
-  @Override public void onPasterDisplayStatusChanged(QExpressionPasterStatus status) {
-    LogUtils.d(TAG, "onPasterDisplayStatusChanged : " + new Gson().toJson(status));
-  }
 }

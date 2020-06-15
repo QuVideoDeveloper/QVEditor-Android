@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.1.2"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.1.3"
 }
 ```
 
@@ -339,7 +339,6 @@ public interface ICameraEventCallback {
 
   void onPipSrcObjEnd();
 
-  void onPasterDisplayStatusChanged(QExpressionPasterStatus status);
 }
 ```
 
@@ -392,7 +391,7 @@ mXYCamera.closeCamera();
 
 开始录制需要传递XYRecorderParam参数，该参数可以自定义一些录制参数。
 ```
-mXYCamera.startRecording(new      XYRecorderParam(filePath,mXYCamera.getOutPutSize(),mXYCamera.getCurCameraId() == XYCameraConst.CameraId.CAMERA_FRONT));
+mXYCamera.startRecording(new XYRecorderParam(filePath,mXYCamera.getOutPutSize(),mXYCamera.getCurCameraId() == XYCameraConst.CameraId.CAMERA_FRONT));
 ```
 
 暂停录制会返回当次录制的start位置与end位置，这样可以知道本次录制在mp4文件中的range
