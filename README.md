@@ -965,7 +965,7 @@ AnimEffect参数说明：
 | mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
 | mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
 | mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
-| keyFrameRanges | 关键帧信息数据 {@see EffectKeyFrameInfo} | EffectKeyFrameInfo |
+| keyFrameRanges | 关键帧信息数据 {@see EffectKeyFrameInfo}（由于功能复杂，后期可能调整数据结构） | EffectKeyFrameInfo |
 
 
 
@@ -1015,7 +1015,7 @@ EffectSubFx参数说明：
 | destRange | 子特效出入点区间，相对效果的时间 | VeRange |
 
 
-EffectKeyFrameInfo参数说明：
+EffectKeyFrameInfo参数说明：（由于功能复杂，后期可能调整数据结构）
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | relativeTime | 相对时间，相对于效果入点时间 | int |
@@ -1804,7 +1804,7 @@ EffectAddItem参数说明：
 
 
 
-35）关键帧设置
+35）关键帧设置（由于功能复杂，后期可能调整接口方式）
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
