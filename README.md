@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.0.17"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.1.2"
 }
 ```
 
@@ -965,7 +965,7 @@ AnimEffect参数说明：
 | mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
 | mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
 | mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
-| keyFrameRanges | 关键帧信息数据 {@see EffectKeyFrameInfo}（由于功能复杂，后期可能调整数据结构） | EffectKeyFrameInfo |
+| mEffectKeyFrameInfo | 关键帧信息数据 {@see EffectKeyFrameInfo}（由于功能复杂，后期可能调整数据结构） | EffectKeyFrameInfo |
 
 
 
@@ -1018,12 +1018,64 @@ EffectSubFx参数说明：
 EffectKeyFrameInfo参数说明：（由于功能复杂，后期可能调整数据结构）
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| relativeTime | 相对时间，相对于效果入点时间 | int |
-| centerX | 中心点x，在streamSize的坐标系中 | int |
-| centerY | 中心点y，在streamSize的坐标系中 | int |
-| widthRatio | 宽缩放倍率 | float |
-| heightRatio | 高缩放倍率 | float |
-| rotation | 旋转角度 | int |
+| positionList | 位置关键帧列表 {@see KeyPosInfo} | KeyPosInfo |
+| scaleList | 缩放关键帧列表 {@see KeyScaleInfo}  | KeyScaleInfo |
+| rotationList | 旋转角度关键帧列表{@see KeyRotationInfo}   | KeyRotationInfo |
+| alphaList | 不透明度关键帧列表{@see KeyAlphaInfo} | KeyAlphaInfo |
+
+
+BaseKeyFrame参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| keyFrameType | 关键帧类型 | KeyFrameType |
+| relativeTime | 相对于效果入点的时间 | int |
+| isCurvePath | 关键帧是否曲线路径 | boolean |
+| mKeyBezierCurve | 关键帧缓动贝塞尔曲线点{@see KeyBezierCurve} | KeyBezierCurve |
+
+
+
+KeyFrameType参数说明：
+| 名称  | 解释 |
+| :-: | :-: |
+| POSITION | 位置关键帧 |
+| ROTATION | 旋转关键帧 |
+| SCALE | 缩放关键帧 |
+| ALPHA | 透明度关键帧 |
+
+
+KeyBezierCurve参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| start | 贝塞尔缓动曲线起点,需固定（ 0，0） | Point |
+| stop | 贝塞尔缓动曲线终点,需固定（ 10000，10000） | Point |
+| c0 | 贝塞尔缓动节点1 | Point |
+| c1 | 贝塞尔缓动节点2 | Point |
+
+
+KeyPosInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| centerPosX | 中心点-X，在streamSize的坐标系中 | float |
+| centerPosY | 中心点-Y，在streamSize的坐标系中 | float |
+
+
+KeyScaleInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| widthScale | width缩放比例 | float |
+| heightScale | height缩放比例 | float |
+
+
+KeyRotationInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| rotation | 旋转角度， 0~360 | float |
+
+
+KeyAlphaInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| alpha | 不透明度 0~100 | int |
 
 
 MosaicEffect参数说明：
@@ -1804,12 +1856,12 @@ EffectAddItem参数说明：
 
 
 
-35）关键帧设置（由于功能复杂，后期可能调整接口方式）
+35）关键帧设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
-	// keyFrameRange表示关键帧列表，每次都需要设置完整列表 {@see EffectKeyFrameInfo}
-	EffectOPKeyFrame effectOPKeyFrame = new EffectOPKeyFrame(groupId, effectIndex, keyFrameRange);
+	// effectKeyFrameInfo表示关键帧数据，每次都需要设置完整列表 {@see EffectKeyFrameInfo}
+	EffectOPKeyFrame effectOPKeyFrame = new EffectOPKeyFrame(groupId, effectIndex, effectKeyFrameInfo);
 	mWorkSpace.handleOperation(effectOPKeyFrame);
 ```
 
