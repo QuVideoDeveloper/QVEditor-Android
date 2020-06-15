@@ -1,5 +1,5 @@
 *.iml
-app/src/main/assets/qvlicense/license.txt
+app/src/main/assets/qvlicense/*
 .gradle
 .idea/
 /local.properties
