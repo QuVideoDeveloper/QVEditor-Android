@@ -43,7 +43,7 @@ class EditorApp private constructor() {
       XytManager.installAsset(
           AssetConstants.mScanTemplateList, object : XytInstallListener {
         override fun onSuccess() {}
-        override fun onFailed(errorCode: Int) {}
+        override fun onFailed(p0: MutableList<String>?, p1: Int) {}
       })
       val zipPaths = ArrayList<String>()
       // 拷贝音频文件到sdcard

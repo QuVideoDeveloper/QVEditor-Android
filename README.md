@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.1.4"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.1.5"
 }
 ```
 
@@ -196,7 +196,11 @@ public interface XytInstallListener {
 
   void onSuccess();
 
-  void onFailed(int errorCode);
+/**
+ * @param filePaths 安装失败的素材文件列表
+ * @param errorCode 错误码
+ */
+  void onFailed(List<String> filePaths, int errorCode);
 }
 ```
 
