@@ -121,14 +121,6 @@ public class AssetConstants {
       0x0400000010000040L
   };
 
-  public static final long[] TEST_FX_FILTER_TID = new long[] {
-      0x0400000000500001L,
-      0x0400000000500002L,
-      0x0400000000500003L,
-      0x0400000000500004L,
-      0x0400000000500007L,
-  };
-
   public static final EditFilterTemplate[] TEST_THEME_TID = new EditFilterTemplate[] {
       new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor),
       new EditFilterTemplate(0x01000000000002A3L),
@@ -196,6 +188,15 @@ public class AssetConstants {
       new EditFilterTemplate(0x0400000010000035L),
       new EditFilterTemplate(0x0400000010000039L),
       new EditFilterTemplate(0x0400000010000040L)
+  };
+
+  public static final EditFilterTemplate[] TEST_EDIT_FX_FILTER_TID = new EditFilterTemplate[] {
+      new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor),
+      new EditFilterTemplate(0x0400000000500001L),
+      new EditFilterTemplate(0x0400000000500002L),
+      new EditFilterTemplate(0x0400000000500003L),
+      new EditFilterTemplate(0x0400000000500004L),
+      new EditFilterTemplate(0x0400000000500007L)
   };
 
   public static final EditFilterTemplate[] TEST_EDIT_TRANS_TID = new EditFilterTemplate[] {

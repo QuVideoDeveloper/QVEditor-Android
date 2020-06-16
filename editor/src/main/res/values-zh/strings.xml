@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Tue, 09 Jun 2020 17:20:58 +0800
+ Exported at: Tue, 16 Jun 2020 17:00:28 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -68,6 +68,7 @@
     <string name="mn_edit_title_export">导出</string>
     <string name="mn_edit_title_filter">滤镜</string>
     <string name="mn_edit_title_fx">特效</string>
+    <string name="mn_edit_title_fx_filter">特效滤镜</string>
     <string name="mn_edit_title_mirror">镜像</string>
     <string name="mn_edit_title_mosaic">马赛克</string>
     <string name="mn_edit_title_music">音频</string>

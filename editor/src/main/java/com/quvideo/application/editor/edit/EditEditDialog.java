@@ -14,6 +14,7 @@ import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.sub.EditAdjustDialog;
 import com.quvideo.application.editor.edit.sub.EditFilterDialog;
+import com.quvideo.application.editor.edit.sub.EditFxFilterDialog;
 import com.quvideo.application.editor.edit.sub.EditMagicSoundDialog;
 import com.quvideo.application.editor.edit.sub.EditSpeedDialog;
 import com.quvideo.application.editor.edit.sub.EditSplitDialog;
@@ -73,6 +74,7 @@ public class EditEditDialog extends BaseMenuView {
       add(new EditOperate(R.drawable.edit_icon_delete_nor, context.getString(R.string.mn_edit_title_delete)));
       add(new EditOperate(R.drawable.edit_icon_muteoff_n, context.getString(R.string.mn_edit_title_volume)));
       add(new EditOperate(R.drawable.edit_icon_filter_nor, context.getString(R.string.mn_edit_title_filter)));
+      add(new EditOperate(R.drawable.edit_icon_effect_nor, context.getString(R.string.mn_edit_title_fx_filter)));
       add(new EditOperate(R.drawable.edit_icon_change_nor, context.getString(R.string.mn_edit_title_transitions)));
       add(new EditOperate(R.drawable.edit_icon_changevoice_nor, context.getString(R.string.mn_edit_title_change_voice)));
       add(new EditOperate(R.drawable.edit_icon_speed_nor, context.getString(R.string.mn_edit_title_speed)));
@@ -179,6 +181,8 @@ public class EditEditDialog extends BaseMenuView {
       new EditSpeedDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
     } else if (operate.getResId() == R.drawable.edit_icon_filter_nor) {
       new EditFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
+    } else if (operate.getResId() == R.drawable.edit_icon_effect_nor) {
+      new EditFxFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
     } else if (operate.getResId() == R.drawable.edit_icon_change_nor) {
       if (selIndex >= clipAdapter.getItemCount() - 2) {
         ToastUtils.show(getContext(), R.string.mn_edit_tips_no_allow_set_last_trans, Toast.LENGTH_LONG);
