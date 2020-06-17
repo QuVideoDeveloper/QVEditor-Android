@@ -224,7 +224,6 @@ XytInfo参数说明：
 | ttidLong | 素材id| long |
 | ttidHexStr | 素材id的十六进制 如：0x06000000000000D9| String |
 | filePath | 素材路径 | String |
-| title | 素材名称 | String |
 
 
 #### 3. 素材工具
@@ -2119,10 +2118,6 @@ SlideInfo.Type参数说明：
 ##### 2.素材缩略图获取
 工具：QEThumbnailTools
 ```
-  /**
-   * 获取素材xyt文件中的缩略图
-   */
-  Bitmap bitmap = QEThumbnailTools.getTemplateThumbnail(String filePath, int width, int height);
 
   /**
    * 获取图片文件的缩略图（jpeg/png/gif等)
