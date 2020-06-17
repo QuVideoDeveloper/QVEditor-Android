@@ -397,6 +397,15 @@ mXYCamera.closeCamera();
 mXYCamera.startRecording(new XYRecorderParam(filePath,mXYCamera.getOutPutSize(),mXYCamera.getCurCameraId() == XYCameraConst.CameraId.CAMERA_FRONT));
 ```
 
+
+XYRecorderParam参数说明：
+| 名称 | 解释 | 类型 |
+| :-: | :-: | :-: |
+| outputFilePath | 视频录制文件路径 | String |
+| outputSize | 视频录制尺寸  | VeMSize |
+| isFrontCamera | 是否前置摄像头 | boolean |
+
+
 暂停录制会返回当次录制的start位置与end位置，这样可以知道本次录制在mp4文件中的range
 ```
 int[] range = mXYCamera.pauseRecording();
