@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.1.5"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.1.7"
 }
 ```
 
@@ -1431,7 +1431,7 @@ ClipBgData构造器
 ```
 	// groupId为effect的类型
 	// effectIndex为effect添加的位置，0为第一个
-	// effectAddItem需要的effect {@see EffectAddItem}
+	// effectAddItem需要添加的effect信息 {@see EffectAddItem}
 	EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, effectIndex, effectAddItem);
 	mWorkSpace.handleOperation(effectOPAdd);
 ```
@@ -1439,7 +1439,7 @@ EffectAddItem参数说明：
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | mEffectPath | 素材资源路径 | String | 必须 |
-| srcRange | 效果选取的时长，可以选取某一部分，默认（0， -1） | VeRange | 非必须 |
+| trimRange | 效果选取的时长，可以选取某一部分，默认（0， -1） | VeRange | 非必须 |
 | destRange | effect在storyboard上的 mVeRange（起始点，时长） | VeRange | 非必须 |
 | effectLayerId | 效果的层级信息，是一个浮点数，数字越大 层级越高 | float | 非必须 |
 | mEffectPosInfo | 素材位置数据,基于steamsize的，使用的话EffectPosInfo有关于surfacesize的转化 | EffectPosInfo | 非必须 |
@@ -1555,17 +1555,7 @@ EffectAddItem参数说明：
 ```
 
 
-13）替换音频
-```
-	// groupId为effect的类型
-	// effectIndex为同类型中第几个效果
-	// audioPath表示音频路径
-	// srcRange表示引擎裁切区间
-	EffectOPAudioReplace effectOPAudioReplace = new EffectOPAudioReplace(groupId, effectIndex, audioPath, srcRange);
-	mWorkSpace.handleOperation(effectOPAudioReplace);
-```
-
-14）音频歌词字幕设置
+13）音频歌词字幕设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1594,6 +1584,7 @@ EffectAddItem参数说明：
 ```
 该操作配合EffectOPPosInfo使用，当需要快速刷新播放器某个效果位置时，需要先锁定该效果，当位置刷新结束后，需要对改效果解锁。
 
+
 16）位置信息
 ```
 	// groupId为effect的类型
@@ -1610,7 +1601,35 @@ EffectAddItem参数说明：
 
 
 
-17）画中画混合模式设置
+17）替换音频
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// audioPath表示音频路径
+	// srcRange表示引擎裁切区间
+	EffectOPAudioReplace effectOPAudioReplace = new EffectOPAudioReplace(groupId, effectIndex, audioPath, srcRange);
+	mWorkSpace.handleOperation(effectOPAudioReplace);
+```
+
+
+18）替换效果素材文件
+```
+	// groupId为effect的类型
+	// effectIndex为effect添加的位置，0为第一个
+	// effectReplaceItem需要替换的effect信息 {@see EffectReplaceItem}
+	EffectOPReplace effectOPReplace = new EffectOPReplace(groupId, effectIndex, effectReplaceItem);
+	mWorkSpace.handleOperation(effectOPReplace);
+```
+EffectReplaceItem参数说明：
+| 名称  | 解释 | 类型 | 是否必须 |
+| :-: | :-: | :-: | :-: |
+| mEffectPath | 素材资源路径 | String | 必须 |
+| trimRange | null时则不修改原来的trimRange | VeRange | 非必须 |
+| destRange | null时则不修改原来的destRange | VeRange | 非必须 |
+| mEffectPosInfo | null则根据原有的effectPosInfo进行简单的缩放处理 | EffectPosInfo | 非必须 |
+
+
+19）画中画混合模式设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1620,7 +1639,7 @@ EffectAddItem参数说明：
 ```
 
 
-18）画中画蒙版设置
+20）画中画蒙版设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1630,7 +1649,7 @@ EffectAddItem参数说明：
 ```
 
 
-19）画中画抠色设置（绿幕）
+21）画中画抠色设置（绿幕）
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1640,7 +1659,7 @@ EffectAddItem参数说明：
 ```
 
 
-20）画中画滤镜设置
+22）画中画滤镜设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1650,7 +1669,7 @@ EffectAddItem参数说明：
 ```
 
 
-21）画中画参数调节设置
+23）画中画参数调节设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1660,8 +1679,7 @@ EffectAddItem参数说明：
 ```
 
 
-
-22）画中画添加子特效
+24）画中画添加子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1672,8 +1690,7 @@ EffectAddItem参数说明：
 ```
 
 
-
-23）画中画修改子特效出入点时间区间
+25）画中画修改子特效出入点时间区间
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1684,7 +1701,7 @@ EffectAddItem参数说明：
 ```
 
 
-24）画中画删除子特效
+26）画中画删除子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1694,7 +1711,7 @@ EffectAddItem参数说明：
 ```
 
 
-25）锚点修改
+27）锚点修改
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1703,7 +1720,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
-26）显示静态图片
+28）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1714,7 +1731,7 @@ EffectAddItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-27）马赛克模糊程度
+29）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1724,7 +1741,7 @@ EffectAddItem参数说明：
 ```
 
 
-28）字幕动画开关
+30）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1733,7 +1750,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-29）字幕文本
+31）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1752,7 +1769,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-30）字幕字体
+32）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1772,7 +1789,7 @@ EffectAddItem参数说明：
 ```
 
 
-31）字幕文本颜色
+33）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1791,7 +1808,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-32）字幕文本对齐方式
+34）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1827,7 +1844,7 @@ EffectAddItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-33）字幕文本阴影
+35）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1846,7 +1863,7 @@ EffectAddItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-34）字幕文本描边
+36）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1867,13 +1884,41 @@ EffectAddItem参数说明：
 
 
 
-35）关键帧设置
+37）关键帧设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
 	// effectKeyFrameInfo表示关键帧数据，每次都需要设置完整列表 {@see EffectKeyFrameInfo}
 	EffectOPKeyFrame effectOPKeyFrame = new EffectOPKeyFrame(groupId, effectIndex, effectKeyFrameInfo);
 	mWorkSpace.handleOperation(effectOPKeyFrame);
+```
+
+
+
+
+
+38）获取画中画抠色图片
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	EffectOPCreateChromaColor effectOPCreateChromaColor = new EffectOPCreateChromaColor(groupId, effectIndex);
+	mWorkSpace.handleOperation(effectOPCreateChromaColor);
+```
+操作执行结束回调时，可以通过下面方法获取抠色图片：
+```
+ChromaColor chromaColor = effectOPCreateChromaColor.getChromaColor();
+```
+抠色图片可以获取效果特定位置的颜色值：
+```
+// relateX和relateY是相对以画中画为坐标系本身偏移的位置
+chromaColor.getColorByPosition(float relateX, float relateY);
+```
+注意：取的抠色图片，是取播放器当前时间，该效果的图片。所以需要保证播放器当前时间该图片是显示中，切取色只能取可见区域内的颜色。
+
+
+当抠色图片不再使用时，需要释放资源：
+```
+chromaColor.recycle();
 ```
 
 

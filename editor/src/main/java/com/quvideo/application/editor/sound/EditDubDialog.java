@@ -120,7 +120,7 @@ public class EditDubDialog extends BaseMenuView {
 
     int recordLength = audioRecorder.getRecordDuration();
     effectAddItem.destRange = new VeRange(startPos, recordLength);
-    effectAddItem.srcRange = new VeRange(0, recordLength);
+    effectAddItem.trimRange = new VeRange(0, recordLength);
     LogUtils.d("EditDubDialog", "startPos = " + startPos + ", recordLength = " + recordLength);
 
     EffectOPAdd effectOPAdd = new EffectOPAdd(QEGroupConst.GROUP_ID_RECORD, 0, effectAddItem);
