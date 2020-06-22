@@ -1908,12 +1908,6 @@ public interface IExportController {
   /** 切换前台导出，恢复导出时的cpu使用率 */
   int change2Fore();
 
-  /** 暂停 */
-  int pause();
-
-  /** 开始 */
-  int resume();
-
   /** 取消 */
   int cancel();
 }
