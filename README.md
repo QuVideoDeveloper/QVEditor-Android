@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.1.7"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.1.8"
 }
 ```
 
@@ -1057,10 +1057,10 @@ KeyFrameType参数说明：
 KeyBezierCurve参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| start | 贝塞尔缓动曲线起点,需固定（ 0，0） | Point |
-| stop | 贝塞尔缓动曲线终点,需固定（ 10000，10000） | Point |
-| c0 | 贝塞尔缓动节点1 | Point |
-| c1 | 贝塞尔缓动节点2 | Point |
+| start | 贝塞尔缓动曲线起点,需固定（ 0，0） | QPoint |
+| stop | 贝塞尔缓动曲线终点,需固定（ 10000，10000） | QPoint |
+| c0 | 贝塞尔缓动节点1 | QPoint |
+| c1 | 贝塞尔缓动节点2 | QPoint |
 
 
 KeyPosInfo参数说明：
