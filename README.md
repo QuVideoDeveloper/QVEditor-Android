@@ -165,7 +165,7 @@ QEInitData参数说明：
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | licensePath | license文件路径地址 | String | 必须 |
-| projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除 | number | 非必须 |
+| projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除 | String | 非必须 |
 | hwCodecCapPath | 设备软硬件配置文件 | string | 非必须 |
 | corruptImgPath | clip错误时显示图片地址 | string | 非必须 |
 | isUseStuffClip | 是否末尾补黑帧,默认false（详解【高级玩法-自由黑帧模式】一章说明） | boolean | 非必须 |
