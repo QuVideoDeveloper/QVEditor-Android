@@ -165,7 +165,7 @@ QEInitData参数说明：
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | licensePath | license文件路径地址 | String | 必须 |
-| projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除 | String | 非必须 |
+| projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除 | number | 非必须 |
 | hwCodecCapPath | 设备软硬件配置文件 | string | 非必须 |
 | corruptImgPath | clip错误时显示图片地址 | string | 非必须 |
 | isUseStuffClip | 是否末尾补黑帧,默认false（详解【高级玩法-自由黑帧模式】一章说明） | boolean | 非必须 |
@@ -819,7 +819,7 @@ ClipData参数说明：
 | mParamAdjust | 参数调节信息{@see ParamAdjust} | ParamAdjust |
 | mClipPosInfo | 片段位置信息{@see ClipPosInfo} | ClipPosInfo |
 | mClipBgData | 片段背景信息{@see ClipBgData} | ClipBgData |
-| mColorCurveInfo | 颜色曲线信息数据 {@see ColorCurveInfo} | ColorCurveInfo |
+| mColorCurveInfo | 曲线调色信息数据 {@see ColorCurveInfo} | ColorCurveInfo |
 
 
 ClipData.ClipType参数说明：
@@ -898,23 +898,28 @@ ClipBgData.ClipBgType参数说明：
 ColorCurveInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| mColorCurveItems | 颜色曲线详情{@see ColorCurveItem} | ColorCurveItem |
+| mColorCurveItems | 曲线调色详情{@see ColorCurveItem} | ColorCurveItem |
 
 
-ColorCurveInfo参数说明：
+ColorCurveItem参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| ts | 颜色曲线点的相对时间 | int |
-| rgb | 颜色曲线rgb信息点数据 | QPoint |
-| red | 颜色曲线red信息点数据 | QPoint |
-| green | 颜色曲线green信息点数据 | QPoint |
-| blue | 颜色曲线blue信息点数据 | QPoint |
+| ts | 曲线调色点的相对时间 | int |
+| rgb | 曲线调色rgb信息点数据 | QPoint |
+| red | 曲线调色red信息点数据 | QPoint |
+| green | 曲线调色green信息点数据 | QPoint |
+| blue | 曲线调色blue信息点数据 | QPoint |
+
+
+注意：
+1.曲线调色信息列表，每个ColorCurveItem需要按ts排序，如果不需要渐变，则只需要一个ColorCurveItem即可。
+2.rgb/red/green/blue信息列表，QPoint的x、y取值范围都是0~255。需按x的从小到大排序，且至少需要保证有x=0和x=255的两个点。
 
 
 2) 效果Effect相关
 效果类继承结构：
-<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_effect.png" width="633" height="261" align="center">
 
+<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_effect.png" width="633" height="261" align="center">
 
 BaseEffect参数说明：
 | 名称  | 解释 | 类型 |
@@ -991,7 +996,7 @@ AnimEffect参数说明：
 | mEffectChromaInfo | 抠色信息数据（绿幕） {@see EffectChromaInfo} | EffectChromaInfo |
 | mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
 | mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
-| mColorCurveInfo | 颜色曲线信息数据 {@see ColorCurveInfo} | ColorCurveInfo |
+| mColorCurveInfo | 曲线调色信息数据 {@see ColorCurveInfo} | ColorCurveInfo |
 | mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
 | mEffectKeyFrameInfo | 关键帧信息数据 {@see EffectKeyFrameInfo}（由于功能复杂，后期可能调整数据结构） | EffectKeyFrameInfo |
 
@@ -1420,10 +1425,10 @@ ClipBgData构造器
 ```
 
 
-21）颜色曲线调节
+21）曲线调色调节
 ```
 	// clipIndex表示第几个片段，从0开始
-	// colorCurveInfo颜色曲线数据 {@see ColorCurveInfo}
+	// colorCurveInfo曲线调色数据 {@see ColorCurveInfo}
 	ClipOPColorCurve clipOPColorCurve = new ClipOPColorCurve(clipIndex, colorCurveInfo);
 	mWorkSpace.handleOperation(clipOPColorCurve);
 ```
@@ -1706,11 +1711,11 @@ EffectReplaceItem参数说明：
 ```
 
 
-24）画中画参数调节设置
+24）画中画曲线调色设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
-	// colorCurveInfo表示参数调节信息 {@see ColorCurveInfo}
+	// colorCurveInfo表示曲线调色信息 {@see ColorCurveInfo}
 	EffectOPColorCurve effectOPColorCurve = new EffectOPColorCurve(groupId, effectIndex, colorCurveInfo);
 	mWorkSpace.handleOperation(effectOPColorCurve);
 ```
