@@ -5,27 +5,25 @@ import android.graphics.Rect;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import com.quvideo.application.editor.R;
+import com.quvideo.application.editor.base.BaseMenuView;
+import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.utils.DeviceSizeUtil;
 import com.quvideo.application.utils.softkeyboard.DifferenceCalculator;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleText;
 
-public class EditEffectInputDialog extends RelativeLayout {
+public class EditEffectInputDialog extends BaseMenuView {
 
-  protected ViewGroup mMenuContainer;
-
-  private IQEWorkSpace workSpace;
   private int groupId = 0;
   private int effectIndex = 0;
 
@@ -34,40 +32,36 @@ public class EditEffectInputDialog extends RelativeLayout {
 
   private String curText = "";
 
-  private View mMessageRoot;
-
   private boolean mNeedShowKey = true;
 
-  public EditEffectInputDialog(Context context, ViewGroup container, IQEWorkSpace workSpace, int groupId, int effectIndex) {
-    super(context);
-    this.workSpace = workSpace;
+  public EditEffectInputDialog(Context context, MenuContainer container, IQEWorkSpace workSpace, int groupId, int effectIndex) {
+    super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
-    showMenu(container);
+    showMenu(container, null);
+    EffectOPStaticPic effectOPStaticPic = new EffectOPStaticPic(groupId, effectIndex, true);
+    mWorkSpace.handleOperation(effectOPStaticPic);
   }
 
-  private void showMenu(ViewGroup container) {
-    init(getContext());
-    mMenuContainer = container;
-    LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT);
-    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-    mMenuContainer.addView(this, params);
+  @Override public MenuType getMenuType() {
+    return MenuType.EffectSubtitleInput;
+  }
+
+  @Override protected int getCustomLayoutId() {
+    return R.layout.dialog_edit_effect_input;
+  }
+
+  @Override protected void initCustomMenu(Context context, View view) {
     if (mNeedShowKey) {
-      initKey();
+      initKey(view);
       showKeyBoard();
       mNeedShowKey = false;
     }
-  }
+    mEditText = view.findViewById(R.id.et_edit);
+    mBgView = view.findViewById(R.id.viewBg);
+    Button btnConfirm = view.findViewById(R.id.btn_confirm);
 
-  public void init(Context context) {
-    mMessageRoot = LayoutInflater.from(context).inflate(R.layout.dialog_edit_effect_input, this, true);
-
-    mEditText = mMessageRoot.findViewById(R.id.et_edit);
-    mBgView = mMessageRoot.findViewById(R.id.bg_view);
-    Button btnConfirm = mMessageRoot.findViewById(R.id.btn_confirm);
-
-    BaseEffect baseEffect = workSpace.getEffectAPI().getEffect(groupId, effectIndex);
+    BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
     if (baseEffect instanceof SubtitleEffect) {
       curText = ((SubtitleEffect) baseEffect).getTextBubbleInfo().getFirstText();
       if (curText != null) {
@@ -88,7 +82,7 @@ public class EditEffectInputDialog extends RelativeLayout {
         String endStr = editable.toString();
         if (!TextUtils.equals(endStr, curText)) {
           EffectOPSubtitleText effectOPSubtitleText = new EffectOPSubtitleText(effectIndex, endStr);
-          workSpace.handleOperation(effectOPSubtitleText);
+          mWorkSpace.handleOperation(effectOPSubtitleText);
         }
         curText = endStr;
       }
@@ -104,6 +98,15 @@ public class EditEffectInputDialog extends RelativeLayout {
         dismissMenu();
       }
     });
+  }
+
+  @Override protected String getBottomTitle() {
+    return "";
+  }
+
+  @Override protected void releaseAll() {
+    EffectOPStaticPic effectOPStaticPic = new EffectOPStaticPic(groupId, effectIndex, false);
+    mWorkSpace.handleOperation(effectOPStaticPic);
   }
 
   @Override protected void onDetachedFromWindow() {
@@ -126,7 +129,7 @@ public class EditEffectInputDialog extends RelativeLayout {
     this.enableLayoutChange = enableLayoutChange;
   }
 
-  public void initKey() {
+  public void initKey(final View view) {
     if (mKeyboardHeight > 0) {
       ViewGroup.LayoutParams layoutParams = mBgView.getLayoutParams();
       //layoutParams.setMargins(0, TextSeekBar.dip2px(getContext(), 8), 0,
@@ -137,19 +140,19 @@ public class EditEffectInputDialog extends RelativeLayout {
       //showKeyBoard();
       mBgView.postDelayed(new Runnable() {
         @Override public void run() {
-          measureKeyboard();
+          measureKeyboard(view);
         }
       }, 200);
       //miniProgressBarHelper.setBlockTouch(true);
     } else {
-      measureKeyboard();
+      measureKeyboard(view);
       //showKeyBoard();
     }
   }
 
   private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
-  public void measureKeyboard() {
+  public void measureKeyboard(View view) {
     if (onGlobalLayoutListener == null) {
       onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override public void onGlobalLayout() {
@@ -158,7 +161,7 @@ public class EditEffectInputDialog extends RelativeLayout {
           }
           Rect r = new Rect();
           //获取当前界面可视部分
-          mMessageRoot.getWindowVisibleDisplayFrame(r);
+          view.getWindowVisibleDisplayFrame(r);
 
           int heightDifference = DifferenceCalculator.getInstance().getDifference(getContext(), r);
           if (heightDifference > DeviceSizeUtil.getScreenHeight() / 6) {
@@ -167,7 +170,7 @@ public class EditEffectInputDialog extends RelativeLayout {
           }
         }
       };
-      mMessageRoot.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+      view.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
     }
   }
 

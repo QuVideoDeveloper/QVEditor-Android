@@ -29,6 +29,10 @@ public class EditThemeDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.Theme;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_effect_add;
   }

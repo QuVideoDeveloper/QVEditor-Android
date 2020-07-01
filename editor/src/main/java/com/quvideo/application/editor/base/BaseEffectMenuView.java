@@ -1,15 +1,13 @@
 package com.quvideo.application.editor.base;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.effect.EffectBarItem;
+import com.quvideo.application.editor.effect.fake.IFakeViewApi;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 
 public abstract class BaseEffectMenuView extends BaseMenuLayer implements View.OnClickListener, IEffectEditClickListener {
@@ -17,14 +15,14 @@ public abstract class BaseEffectMenuView extends BaseMenuLayer implements View.O
   protected MenuContainer mMenuContainer;
   private IEffectEditClickListener mItemOnClickListener;
 
-  protected IQEWorkSpace mWorkSpace;
+  protected IFakeViewApi mFakeApi;
 
   public BaseEffectMenuView(Context context, IQEWorkSpace workSpace) {
-    super(context);
-    this.mWorkSpace = workSpace;
+    super(context, workSpace);
   }
 
-  public void showMenu(MenuContainer container, IEffectEditClickListener itemOnClickListener) {
+  public void showMenu(MenuContainer container, IEffectEditClickListener itemOnClickListener, IFakeViewApi iFakeViewApi) {
+    mFakeApi = iFakeViewApi;
     init(getContext());
     mMenuContainer = container;
     mItemOnClickListener = itemOnClickListener;
@@ -73,6 +71,11 @@ public abstract class BaseEffectMenuView extends BaseMenuLayer implements View.O
   public void dismissMenu() {
     if (mMenuContainer != null) {
       mMenuContainer.removeMenuLayer(this);
+    }
+
+    if (mFakeApi != null) {
+      mFakeApi.setTarget(null, null);
+      mFakeApi = null;
     }
   }
 }

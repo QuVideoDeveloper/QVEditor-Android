@@ -33,6 +33,10 @@ public class EditFxFilterDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipFxFilter;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_filter;
   }

@@ -121,6 +121,10 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
     notifyItemChanged(selectIndex + addOffset);
   }
 
+  public void setSelectIndex(int index) {
+    changeSelect(index + 1);
+  }
+
   public int getSelectIndex() {
     return selectIndex;
   }

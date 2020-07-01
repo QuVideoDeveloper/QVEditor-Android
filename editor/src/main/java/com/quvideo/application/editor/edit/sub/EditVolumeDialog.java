@@ -27,6 +27,10 @@ public class EditVolumeDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipVolume;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_volume;
   }

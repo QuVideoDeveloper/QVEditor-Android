@@ -36,6 +36,7 @@ import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
+import com.quvideo.mobile.engine.work.operate.clip.ClipOPCopy;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPDel;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPMirror;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPReverse;
@@ -55,6 +56,10 @@ public class EditEditDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipEdit;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_edit;
   }
@@ -71,6 +76,7 @@ public class EditEditDialog extends BaseMenuView {
     List<EditOperate> list = new ArrayList<EditOperate>() {{
       add(new EditOperate(R.drawable.edit_icon_trim_n, context.getString(R.string.mn_edit_title_trim)));
       add(new EditOperate(R.drawable.edit_icon_split_nor, context.getString(R.string.mn_edit_title_split)));
+      add(new EditOperate(R.drawable.edit_icon_duplicate, context.getString(R.string.mn_edit_duplicate_title)));
       add(new EditOperate(R.drawable.edit_icon_delete_nor, context.getString(R.string.mn_edit_title_delete)));
       add(new EditOperate(R.drawable.edit_icon_muteoff_n, context.getString(R.string.mn_edit_title_volume)));
       add(new EditOperate(R.drawable.edit_icon_filter_nor, context.getString(R.string.mn_edit_title_filter)));
@@ -135,7 +141,9 @@ public class EditEditDialog extends BaseMenuView {
 
   private BaseObserver mBaseObserver = new BaseObserver() {
     @Override public void onChange(BaseOperate operate) {
-      if (operate instanceof ClipOPAdd || operate instanceof ClipOPDel
+      if (operate instanceof ClipOPAdd
+          || operate instanceof ClipOPDel
+          || operate instanceof ClipOPCopy
           || operate instanceof ClipOPSplit) {
         // 添加 / 删除 clip完成监听
         AndroidSchedulers.mainThread().scheduleDirect(() -> clipAdapter.updateClipList());
@@ -165,6 +173,8 @@ public class EditEditDialog extends BaseMenuView {
       new EditTrimDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
     } else if (operate.getResId() == R.drawable.edit_icon_split_nor) {
       new EditSplitDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
+    } else if (operate.getResId() == R.drawable.edit_icon_duplicate) {
+      doClipDuplicate(selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_delete_nor) {
       doClipDel(selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_mirror_nor) {
@@ -191,6 +201,15 @@ public class EditEditDialog extends BaseMenuView {
       new EditTransDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
     } else if (operate.getResId() == R.drawable.edit_icon_adjust_nor) {
       new EditAdjustDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
+    }
+  }
+
+  private void doClipDuplicate(int selClipIndex) {
+    if (mWorkSpace.getClipAPI().getClipList().size() > 1
+        && selClipIndex >= 0
+        && selClipIndex < mWorkSpace.getClipAPI().getClipList().size()) {
+      ClipOPCopy clipOPCopy = new ClipOPCopy(selClipIndex);
+      mWorkSpace.handleOperation(clipOPCopy);
     }
   }
 

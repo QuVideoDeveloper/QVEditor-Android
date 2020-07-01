@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.SeekBar;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.mobile.engine.model.BaseEffect;
@@ -22,12 +21,16 @@ public class EditEffectAlphaDialog extends BaseMenuView {
   private int effectIndex = 0;
 
   public EditEffectAlphaDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int groupId, int effectIndex, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int groupId, int effectIndex) {
     super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
     seekBarController = new EditSeekBarController();
-    showMenu(container, l);
+    showMenu(container, null);
+  }
+
+  @Override public MenuType getMenuType() {
+    return MenuType.EffectAlpha;
   }
 
   @Override protected int getCustomLayoutId() {

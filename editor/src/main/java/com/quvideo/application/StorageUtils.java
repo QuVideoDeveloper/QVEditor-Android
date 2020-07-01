@@ -17,13 +17,15 @@ public class StorageUtils {
   // 素材目录
   private static String mTemplatePath;
 
+  private static String outerAppDir;
+
   public static void init(Context context) {
     String innerDir = context.getFilesDir().getAbsolutePath();
     if (!innerDir.endsWith(File.separator)) {
       innerDir += File.separator;
     }
     File outerFile = context.getExternalFilesDir(null);
-    String outerAppDir = null;
+    outerAppDir = null;
     if (outerFile != null) {
       outerAppDir = outerFile.getAbsolutePath();
       if (!TextUtils.isEmpty(outerAppDir) && !outerAppDir.endsWith(File.separator)) {
@@ -36,6 +38,13 @@ public class StorageUtils {
     mTemplatePath = outerAppDir + PATH_ROOT + PATH_TEMPLATE;
     FileUtils.createMultilevelDirectory(mTemplatePath);
     FileUtils.createNoMediaFileInPath(mTemplatePath);
+  }
+
+  public static synchronized String getAppPath(Context context) {
+    if (TextUtils.isEmpty(outerAppDir)) {
+      init(context);
+    }
+    return outerAppDir;
   }
 
   public static synchronized String getTemplatePath(Context context) {

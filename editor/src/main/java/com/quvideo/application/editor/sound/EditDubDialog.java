@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.TimeFormatUtil;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.camera.XYAudioRecorder;
@@ -35,9 +34,13 @@ public class EditDubDialog extends BaseMenuView {
   private TextView tvRecordTime;
   private boolean isRecording;
 
-  public EditDubDialog(Context context, MenuContainer container, IQEWorkSpace workSpace, ItemOnClickListener l) {
+  public EditDubDialog(Context context, MenuContainer container, IQEWorkSpace workSpace) {
     super(context, workSpace);
-    showMenu(container, l);
+    showMenu(container, null);
+  }
+
+  @Override public MenuType getMenuType() {
+    return MenuType.AudioRecord;
   }
 
   @Override protected int getCustomLayoutId() {

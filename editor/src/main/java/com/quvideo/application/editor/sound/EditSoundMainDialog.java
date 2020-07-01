@@ -17,6 +17,10 @@ public class EditSoundMainDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.Audio;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_sound_main;
   }
@@ -27,13 +31,13 @@ public class EditSoundMainDialog extends BaseMenuView {
     View btnDub = view.findViewById(R.id.btnDub);
 
     btnAddMusic.setOnClickListener(v -> {
-      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_BGMUSIC);
+      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_BGMUSIC, null);
     });
     btnAddSoundEffect.setOnClickListener(v -> {
-      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_DUBBING);
+      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_DUBBING, null);
     });
     btnDub.setOnClickListener(v -> {
-      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_RECORD);
+      new EditEffectDialog(getContext(), mMenuContainer, mWorkSpace, QEGroupConst.GROUP_ID_RECORD, null);
     });
   }
 

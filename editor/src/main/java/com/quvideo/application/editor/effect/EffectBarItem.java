@@ -10,13 +10,12 @@ public class EffectBarItem {
   public static final int ACTION_INPUT = 2;
   public static final int ACTION_VOLUME = 3;
   public static final int ACTION_ALPHA = 4;
-  public static final int ACTION_SCALE_MORE = 5;
-  public static final int ACTION_SCALE_LESS = 6;
-  public static final int ACTION_MAGIC = 7;
-  public static final int ACTION_MIRROR = 8;
-  public static final int ACTION_ROTATE = 9;
+  public static final int ACTION_MAGIC = 5;
+  public static final int ACTION_MIRROR = 6;
+  public static final int ACTION_MASK = 7;
+  public static final int ACTION_CHROMA = 8;
+  public static final int ACTION_DUPLICATE = 9;
   public static final int ACTION_DEL = 10;
-  public static final int ACTION_POSITION = 11;
 
   private int action;
   private int resId;

@@ -42,6 +42,10 @@ public class EditAdjustDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipAdjust;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_adjust;
   }

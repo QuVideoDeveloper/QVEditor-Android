@@ -9,7 +9,6 @@ import com.quvideo.application.AssetConstants;
 import com.quvideo.application.EditorApp;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.EditFilterTemplate;
 import com.quvideo.application.template.SimpleTemplate;
@@ -20,11 +19,11 @@ import com.quvideo.mobile.component.template.model.XytInfo;
 import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
-import com.quvideo.mobile.engine.model.clip.FilterInfo;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,11 +32,23 @@ public class EffectAddDialog extends BaseMenuView {
 
   private int groupId;
 
+  private int length;
+
+  private boolean isNeedStatic = false;
+
+  private ArrayList<Integer> addPos = new ArrayList<>();
+
   public EffectAddDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int groupId, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int groupId) {
     super(context, workSpace);
     this.groupId = groupId;
-    showMenu(container, l);
+    isNeedStatic = groupId == QEGroupConst.GROUP_ID_STICKER || groupId == QEGroupConst.GROUP_ID_SUBTITLE;
+    length = workSpace.getEffectAPI().getEffectList(groupId).size();
+    showMenu(container, null);
+  }
+
+  @Override public MenuType getMenuType() {
+    return MenuType.EffectAdd;
   }
 
   @Override protected int getCustomLayoutId() {
@@ -59,10 +70,15 @@ public class EffectAddDialog extends BaseMenuView {
   }
 
   @Override protected void releaseAll() {
+    if (isNeedStatic) {
+      for (Integer position : addPos) {
+        EffectOPStaticPic effectOPStaticPic = new EffectOPStaticPic(groupId, position, false);
+        mWorkSpace.handleOperation(effectOPStaticPic);
+      }
+    }
   }
 
   private void applyTemplate(SimpleTemplate template) {
-    FilterInfo filterInfo;
     if (template.getTemplateId() <= 0) {
       // 无滤镜
       ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_error_template, Toast.LENGTH_LONG);
@@ -82,8 +98,14 @@ public class EffectAddDialog extends BaseMenuView {
     effectPosInfo.centerPosX = streamSize.width * RandomUtil.randInt(1000, 9000) / 10000f;
     effectPosInfo.centerPosY = streamSize.height * RandomUtil.randInt(1000, 9000) / 10000f;
     effectAddItem.mEffectPosInfo = effectPosInfo;
-    EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, 0, effectAddItem);
+    EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, length, effectAddItem);
     mWorkSpace.handleOperation(effectOPAdd);
+    addPos.add(length);
+    if (isNeedStatic) {
+      EffectOPStaticPic effectOPStaticPic = new EffectOPStaticPic(groupId, length, true);
+      mWorkSpace.handleOperation(effectOPStaticPic);
+    }
+    length++;
   }
 
   @Override public void onClick(View v) {

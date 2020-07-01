@@ -6,19 +6,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.quvideo.application.EditorConst;
 import com.quvideo.application.camera.CameraActivity;
 import com.quvideo.application.camera.recorder.RecorderClipInfo;
+import com.quvideo.application.editor.base.BaseMenuLayer;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.EditEditDialog;
 import com.quvideo.application.editor.effect.EditEffectDialog;
+import com.quvideo.application.editor.effect.fake.FakeView;
 import com.quvideo.application.editor.sound.EditSoundMainDialog;
 import com.quvideo.application.editor.theme.EditThemeDialog;
 import com.quvideo.application.export.ExportChooseDialog;
@@ -56,6 +62,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   private RecyclerView mRecyclerView;
   private List<EditOperate> mEditOperates;
 
+  private View rlTitle;
   private ImageView btnBack;
   private Button btnExport;
 
@@ -66,6 +73,8 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   private IQEWorkSpace mWorkSpace;
 
   private MenuContainer mMenuLayout;
+
+  private FakeView mFakeView;
 
   volatile boolean reverse = false;
 
@@ -125,13 +134,15 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     });
     btnBack.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        finish();
+        handleBack();
       }
     });
     btnExport.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         //boolean[] expDialogShowCfgs = new boolean[] { true, bShow720P, bShow1080PItem, false, false };
-        if (mWorkSpace != null && mWorkSpace.getPlayerAPI() != null && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+        if (mWorkSpace != null
+            && mWorkSpace.getPlayerAPI() != null
+            && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
           mWorkSpace.getPlayerAPI().getPlayerControl().pause();
         }
         ExportChooseDialog dialog = new ExportChooseDialog(EditorActivity.this);
@@ -156,20 +167,38 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   }
 
   private void initView() {
+    rlTitle = findViewById(R.id.title_layout);
     btnBack = findViewById(R.id.btn_back);
     btnExport = findViewById(R.id.btn_export);
     mPlayerControllerView = findViewById(R.id.edit_enter_play_controller);
     editorPlayerView = findViewById(R.id.editor_play_view);
     mMenuLayout = findViewById(R.id.menu_container);
+    mFakeView = findViewById(R.id.editor_fake_layer);
+
+    mMenuLayout.setOnMenuListener(new MenuContainer.OnMenuListener() {
+      @Override public void onMenuChange(BaseMenuLayer.MenuType menuType) {
+        if (menuType == BaseMenuLayer.MenuType.EffectAdd
+            || menuType == BaseMenuLayer.MenuType.EffectSubtitleInput) {
+          rlTitle.setVisibility(View.INVISIBLE);
+        } else {
+          rlTitle.setVisibility(View.VISIBLE);
+        }
+      }
+    });
 
     mEditOperates = new ArrayList<EditOperate>() {{
       add(new EditOperate(R.drawable.edit_icon_edit_nor, getString(R.string.mn_edit_title_edit)));
-      add(new EditOperate(R.drawable.edit_icon_sticker_nor, getString(R.string.mn_edit_title_sticker)));
+      add(new EditOperate(R.drawable.edit_icon_sticker_nor,
+          getString(R.string.mn_edit_title_sticker)));
       add(new EditOperate(R.drawable.edit_icon_effect_nor, getString(R.string.mn_edit_title_fx)));
-      add(new EditOperate(R.drawable.edit_icon_midpic_nor, getString(R.string.mn_edit_title_collages)));
-      add(new EditOperate(R.drawable.edit_icon_watermark_nor, getString(R.string.mn_edit_title_watermark)));
-      add(new EditOperate(R.drawable.edit_icon_mosaic_nor, getString(R.string.mn_edit_title_mosaic)));
-      add(new EditOperate(R.drawable.edit_icon_text_nor, getString(R.string.mn_edit_title_subtitle)));
+      add(new EditOperate(R.drawable.edit_icon_midpic_nor,
+          getString(R.string.mn_edit_title_collages)));
+      add(new EditOperate(R.drawable.edit_icon_watermark_nor,
+          getString(R.string.mn_edit_title_watermark)));
+      add(new EditOperate(R.drawable.edit_icon_mosaic_nor,
+          getString(R.string.mn_edit_title_mosaic)));
+      add(new EditOperate(R.drawable.edit_icon_text_nor,
+          getString(R.string.mn_edit_title_subtitle)));
       add(new EditOperate(R.drawable.edit_icon_theme_nor, getString(R.string.mn_edit_title_theme)));
       add(new EditOperate(R.drawable.edit_icon_music_nor, getString(R.string.mn_edit_title_music)));
       add(new EditOperate(R.drawable.edit_icon_pic_nor, getString(R.string.mn_edit_title_ratio)));
@@ -185,11 +214,12 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
       new EditEditDialog(this, mMenuLayout, mWorkSpace, this);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER,
+          mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_effect_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER_FX);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER_FX, null);
     } else if (operate.getResId() == R.drawable.edit_icon_midpic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_COLLAGES);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_COLLAGES, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_watermark_nor) {// 水印
       if (mWorkSpace.getEffectAPI().getEffect(QEGroupConst.GROUP_ID_WATERMARK, 0)
           != null) {
@@ -203,9 +233,11 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         mWorkSpace.handleOperation(effectOPAdd);
       }
     } else if (operate.getResId() == R.drawable.edit_icon_mosaic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_MOSAIC);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_MOSAIC,
+          mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_text_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_SUBTITLE);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_SUBTITLE,
+          mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_theme_nor) {
       new EditThemeDialog(this, mMenuLayout, mWorkSpace, this);
     } else if (operate.getResId() == R.drawable.edit_icon_music_nor) {
@@ -221,7 +253,25 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     if (mMenuLayout != null && mMenuLayout.handleBackPress()) {
       return;
     }
-    super.onBackPressed();
+    handleBack();
+  }
+
+  private void handleBack() {
+    new MaterialDialog.Builder(this)
+        .negativeText(R.string.mn_app_cancel)
+        .positiveText(R.string.mn_app_confirm)
+        .negativeColor(ContextCompat.getColor(this, R.color.color_585858))
+        .positiveColor(ContextCompat.getColor(this, R.color.color_585858))
+        .canceledOnTouchOutside(false)
+        .content(R.string.mn_edit_exit_confirm_content)
+        .onPositive(new MaterialDialog.SingleButtonCallback() {
+          @Override
+          public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+            finish();
+          }
+        })
+        .build()
+        .show();
   }
 
   private BaseObserver mProjectObserver = new BaseObserver() {

@@ -29,6 +29,10 @@ public class EditSpeedDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipSpeed;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_speed;
   }

@@ -33,6 +33,10 @@ public class EditTrimDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipTrim;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_trim;
   }

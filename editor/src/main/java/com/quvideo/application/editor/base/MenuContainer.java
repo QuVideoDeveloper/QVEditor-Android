@@ -14,6 +14,8 @@ public class MenuContainer extends RelativeLayout {
 
   private ArrayList<BaseMenuLayer> mBaseMenuLayers = new ArrayList<>();
 
+  private OnMenuListener mOnMenuListener;
+
   public MenuContainer(Context context) {
     super(context);
   }
@@ -30,12 +32,16 @@ public class MenuContainer extends RelativeLayout {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
+  public void setOnMenuListener(OnMenuListener onMenuListener) {
+    mOnMenuListener = onMenuListener;
+  }
+
   /**
    * 处理返回键
    */
   public final boolean handleBackPress() {
     if (mBaseMenuLayers.size() > 0) {
-      mBaseMenuLayers.get(mBaseMenuLayers.size() -1).handleBackPress();
+      mBaseMenuLayers.get(mBaseMenuLayers.size() - 1).handleBackPress();
       return true;
     }
     return false;
@@ -47,10 +53,25 @@ public class MenuContainer extends RelativeLayout {
         ViewGroup.LayoutParams.WRAP_CONTENT);
     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
     addView(menuLayer, params);
+    changeCurMenu();
   }
 
   public void removeMenuLayer(BaseMenuLayer menuLayer) {
     mBaseMenuLayers.remove(menuLayer);
     removeView(menuLayer);
+    changeCurMenu();
+  }
+
+  private void changeCurMenu() {
+    if (mBaseMenuLayers.size() > 0) {
+      BaseMenuLayer baseMenuLayer = mBaseMenuLayers.get(mBaseMenuLayers.size() - 1);
+      if (baseMenuLayer != null && mOnMenuListener != null) {
+        mOnMenuListener.onMenuChange(baseMenuLayer.getMenuType());
+      }
+    }
+  }
+
+  public interface OnMenuListener {
+    void onMenuChange(BaseMenuLayer.MenuType menuType);
   }
 }

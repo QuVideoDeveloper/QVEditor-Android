@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Tue, 16 Jun 2020 17:00:28 +0800
+ Exported at: Wed, 01 Jul 2020 19:36:26 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -14,6 +14,7 @@
     <string name="mn_app_cancel">Cancel</string>
     <string name="mn_app_confirm">Confirm</string>
     <string name="mn_app_done">Done</string>
+    <string name="mn_app_home_title">Create</string>
     <string name="mn_app_mode_camera">Camera</string>
     <string name="mn_app_mode_editor">Editor</string>
     <string name="mn_app_mode_template">Template</string>
@@ -41,8 +42,19 @@
     <string name="mn_edit_bgm_edit">Edit</string>
     <string name="mn_edit_change_style">Change Style</string>
     <string name="mn_edit_change_zoom">Zoom</string>
+    <string name="mn_edit_chroma_accuracy">Accurate</string>
+    <string name="mn_edit_duplicate_title">Duplicate</string>
     <string name="mn_edit_effect_position">Position</string>
+    <string name="mn_edit_exit_confirm_content">exit？</string>
     <string name="mn_edit_export_resolution">Resolution</string>
+    <string name="mn_edit_mask_invert">Invert</string>
+    <string name="mn_edit_mask_linear">Linear</string>
+    <string name="mn_edit_mask_mirror">Mirror</string>
+    <string name="mn_edit_mask_radial">Radial</string>
+    <string name="mn_edit_mask_rectangle">Rectangle</string>
+    <string name="mn_edit_none">None</string>
+    <string name="mn_edit_reset">Reset</string>
+    <string name="mn_edit_reset_text">reset</string>
     <string name="mn_edit_split_progress_title">Split</string>
     <string name="mn_edit_subtitle_input">Input</string>
     <string name="mn_edit_tips_cannot_operate">Operation failed</string>
@@ -59,6 +71,7 @@
     <string name="mn_edit_title_adjust">Adjust</string>
     <string name="mn_edit_title_bgm">Music</string>
     <string name="mn_edit_title_change_voice">Voice</string>
+    <string name="mn_edit_title_chroma">Chroma</string>
     <string name="mn_edit_title_collages">Collages</string>
     <string name="mn_edit_title_delete">Delete</string>
     <string name="mn_edit_title_dub_record">Record</string>
@@ -69,6 +82,7 @@
     <string name="mn_edit_title_filter">Filter</string>
     <string name="mn_edit_title_fx">Fx</string>
     <string name="mn_edit_title_fx_filter">Fx Filter</string>
+    <string name="mn_edit_title_mask">mask</string>
     <string name="mn_edit_title_mirror">Mirror</string>
     <string name="mn_edit_title_mosaic">Mosaic</string>
     <string name="mn_edit_title_music">Music</string>

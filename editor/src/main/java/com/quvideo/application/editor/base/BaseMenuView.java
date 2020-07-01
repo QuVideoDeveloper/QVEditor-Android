@@ -5,19 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.EditOperate;
+import com.quvideo.application.editor.R;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 
 public abstract class BaseMenuView extends BaseMenuLayer implements View.OnClickListener, ItemOnClickListener {
 
   protected MenuContainer mMenuContainer;
   private ItemOnClickListener mItemOnClickListener;
-  protected IQEWorkSpace mWorkSpace;
 
   public BaseMenuView(Context context, IQEWorkSpace workSpace) {
-    super(context);
-    this.mWorkSpace = workSpace;
+    super(context, workSpace);
   }
 
   public void showMenu(MenuContainer container, ItemOnClickListener itemOnClickListener) {
@@ -30,8 +28,14 @@ public abstract class BaseMenuView extends BaseMenuLayer implements View.OnClick
   private void init(Context context) {
     View view = LayoutInflater.from(context).inflate(getCustomLayoutId(), this, true);
     initCustomMenu(context, view);
-    ((TextView) view.findViewById(R.id.title)).setText(getBottomTitle());
-    view.findViewById(R.id.confirm).setOnClickListener(this);
+    TextView bottomTitle = view.findViewById(R.id.title);
+    if (bottomTitle != null) {
+      bottomTitle.setText(getBottomTitle());
+    }
+    View comfirmView = view.findViewById(R.id.confirm);
+    if (comfirmView != null) {
+      comfirmView.setOnClickListener(this);
+    }
     View rootBg = view.findViewById(R.id.root_bg);
     if (rootBg != null) {
       rootBg.setOnClickListener(v -> {

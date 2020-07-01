@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.view.View;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
@@ -14,6 +16,13 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseEffectMenuView;
 import com.quvideo.application.editor.base.IEffectEditClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
+import com.quvideo.application.editor.effect.chroma.EffectChromaDialog;
+import com.quvideo.application.editor.effect.fake.FakePosInfo;
+import com.quvideo.application.editor.effect.fake.FakePosUtils;
+import com.quvideo.application.editor.effect.fake.IFakeViewApi;
+import com.quvideo.application.editor.effect.fake.IFakeViewListener;
+import com.quvideo.application.editor.effect.fake.draw.PosDraw;
+import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
 import com.quvideo.application.editor.sound.EditDubDialog;
 import com.quvideo.application.editor.sound.EffectAddMusicDialog;
 import com.quvideo.application.gallery.GalleryClient;
@@ -39,10 +48,14 @@ import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioReplace;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPCopy;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPPosInfo;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class EditEffectDialog extends BaseEffectMenuView {
 
@@ -60,19 +73,24 @@ public class EditEffectDialog extends BaseEffectMenuView {
   private int currentTime = 0;
 
   public EditEffectDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
-      int groupId) {
+      int groupId, IFakeViewApi fakeViewApi) {
     super(context, workSpace);
     this.groupId = groupId;
     workSpace.getPlayerAPI().getPlayerControl().pause();
     currentTime = workSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
     mWorkSpace.addObserver(mBaseObserver);
-    showMenu(container, mItemOnClickListener);
+    showMenu(container, mItemOnClickListener, fakeViewApi);
+  }
+
+  @Override public MenuType getMenuType() {
+    return MenuType.EffectEdit;
   }
 
   private BaseObserver mBaseObserver = new BaseObserver() {
     @Override public void onChange(BaseOperate operate) {
       if (operate instanceof EffectOPAdd
           || operate instanceof EffectOPDel
+          || operate instanceof EffectOPCopy
           || operate instanceof EffectOPAudioReplace) {
         // 刷新数据
         if (mWorkSpace.getPlayerAPI() != null
@@ -89,6 +107,12 @@ public class EditEffectDialog extends BaseEffectMenuView {
                 && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
               mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
             }
+
+            updateFakeView(selectIndex, baseEffect);
+          }
+        } else {
+          if (mFakeApi != null) {
+            mFakeApi.setTarget(null, null);
           }
         }
         if (groupId == QEGroupConst.GROUP_ID_BGMUSIC && mEffectOperateAdapter != null) {
@@ -120,6 +144,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
       BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);
       if (baseEffect != null) {
         mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
+
+        updateFakeView(selectIndex, baseEffect);
       }
     }
     // 操作view
@@ -153,7 +179,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
       switch (operate.getAction()) {
         case EffectBarItem.ACTION_EDIT:
           if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
-            new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
+            new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId);
           } else {
             ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
                 getContext().getString(R.string.mn_edit_tips_no_support),
@@ -161,7 +187,11 @@ public class EditEffectDialog extends BaseEffectMenuView {
           }
           break;
         case EffectBarItem.ACTION_TRIM:
-          new EditEffectTrimDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, null);
+          new EditEffectTrimDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+          break;
+        case EffectBarItem.ACTION_DUPLICATE:
+          EffectOPCopy effectOPCopy = new EffectOPCopy(groupId, index);
+          mWorkSpace.handleOperation(effectOPCopy);
           break;
         case EffectBarItem.ACTION_INPUT:
           if (baseEffect instanceof SubtitleEffect) {
@@ -174,56 +204,20 @@ public class EditEffectDialog extends BaseEffectMenuView {
           break;
         case EffectBarItem.ACTION_VOLUME:
           if (baseEffect.isHadAudio) {
-            new EditEffectVolumeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
-                null);
+            new EditEffectVolumeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index
+            );
           } else {
             ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
                 R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
           }
           break;
         case EffectBarItem.ACTION_ALPHA:
-          new EditEffectAlphaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, null);
-          break;
-        case EffectBarItem.ACTION_SCALE_MORE:
-          if (baseEffect instanceof FloatEffect) {
-            EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
-            effectPosInfo.width *= 1.1f;
-            effectPosInfo.height *= 1.1f;
-            if (effectPosInfo.width > 3000 || effectPosInfo.height > 3000) {
-              ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
-                  R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
-              return;
-            }
-            EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
-            mWorkSpace.handleOperation(effectOPPosInfo);
-          } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
-                getContext().getString(R.string.mn_edit_tips_no_support),
-                Toast.LENGTH_LONG);
-          }
-          break;
-        case EffectBarItem.ACTION_SCALE_LESS:
-          if (baseEffect instanceof FloatEffect) {
-            EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
-            effectPosInfo.width *= 0.9f;
-            effectPosInfo.height *= 0.9f;
-            if (effectPosInfo.width < 5 || effectPosInfo.height < 5) {
-              ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
-                  R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
-              return;
-            }
-            EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
-            mWorkSpace.handleOperation(effectOPPosInfo);
-          } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
-                getContext().getString(R.string.mn_edit_tips_no_support),
-                Toast.LENGTH_LONG);
-          }
+          new EditEffectAlphaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           break;
         case EffectBarItem.ACTION_MAGIC:
           if (baseEffect instanceof AudioEffect) {
-            new EditEffectToneDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
-                null);
+            new EditEffectToneDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index
+            );
           } else {
             ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
                 getContext().getString(R.string.mn_edit_tips_no_support),
@@ -246,26 +240,15 @@ public class EditEffectDialog extends BaseEffectMenuView {
                 Toast.LENGTH_LONG);
           }
           break;
-        case EffectBarItem.ACTION_ROTATE:
-          if (baseEffect instanceof FloatEffect) {
-            EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
-            effectPosInfo.degree += 1;
-            effectPosInfo.degree %= 360;
-            EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
-            mWorkSpace.handleOperation(effectOPPosInfo);
-          } else {
-            ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
-                getContext().getString(R.string.mn_edit_tips_no_support),
-                Toast.LENGTH_LONG);
-          }
+        case EffectBarItem.ACTION_MASK:
+          new EffectMaskDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
+          break;
+        case EffectBarItem.ACTION_CHROMA:
+          new EffectChromaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
           break;
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
           mWorkSpace.handleOperation(effectOPDel);
-          break;
-        case EffectBarItem.ACTION_POSITION:
-          new EditEffectPositionDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
-              null);
           break;
         default:
           ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
@@ -286,25 +269,97 @@ public class EditEffectDialog extends BaseEffectMenuView {
               go2choosePhoto();
             } else if (QEGroupConst.GROUP_ID_BGMUSIC == groupId
                 || QEGroupConst.GROUP_ID_DUBBING == groupId) {
-              new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
+              new EffectAddMusicDialog(getContext(), mMenuContainer, mWorkSpace, groupId);
             } else if (QEGroupConst.GROUP_ID_RECORD == groupId) {
               if (hasPermissionsGranted(getActivity())) {
-                new EditDubDialog(getContext(), mMenuContainer, mWorkSpace, null);
+                new EditDubDialog(getContext(), mMenuContainer, mWorkSpace);
               } else {
                 ActivityCompat.requestPermissions(getActivity(), AUDIO_RECORD_PERMISSIONS, 1);
               }
             } else {
-              new EffectAddDialog(getContext(), mMenuContainer, mWorkSpace, groupId, null);
+              new EffectAddDialog(getContext(), mMenuContainer, mWorkSpace, groupId);
             }
           } else {
             BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
             if (baseEffect != null) {
               mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
               currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+              updateFakeView(index, baseEffect);
             }
           }
         }
       };
+
+  private void updateFakeView(final int index, BaseEffect baseEffect) {
+    if (mFakeApi == null) {
+      return;
+    }
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_MOSAIC
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_WATERMARK
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
+      EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
+      mFakeApi.setTarget(new PosDraw(), effectPosInfo);
+      mFakeApi.setFakeViewListener(new IFakeViewListener() {
+
+        @Override public void onEffectMoving() {
+          FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
+          BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
+          EffectPosInfo targetPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
+          FakePosUtils.INSTANCE.updateEffectPosByFakePos(curFakePos, targetPosInfo);
+          EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, targetPosInfo);
+          effectOPPosInfo.setFastRefresh(true);
+          mWorkSpace.handleOperation(effectOPPosInfo);
+        }
+
+        @Override public void onEffectMoveStart() {
+          EffectOPLock effectOPLock = new EffectOPLock(groupId, index, true);
+          mWorkSpace.handleOperation(effectOPLock);
+          EffectOPStaticPic
+              effectOPStaticPic = new EffectOPStaticPic(groupId, index, true);
+          mWorkSpace.handleOperation(effectOPStaticPic);
+        }
+
+        @Override public void onEffectMoveEnd(boolean moved) {
+          EffectOPLock effectOPLock = new EffectOPLock(groupId, index, false);
+          mWorkSpace.handleOperation(effectOPLock);
+          EffectOPStaticPic
+              effectOPStaticPic = new EffectOPStaticPic(groupId, index, false);
+          mWorkSpace.handleOperation(effectOPStaticPic);
+          FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
+          BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
+          EffectPosInfo targetPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
+          FakePosUtils.INSTANCE.updateEffectPosByFakePos(curFakePos, targetPosInfo);
+          EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, targetPosInfo);
+          effectOPPosInfo.setFastRefresh(false);
+          mWorkSpace.handleOperation(effectOPPosInfo);
+        }
+
+        @Override public void checkEffectTouchHit(@NotNull PointF pointF) {
+          List<BaseEffect> list = mWorkSpace.getEffectAPI().getEffectList(groupId);
+          if (list == null || list.isEmpty()) {
+            return;
+          }
+
+          for (int i = 0; i < list.size(); i++) {
+            BaseEffect effect = list.get(i);
+            EffectPosInfo effectPosInfo = ((FloatEffect) effect).mEffectPosInfo;
+            RectF targetRect = effectPosInfo.getRectArea();
+            if (mEffectAdapter.getSelectIndex() != i && targetRect != null
+                && targetRect.contains(pointF.x, pointF.y)) {
+              updateFakeView(i, effect);
+              mEffectAdapter.setSelectIndex(i);
+              return;
+            }
+          }
+        }
+      });
+    } else {
+      mFakeApi.setTarget(null, null);
+    }
+  }
 
   private boolean hasPermissionsGranted(Activity activity) {
     for (String permission : AUDIO_RECORD_PERMISSIONS) {
@@ -375,14 +430,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
 
   private List<EffectBarItem> getOperateList() {
     List<EffectBarItem> list = new ArrayList<>();
-    if (groupId == QEGroupConst.GROUP_ID_STICKER
-        || groupId == QEGroupConst.GROUP_ID_MOSAIC
-        || groupId == QEGroupConst.GROUP_ID_COLLAGES
-        || groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
-      list.add(
-          new EffectBarItem(EffectBarItem.ACTION_POSITION, R.drawable.edit_icon_edit_nor,
-              getContext().getString(R.string.mn_edit_effect_position)));
-    }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_EDIT, R.drawable.edit_icon_edit_nor,
@@ -392,6 +439,12 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
               getContext().getString(R.string.mn_edit_title_trim)));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      list.add(new EffectBarItem(EffectBarItem.ACTION_DUPLICATE, R.drawable.edit_icon_duplicate,
+          getContext().getString(R.string.mn_edit_duplicate_title)));
     }
     if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_INPUT, R.drawable.edit_icon_key_nor,
@@ -413,18 +466,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(new EffectBarItem(EffectBarItem.ACTION_ALPHA, R.drawable.edit_icon_alpha_nor,
           getContext().getString(R.string.mn_edit_alpha_change)));
     }
-    if (groupId == QEGroupConst.GROUP_ID_STICKER
-        || groupId == QEGroupConst.GROUP_ID_MOSAIC
-        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
-        || groupId == QEGroupConst.GROUP_ID_WATERMARK
-        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
-      list.add(
-          new EffectBarItem(EffectBarItem.ACTION_SCALE_MORE, R.drawable.edit_icon_scale_more_nor,
-              getContext().getString(R.string.mn_edit_zoom_in)));
-      list.add(
-          new EffectBarItem(EffectBarItem.ACTION_SCALE_LESS, R.drawable.edit_icon_scale_less_nor,
-              getContext().getString(R.string.mn_edit_zoom_out)));
-    }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING
         || groupId == QEGroupConst.GROUP_ID_RECORD) {
@@ -438,12 +479,14 @@ public class EditEffectDialog extends BaseEffectMenuView {
           getContext().getString(R.string.mn_edit_title_mirror)));
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
-        || groupId == QEGroupConst.GROUP_ID_MOSAIC
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
-        || groupId == QEGroupConst.GROUP_ID_WATERMARK
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_ROTATE, R.drawable.edit_icon_rotate_nor,
-          getContext().getString(R.string.mn_edit_title_rotate)));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_MASK, R.drawable.editor_icon_collage_tool_mask,
+          getContext().getString(R.string.mn_edit_title_mask)));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      list.add(new EffectBarItem(EffectBarItem.ACTION_CHROMA, R.drawable.editor_icon_collage_tool_chroma,
+          getContext().getString(R.string.mn_edit_title_chroma)));
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
         getContext().getString(R.string.mn_edit_title_delete)));

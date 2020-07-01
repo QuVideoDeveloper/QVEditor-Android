@@ -3,10 +3,9 @@ package com.quvideo.application.editor.effect;
 import android.content.Context;
 import android.view.View;
 import android.widget.Toast;
-import com.quvideo.application.editor.R;
 import com.quvideo.application.TimeFormatUtil;
+import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.application.utils.ToastUtils;
@@ -24,13 +23,17 @@ public class EditEffectTrimDialog extends BaseMenuView {
   private int effectIndex = 0;
 
   public EditEffectTrimDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int groupId, int effectIndex, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int groupId, int effectIndex) {
     super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
     startSeekBarController = new EditSeekBarController();
     endSeekBarController = new EditSeekBarController();
-    showMenu(container, l);
+    showMenu(container, null);
+  }
+
+  @Override public MenuType getMenuType() {
+    return MenuType.EffectTrim;
   }
 
   @Override protected int getCustomLayoutId() {

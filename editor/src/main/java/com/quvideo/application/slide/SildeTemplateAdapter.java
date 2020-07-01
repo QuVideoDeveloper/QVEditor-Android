@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
@@ -28,15 +26,12 @@ import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SildeTemplateAdapter
     extends RecyclerView.Adapter<SildeTemplateAdapter.TemplateHolder> {
 
   private List<SimpleTemplate> mTemplates = new ArrayList<>();
-
-  private MutableLiveData<LinkedList<Integer>> mSelected = new MutableLiveData<>();
 
   private Activity mActivity;
 
@@ -51,18 +46,6 @@ public class SildeTemplateAdapter
   public SildeTemplateAdapter(AppCompatActivity activity, DialogFragment dialogFragment) {
     this.mActivity = activity;
     this.mDialogFragment = dialogFragment;
-    mSelected.setValue(new LinkedList<Integer>() {{
-      offer(0);
-      offer(0);
-    }});
-    mSelected.observe(activity, new Observer<List<Integer>>() {
-      @Override
-      public void onChanged(List<Integer> integers) {
-        for (Integer pos : integers) {
-          notifyItemChanged(pos);
-        }
-      }
-    });
   }
 
   public void updateList(List<SimpleTemplate> templates) {
@@ -91,7 +74,6 @@ public class SildeTemplateAdapter
       XytInfo xytInfo = XytManager.getXytInfo(item.getTemplateId());
       holder.mTextView.setText(xytInfo.getTitle(mActivity.getResources().getConfiguration().locale));
     }
-    boolean isSelected = position == mSelected.getValue().get(mSelected.getValue().size() - 1);
     if (item.getThumbnailResId() <= 0) {
       final String filterPath = XytManager.getXytInfo(item.getTemplateId()).filePath;
       int thumbWidth = DPUtils.dpToPixel(holder.mImageView.getContext(), 60);
@@ -121,16 +103,12 @@ public class SildeTemplateAdapter
           })
           .into(holder.mImageView);
     }
-    holder.mImageView.setSelected(isSelected);
+    holder.mImageView.setSelected(false);
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         if (mOnItemClickListener != null) {
           mOnItemClickListener.onItemSelected(item);
-          mSelected.postValue(new LinkedList<Integer>() {{
-            offer(mSelected.getValue().get(mSelected.getValue().size() - 1));
-            offer(position);
-          }});
         } else {
           item.onClick(mActivity);
           mDialogFragment.dismissAllowingStateLoss();

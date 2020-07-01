@@ -28,6 +28,10 @@ public class EditSplitDialog extends BaseMenuView {
     showMenu(container, l);
   }
 
+  @Override public MenuType getMenuType() {
+    return MenuType.ClipSplit;
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_split;
   }

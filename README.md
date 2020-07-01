@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.1.8"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.1.9"
 }
 ```
 
@@ -819,6 +819,7 @@ ClipData参数说明：
 | mParamAdjust | 参数调节信息{@see ParamAdjust} | ParamAdjust |
 | mClipPosInfo | 片段位置信息{@see ClipPosInfo} | ClipPosInfo |
 | mClipBgData | 片段背景信息{@see ClipBgData} | ClipBgData |
+| mColorCurveInfo | 颜色曲线信息数据 {@see ColorCurveInfo} | ColorCurveInfo |
 
 
 ClipData.ClipType参数说明：
@@ -893,10 +894,25 @@ ClipBgData.ClipBgType参数说明：
 | COLOR | 纯色背景 |
 | PICTURE | 图片背景 |
 
+
+ColorCurveInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| mColorCurveItems | 颜色曲线详情{@see ColorCurveItem} | ColorCurveItem |
+
+
+ColorCurveInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| ts | 颜色曲线点的相对时间 | int |
+| rgb | 颜色曲线rgb信息点数据 | QPoint |
+| red | 颜色曲线red信息点数据 | QPoint |
+| green | 颜色曲线green信息点数据 | QPoint |
+| blue | 颜色曲线blue信息点数据 | QPoint |
+
+
 2) 效果Effect相关
-
 效果类继承结构：
-
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_effect.png" width="633" height="261" align="center">
 
 
@@ -975,6 +991,7 @@ AnimEffect参数说明：
 | mEffectChromaInfo | 抠色信息数据（绿幕） {@see EffectChromaInfo} | EffectChromaInfo |
 | mFilterInfo | 滤镜信息数据 {@see FilterInfo} | FilterInfo |
 | mParamAdjust | 参数调节信息数据 {@see ParamAdjust} | ParamAdjust |
+| mColorCurveInfo | 颜色曲线信息数据 {@see ColorCurveInfo} | ColorCurveInfo |
 | mEffectSubFxList | 子特效列表信息数据 {@see EffectSubFx} | EffectSubFx |
 | mEffectKeyFrameInfo | 关键帧信息数据 {@see EffectKeyFrameInfo}（由于功能复杂，后期可能调整数据结构） | EffectKeyFrameInfo |
 
@@ -1402,7 +1419,17 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPParamAdjust);
 ```
 
-21）滤镜
+
+21）颜色曲线调节
+```
+	// clipIndex表示第几个片段，从0开始
+	// colorCurveInfo颜色曲线数据 {@see ColorCurveInfo}
+	ClipOPColorCurve clipOPColorCurve = new ClipOPColorCurve(clipIndex, colorCurveInfo);
+	mWorkSpace.handleOperation(clipOPColorCurve);
+```
+
+
+22）滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// filterInfo滤镜信息 {@see FilterInfo}，null表示不使用滤镜
@@ -1410,7 +1437,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFilter);
 ```
 
-22）特效滤镜
+23）特效滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// fxFilterInfo特效滤镜信息 {@see FxFilterInfo}，null表示不使用特效滤镜
@@ -1418,7 +1445,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFxFilter);
 ```
 
-23）转场
+24）转场
 ```
 	// clipIndex表示第几个片段，从0开始
 	// crossInfo转场信息 {@see CrossInfo}，null表示不使用转场
@@ -1673,13 +1700,23 @@ EffectReplaceItem参数说明：
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
-	// ParamAdjust表示参数调节信息 {@see ParamAdjust}
+	// paramAdjust表示参数调节信息 {@see ParamAdjust}
 	EffectOPParamAdjust effectOPParamAdjust = new EffectOPParamAdjust(groupId, effectIndex, paramAdjust);
 	mWorkSpace.handleOperation(effectOPParamAdjust);
 ```
 
 
-24）画中画添加子特效
+24）画中画参数调节设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// colorCurveInfo表示参数调节信息 {@see ColorCurveInfo}
+	EffectOPColorCurve effectOPColorCurve = new EffectOPColorCurve(groupId, effectIndex, colorCurveInfo);
+	mWorkSpace.handleOperation(effectOPColorCurve);
+```
+
+
+25）画中画添加子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1690,7 +1727,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-25）画中画修改子特效出入点时间区间
+26）画中画修改子特效出入点时间区间
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1701,7 +1738,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-26）画中画删除子特效
+27）画中画删除子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1711,7 +1748,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-27）锚点修改
+28）锚点修改
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1720,7 +1757,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
-28）显示静态图片
+29）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1731,7 +1768,7 @@ EffectReplaceItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-29）马赛克模糊程度
+30）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1741,7 +1778,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-30）字幕动画开关
+31）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1750,7 +1787,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-31）字幕文本
+32）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1769,7 +1806,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-32）字幕字体
+33）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1789,7 +1826,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-33）字幕文本颜色
+34）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1808,7 +1845,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-34）字幕文本对齐方式
+35）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1844,7 +1881,7 @@ EffectReplaceItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-35）字幕文本阴影
+36）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1863,7 +1900,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-36）字幕文本描边
+37）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1884,7 +1921,7 @@ EffectReplaceItem参数说明：
 
 
 
-37）关键帧设置
+38）关键帧设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1897,7 +1934,7 @@ EffectReplaceItem参数说明：
 
 
 
-38）获取画中画抠色图片
+39）获取画中画抠色图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.AssetConstants;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeRange;
@@ -25,10 +24,14 @@ public class EffectAddMusicDialog extends BaseMenuView {
   private int groupId;
 
   public EffectAddMusicDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int groupId, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int groupId) {
     super(context, workSpace);
     this.groupId = groupId;
-    showMenu(container, l);
+    showMenu(container, null);
+  }
+
+  @Override public MenuType getMenuType() {
+    return MenuType.AudioAdd;
   }
 
   @Override protected int getCustomLayoutId() {

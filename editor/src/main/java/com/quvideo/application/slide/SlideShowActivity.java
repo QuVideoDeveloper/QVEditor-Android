@@ -123,6 +123,9 @@ public class SlideShowActivity extends AppCompatActivity {
         if (mPlayerControllerView != null) {
           mPlayerControllerView.seekPlayer(item.previewPos);
         }
+      }
+
+      @Override public void onReplaceClick(SlideInfo item) {
         //moveSlideNode(item.index, item.index + 1);
         replaceSlideNode(item.index);
       }
