@@ -17,11 +17,11 @@ import com.quvideo.application.editor.base.BaseEffectMenuView;
 import com.quvideo.application.editor.base.IEffectEditClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.chroma.EffectChromaDialog;
-import com.quvideo.application.editor.effect.fake.FakePosInfo;
-import com.quvideo.application.editor.effect.fake.FakePosUtils;
-import com.quvideo.application.editor.effect.fake.IFakeViewApi;
-import com.quvideo.application.editor.effect.fake.IFakeViewListener;
-import com.quvideo.application.editor.effect.fake.draw.PosDraw;
+import com.quvideo.application.editor.fake.FakePosInfo;
+import com.quvideo.application.editor.fake.FakePosUtils;
+import com.quvideo.application.editor.fake.IFakeViewApi;
+import com.quvideo.application.editor.fake.IFakeViewListener;
+import com.quvideo.application.editor.fake.draw.PosDraw;
 import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
 import com.quvideo.application.editor.sound.EditDubDialog;
 import com.quvideo.application.editor.sound.EffectAddMusicDialog;
@@ -123,7 +123,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
   };
 
   @Override protected int getCustomLayoutId() {
-    return R.layout.dialog_edit_edit;
+    return R.layout.dialog_edit_effect;
   }
 
   @Override protected void initCustomMenu(Context context, View view) {

@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Wed, 01 Jul 2020 19:36:26 +0800
+ Exported at: Fri, 03 Jul 2020 10:25:42 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -43,6 +43,8 @@
     <string name="mn_edit_change_style"></string>
     <string name="mn_edit_change_zoom">缩放</string>
     <string name="mn_edit_chroma_accuracy">精度</string>
+    <string name="mn_edit_clip_transform_fit_in">适合</string>
+    <string name="mn_edit_clip_transform_fit_out">填充</string>
     <string name="mn_edit_duplicate_title">复制</string>
     <string name="mn_edit_effect_position">位置</string>
     <string name="mn_edit_exit_confirm_content">退出？</string>
@@ -80,6 +82,7 @@
     <string name="mn_edit_title_end">结束</string>
     <string name="mn_edit_title_export">导出</string>
     <string name="mn_edit_title_filter">滤镜</string>
+    <string name="mn_edit_title_flip">翻转</string>
     <string name="mn_edit_title_fx">特效</string>
     <string name="mn_edit_title_fx_filter">特效滤镜</string>
     <string name="mn_edit_title_mask">蒙版</string>

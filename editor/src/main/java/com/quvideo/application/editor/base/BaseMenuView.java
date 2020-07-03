@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.quvideo.application.editor.EditOperate;
 import com.quvideo.application.editor.R;
+import com.quvideo.application.editor.fake.IFakeViewApi;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 
 public abstract class BaseMenuView extends BaseMenuLayer implements View.OnClickListener, ItemOnClickListener {
@@ -14,10 +15,16 @@ public abstract class BaseMenuView extends BaseMenuLayer implements View.OnClick
   protected MenuContainer mMenuContainer;
   private ItemOnClickListener mItemOnClickListener;
 
+  protected IFakeViewApi mFakeApi;
+
   public BaseMenuView(Context context, IQEWorkSpace workSpace) {
     super(context, workSpace);
   }
 
+  public void showMenu(MenuContainer container, ItemOnClickListener itemOnClickListener, IFakeViewApi iFakeViewApi) {
+    this.mFakeApi = iFakeViewApi;
+    showMenu(container, itemOnClickListener);
+  }
   public void showMenu(MenuContainer container, ItemOnClickListener itemOnClickListener) {
     init(getContext());
     mMenuContainer = container;
@@ -78,6 +85,11 @@ public abstract class BaseMenuView extends BaseMenuLayer implements View.OnClick
   public void dismissMenu() {
     if (mMenuContainer != null) {
       mMenuContainer.removeMenuLayer(this);
+    }
+
+    if (mFakeApi != null) {
+      mFakeApi.setTarget(null, null);
+      mFakeApi = null;
     }
   }
 }

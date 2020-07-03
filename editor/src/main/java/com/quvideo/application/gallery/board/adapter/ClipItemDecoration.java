@@ -4,7 +4,7 @@ import android.graphics.Rect;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.quvideo.application.utils.widget.rtl.RTLUtil;
+import com.quvideo.application.utils.RTLUtil;
 
 /**
  * @author Elijah <a href="zhonghu.liu@quvideo.com">Contact me.</a>

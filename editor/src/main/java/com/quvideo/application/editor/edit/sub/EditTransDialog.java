@@ -11,7 +11,6 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.base.SimpleTemplateAdapter;
-import com.quvideo.application.editor.edit.EditFilterTemplate;
 import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
@@ -50,7 +49,7 @@ public class EditTransDialog extends BaseMenuView {
     SimpleTemplateAdapter adapter =
         new SimpleTemplateAdapter(getActivity(), this);
     List<SimpleTemplate> filterTemplates =
-        new ArrayList<>(Arrays.asList(AssetConstants.TEST_EDIT_TRANS_TID));
+        new ArrayList<>(Arrays.asList(AssetConstants.getXytListByType(AssetConstants.XytType.Transition)));
     adapter.updateList(filterTemplates);
     clipRecyclerView.setAdapter(adapter);
     adapter.setOnItemClickListener(this::applyTemplate);
@@ -59,7 +58,7 @@ public class EditTransDialog extends BaseMenuView {
     if (clipData.getCrossInfo() != null && !TextUtils.isEmpty(clipData.getCrossInfo().crossPath)) {
       XytInfo xytInfo = XytManager.getXytInfo(clipData.getCrossInfo().crossPath);
       int select = 0;
-      for (EditFilterTemplate editFilterTemplate : AssetConstants.TEST_EDIT_TRANS_TID) {
+      for (SimpleTemplate editFilterTemplate : filterTemplates) {
         if (editFilterTemplate.getTemplateId() == xytInfo.getTtidLong()) {
           adapter.changeFocus(select);
           break;

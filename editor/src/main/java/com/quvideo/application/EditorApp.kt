@@ -13,7 +13,6 @@ import com.quvideo.mobile.component.template.XytInstallListener
 import com.quvideo.mobile.component.template.XytManager
 import com.quvideo.mobile.engine.QEEngineClient
 import com.quvideo.mobile.engine.QEInitData.Builder
-import com.quvideo.mobile.engine.QELogger
 import java.io.File
 import java.util.ArrayList
 
@@ -57,11 +56,10 @@ class EditorApp private constructor() {
           zipPaths.add(zipPath)
         }
       }
-      for (zipPath in zipPaths) {
-        XytManager.install(zipPath, null)
-      }
-      DemoSharedPref.getInstance()
-          .saveLastVersion(currentVersion)
+//      for (zipPath in zipPaths) {
+        XytManager.install(zipPaths, null)
+//      }
+      DemoSharedPref.getInstance().saveLastVersion(currentVersion)
     }
     // 使用Glide加载素材缩略图
     Glide.get(ctx)

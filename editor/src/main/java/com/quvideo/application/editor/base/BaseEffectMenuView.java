@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.effect.EffectBarItem;
-import com.quvideo.application.editor.effect.fake.IFakeViewApi;
+import com.quvideo.application.editor.fake.IFakeViewApi;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 
 public abstract class BaseEffectMenuView extends BaseMenuLayer implements View.OnClickListener, IEffectEditClickListener {

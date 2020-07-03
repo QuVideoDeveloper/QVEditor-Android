@@ -66,10 +66,17 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
     notifyItemChanged(selectIndex);
   }
 
+  @Override public int getItemViewType(int position) {
+    if (position == clipSize) {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
+
   @Override
   public void onBindViewHolder(@NonNull TemplateHolder holder, final int position) {
     boolean isSelected = position == selectIndex;
-
     if (position == clipSize) {
       holder.mImageView.setImageBitmap(null);
       holder.mImageView.setBackgroundResource(R.drawable.edit_icon_add_clip);
@@ -96,11 +103,9 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
             }
 
             @Override public void onError(Throwable e) {
-
             }
 
             @Override public void onComplete() {
-
             }
           });
 

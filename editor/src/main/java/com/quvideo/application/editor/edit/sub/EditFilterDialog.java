@@ -50,7 +50,7 @@ public class EditFilterDialog extends BaseMenuView {
     SimpleTemplateAdapter adapter =
         new SimpleTemplateAdapter(getActivity(), this);
     List<SimpleTemplate> filterTemplates =
-        new ArrayList<>(Arrays.asList(AssetConstants.TEST_EDIT_FILTER_TID));
+        new ArrayList<>(Arrays.asList(AssetConstants.getXytListByType(AssetConstants.XytType.Filter)));
     adapter.updateList(filterTemplates);
     clipRecyclerView.setAdapter(adapter);
     adapter.setOnItemClickListener(this::applyTemplate);
@@ -59,7 +59,7 @@ public class EditFilterDialog extends BaseMenuView {
     if (clipData.getFilterInfo() != null && !TextUtils.isEmpty(clipData.getFilterInfo().filterPath)) {
       XytInfo xytInfo = XytManager.getXytInfo(clipData.getFilterInfo().filterPath);
       int select = 0;
-      for (EditFilterTemplate editFilterTemplate : AssetConstants.TEST_EDIT_FILTER_TID) {
+      for (SimpleTemplate editFilterTemplate : filterTemplates) {
         if (editFilterTemplate.getTemplateId() == xytInfo.getTtidLong()) {
           adapter.changeFocus(select);
           break;

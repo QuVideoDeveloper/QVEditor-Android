@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Wed, 01 Jul 2020 19:36:26 +0800
+ Exported at: Fri, 03 Jul 2020 10:25:42 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -43,6 +43,8 @@
     <string name="mn_edit_change_style">Change Style</string>
     <string name="mn_edit_change_zoom">Zoom</string>
     <string name="mn_edit_chroma_accuracy">Accurate</string>
+    <string name="mn_edit_clip_transform_fit_in">fit</string>
+    <string name="mn_edit_clip_transform_fit_out">fill</string>
     <string name="mn_edit_duplicate_title">Duplicate</string>
     <string name="mn_edit_effect_position">Position</string>
     <string name="mn_edit_exit_confirm_content">exit？</string>
@@ -80,6 +82,7 @@
     <string name="mn_edit_title_end">End</string>
     <string name="mn_edit_title_export">Export</string>
     <string name="mn_edit_title_filter">Filter</string>
+    <string name="mn_edit_title_flip">Flip</string>
     <string name="mn_edit_title_fx">Fx</string>
     <string name="mn_edit_title_fx_filter">Fx Filter</string>
     <string name="mn_edit_title_mask">mask</string>

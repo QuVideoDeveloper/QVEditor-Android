@@ -4,7 +4,12 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.edit.EditFilterTemplate;
 import com.quvideo.application.editor.sound.AudioTemplate;
 import com.quvideo.application.slide.SlideTemplate;
+import com.quvideo.mobile.component.template.XytManager;
+import com.quvideo.mobile.component.template.model.XytInfo;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class AssetConstants {
 
@@ -87,7 +92,7 @@ public class AssetConstants {
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028B.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000133.xyt");
     // multisubtitle
-    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000000136.zip");
+    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000010000A.zip");
     // 马赛克
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300001.xyt");
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300002.xyt");
@@ -121,43 +126,6 @@ public class AssetConstants {
       0x0400000010000040L
   };
 
-  public static final EditFilterTemplate[] TEST_THEME_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor),
-      new EditFilterTemplate(0x01000000000002A3L),
-      new EditFilterTemplate(0x01000000000002A5L)
-  };
-
-  public static final long[] TEST_TRANS_TID = new long[] {
-      0x030000000000012AL,
-      0x030000000000012BL,
-      0x030000000000012CL,
-      0x030000000000012DL,
-      0x030000000000012EL
-  };
-
-  public static final EditFilterTemplate[] TEST_FX_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0x06000000000000D9L),
-      new EditFilterTemplate(0x06000000000000DAL),
-      new EditFilterTemplate(0x0600000000000141L),
-      new EditFilterTemplate(0x0600000000000145L)
-  };
-
-  public static final EditFilterTemplate[] TEST_STICKER_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0x0500000000000480L),
-      new EditFilterTemplate(0x0500000000000481L),
-      new EditFilterTemplate(0x0500000000000482L),
-      new EditFilterTemplate(0x0500000000000483L),
-      new EditFilterTemplate(0x0500000000000484L)
-  };
-
-  public static final EditFilterTemplate[] TEST_SUBTITLE_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0x0900000000000000L),
-      new EditFilterTemplate(0x090000000000028AL),
-      new EditFilterTemplate(0x090000000000028BL),
-      new EditFilterTemplate(0x0900000000000133L),
-      new EditFilterTemplate(0x0900000000000136L)
-  };
-
   public static final EditFilterTemplate[] TEST_MOSIC_TID = new EditFilterTemplate[] {
       new EditFilterTemplate(0x0500000000300001L),
       new EditFilterTemplate(0x0500000000300002L)
@@ -179,35 +147,6 @@ public class AssetConstants {
           "音乐3", R.drawable.music_3)
   };
 
-  public static final EditFilterTemplate[] TEST_EDIT_FILTER_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor),
-      new EditFilterTemplate(0x040000001000001EL),
-      new EditFilterTemplate(0x040000001000002BL),
-      new EditFilterTemplate(0x040000001000002FL),
-      new EditFilterTemplate(0x0400000010000025L),
-      new EditFilterTemplate(0x0400000010000035L),
-      new EditFilterTemplate(0x0400000010000039L),
-      new EditFilterTemplate(0x0400000010000040L)
-  };
-
-  public static final EditFilterTemplate[] TEST_EDIT_FX_FILTER_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor),
-      new EditFilterTemplate(0x0400000000500001L),
-      new EditFilterTemplate(0x0400000000500002L),
-      new EditFilterTemplate(0x0400000000500003L),
-      new EditFilterTemplate(0x0400000000500004L),
-      new EditFilterTemplate(0x0400000000500007L)
-  };
-
-  public static final EditFilterTemplate[] TEST_EDIT_TRANS_TID = new EditFilterTemplate[] {
-      new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor),
-      new EditFilterTemplate(TEST_TRANS_TID[0]),
-      new EditFilterTemplate(TEST_TRANS_TID[1]),
-      new EditFilterTemplate(TEST_TRANS_TID[2]),
-      new EditFilterTemplate(TEST_TRANS_TID[3]),
-      new EditFilterTemplate(TEST_TRANS_TID[4]),
-  };
-
   public static final SlideTemplate[] TEST_SLIDE_THEME_TID = new SlideTemplate[] {
       new SlideTemplate(0x0100000000400411L, "520-1", R.drawable.thumbnail_520, 1, 6),
       new SlideTemplate(0x0100000000400423L, "pink", R.drawable.thumbnail_pink, 1, 7),
@@ -215,4 +154,83 @@ public class AssetConstants {
       new SlideTemplate(0x0100000000400435L, "SICKO", R.drawable.thumbnail_sicko, 4, 8),
       new SlideTemplate(0x0100000000400436L, "love", R.drawable.thumbnail_love, 1, 7)
   };
+
+  /**
+   * 根据xyttype获取素材列表
+   */
+  public static SlideTemplate[] getSlideXytListByType() {
+    List<SlideTemplate> result = new ArrayList<>();
+    HashMap<Long, XytInfo> temp = XytManager.getAll();
+    Set<Long> keySet = temp.keySet();
+    XytInfo xytInfo;
+    for (Long ttid : keySet) {
+      xytInfo = temp.get(ttid);
+      if (xytInfo != null && isCurrentType(XytType.Slide, xytInfo)) {
+        result.add(new SlideTemplate(ttid, "", 0, 1, 4));
+      }
+    }
+    return result.toArray(new SlideTemplate[result.size()]);
+  }
+
+  /**
+   * 根据xyttype获取素材列表。
+   * 这种判断是非正规的，实际的id不一定会这样，仅测试素材是这样的规则。开发者请勿这样使用
+   */
+  public static EditFilterTemplate[] getXytListByType(XytType xytType) {
+    List<EditFilterTemplate> result = new ArrayList<>();
+    //ArrayList<EditFilterTemplate> result = new ArrayList<>(Arrays.asList(AssetConstants.TEST_SUBTITLE_TID));
+    if (xytType == XytType.Transition
+        || xytType == XytType.Filter
+        || xytType == XytType.FxFilter
+        || xytType == XytType.Theme) {
+      // 无--主题/转场/滤镜/特效滤镜
+      result.add(new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor));
+    }
+    HashMap<Long, XytInfo> temp = XytManager.getAll();
+    Set<Long> keySet = temp.keySet();
+    XytInfo xytInfo;
+    for (Long ttid : keySet) {
+      xytInfo = temp.get(ttid);
+      if (xytInfo != null && isCurrentType(xytType, xytInfo)) {
+        result.add(new EditFilterTemplate(ttid));
+      }
+    }
+    return result.toArray(new EditFilterTemplate[result.size()]);
+  }
+
+  /**
+   * 这种判断是非正规的，实际的id不一定会这样，仅测试素材是这样的规则。开发者请勿这样使用
+   */
+  private static boolean isCurrentType(XytType xytType, XytInfo xytInfo) {
+    switch (xytType) {
+      case Theme:
+        return xytInfo.ttidHexStr.contains("0x01000000000");
+      case Slide:
+        return xytInfo.ttidHexStr.contains("0x01000000004");
+      case Filter:
+        return xytInfo.ttidHexStr.contains("0x04") && !xytInfo.ttidHexStr.contains("0x04000000005");
+      case FxFilter:
+        return xytInfo.ttidHexStr.contains("0x04000000005");
+      case Sticker:
+        return xytInfo.ttidHexStr.contains("0x05") && !xytInfo.ttidHexStr.contains("0x05000000003");
+      case Transition:
+        return xytInfo.ttidHexStr.contains("0x03");
+      case Subtitle:
+        return xytInfo.ttidHexStr.contains("0x09");
+      case Fx:
+        return xytInfo.ttidHexStr.contains("0x06");
+    }
+    return false;
+  }
+
+  public enum XytType {
+    Theme,
+    FxFilter,
+    Filter,
+    Transition,
+    Sticker,
+    Subtitle,
+    Fx,
+    Slide
+  }
 }

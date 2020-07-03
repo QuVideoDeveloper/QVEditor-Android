@@ -70,7 +70,7 @@
 
   </RelativeLayout>
 
-  <androidx.recyclerview.widget.RecyclerView
+  <com.quvideo.application.widget.sort.CusSortRecycler
       android:id="@+id/edit_enter_recyclerview"
       android:layout_width="match_parent"
       android:layout_height="100dp"

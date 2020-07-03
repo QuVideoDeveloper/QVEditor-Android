@@ -24,7 +24,7 @@ import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.EditEditDialog;
 import com.quvideo.application.editor.effect.EditEffectDialog;
-import com.quvideo.application.editor.effect.fake.FakeView;
+import com.quvideo.application.editor.fake.FakeView;
 import com.quvideo.application.editor.sound.EditSoundMainDialog;
 import com.quvideo.application.editor.theme.EditThemeDialog;
 import com.quvideo.application.export.ExportChooseDialog;
@@ -212,7 +212,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   @Override
   public void onClick(View view, EditOperate operate) {
     if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
-      new EditEditDialog(this, mMenuLayout, mWorkSpace, this);
+      new EditEditDialog(this, mMenuLayout, mWorkSpace, this, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER,
           mFakeView);

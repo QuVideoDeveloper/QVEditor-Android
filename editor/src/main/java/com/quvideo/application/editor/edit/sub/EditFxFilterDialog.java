@@ -49,7 +49,7 @@ public class EditFxFilterDialog extends BaseMenuView {
     SimpleTemplateAdapter adapter =
         new SimpleTemplateAdapter(getActivity(), this);
     List<SimpleTemplate> filterTemplates =
-        new ArrayList<>(Arrays.asList(AssetConstants.TEST_EDIT_FX_FILTER_TID));
+        new ArrayList<>(Arrays.asList(AssetConstants.getXytListByType(AssetConstants.XytType.FxFilter)));
     adapter.updateList(filterTemplates);
     clipRecyclerView.setAdapter(adapter);
     adapter.setOnItemClickListener(this::applyTemplate);

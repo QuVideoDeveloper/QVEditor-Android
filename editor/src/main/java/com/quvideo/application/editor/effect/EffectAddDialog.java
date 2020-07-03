@@ -117,11 +117,11 @@ public class EffectAddDialog extends BaseMenuView {
     if (groupId == QEGroupConst.GROUP_ID_MOSAIC) {
       templates = AssetConstants.TEST_MOSIC_TID;
     } else if (groupId == QEGroupConst.GROUP_ID_STICKER) {
-      templates = AssetConstants.TEST_STICKER_TID;
+      templates = AssetConstants.getXytListByType(AssetConstants.XytType.Sticker);
     } else if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
-      templates = AssetConstants.TEST_SUBTITLE_TID;
+      templates = AssetConstants.getXytListByType(AssetConstants.XytType.Subtitle);
     } else if (groupId == QEGroupConst.GROUP_ID_STICKER_FX) {
-      templates = AssetConstants.TEST_FX_TID;
+      templates = AssetConstants.getXytListByType(AssetConstants.XytType.Fx);
     }
     if (templates != null) {
       return new ArrayList<>(Arrays.asList(templates));

@@ -10,7 +10,6 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.base.SimpleTemplateAdapter;
-import com.quvideo.application.editor.edit.EditFilterTemplate;
 import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
@@ -45,7 +44,7 @@ public class EditThemeDialog extends BaseMenuView {
     SimpleTemplateAdapter adapter =
         new SimpleTemplateAdapter(getActivity(), this);
     List<SimpleTemplate> themeTemplates =
-        new ArrayList<>(Arrays.asList(AssetConstants.TEST_THEME_TID));
+        new ArrayList<>(Arrays.asList(AssetConstants.getXytListByType(AssetConstants.XytType.Theme)));
     adapter.updateList(themeTemplates);
     clipRecyclerView.setAdapter(adapter);
     adapter.setOnItemClickListener(this::applyTemplate);
@@ -53,7 +52,7 @@ public class EditThemeDialog extends BaseMenuView {
     long themeId = mWorkSpace.getStoryboardAPI().getThemeId();
     if (themeId != 0) {
       int select = 0;
-      for (EditFilterTemplate editFilterTemplate : AssetConstants.TEST_THEME_TID) {
+      for (SimpleTemplate editFilterTemplate : themeTemplates) {
         if (editFilterTemplate.getTemplateId() == themeId) {
           adapter.changeFocus(select);
           break;

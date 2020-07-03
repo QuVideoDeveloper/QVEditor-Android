@@ -15,7 +15,7 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.utils.DeviceSizeUtil;
-import com.quvideo.application.utils.softkeyboard.DifferenceCalculator;
+import com.quvideo.application.widget.softkeyboard.DifferenceCalculator;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;

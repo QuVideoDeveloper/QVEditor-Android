@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -23,6 +24,8 @@ import com.quvideo.application.gallery.provider.IGalleryProvider;
 import com.quvideo.application.player.PlayerControllerView;
 import com.quvideo.application.utils.FileUtils;
 import com.quvideo.application.utils.ToastUtils;
+import com.quvideo.application.widget.sort.CusSortRecycler;
+import com.quvideo.application.widget.sort.ItemDragHelperCallback;
 import com.quvideo.mobile.engine.QEEngineClient;
 import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.model.export.ExportParams;
@@ -40,7 +43,7 @@ import java.util.ArrayList;
 
 public class SlideShowActivity extends AppCompatActivity {
 
-  private RecyclerView mRecyclerView;
+  private CusSortRecycler mRecyclerView;
   private Button btnExport;
   private ImageView btnBack;
 
@@ -126,13 +129,37 @@ public class SlideShowActivity extends AppCompatActivity {
       }
 
       @Override public void onReplaceClick(SlideInfo item) {
-        //moveSlideNode(item.index, item.index + 1);
+
         replaceSlideNode(item.index);
       }
     });
     mRecyclerView.setAdapter(adapter);
     ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
     mRecyclerView.setHasFixedSize(true);
+    mRecyclerView.setSceneListener(new CusSortRecycler.SelectSceneListener() {
+
+      @Override public void onOrderStart() {
+        mSlideWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      }
+
+      @Override public void onOrderChanged(int from, int to) {
+        if (from != to) {
+          if (from >= adapter.getItemCount() - 1
+              || to >= adapter.getItemCount() - 1) {
+            return;
+          }
+          moveSlideNode(from, to);
+        }
+      }
+    });
+    ItemDragHelperCallback callback = new ItemDragHelperCallback() {
+      @Override public boolean isLongPressDragEnabled() {
+        return true;
+      }
+    };
+    callback.setOnItemMoveListener(mRecyclerView);
+    ItemTouchHelper helper = new ItemTouchHelper(callback);
+    helper.attachToRecyclerView(mRecyclerView);
   }
 
   private void initData() {
