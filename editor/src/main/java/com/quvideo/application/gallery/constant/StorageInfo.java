@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
-import com.quvideo.application.gallery.utils.FileUtils;
+import com.quvideo.application.utils.FileUtils;
 import com.quvideo.application.utils.MD5;
 import java.io.File;
 import java.util.ArrayList;

@@ -15,7 +15,6 @@ import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
-import com.quvideo.mobile.engine.utils.QESizeUtil;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPMirror;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPPosInfo;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPRotate;
@@ -123,32 +122,10 @@ public class EditClipPosInfoDialog extends BaseMenuView {
         ClipOPRotate clipOPRotate = new ClipOPRotate(clipIndex, rotate + 90);
         mWorkSpace.handleOperation(clipOPRotate);
       } else if (v.equals(btnFitIn)) {
-        ClipPosInfo clipPosInfo = new ClipPosInfo();
-        VeMSize streamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
-        clipPosInfo.centerPosX = streamSize.width / 2f;
-        clipPosInfo.centerPosY = streamSize.height / 2f;
-        ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, clipPosInfo);
+        ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, false);
         mWorkSpace.handleOperation(clipOPPosInfo);
       } else if (v.equals(btnFitOut)) {
-        ClipPosInfo clipPosInfo = new ClipPosInfo();
-        VeMSize streamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
-        clipPosInfo.centerPosX = streamSize.width / 2f;
-        clipPosInfo.centerPosY = streamSize.height / 2f;
-        VeMSize targetSize = QESizeUtil.getFitOutSize(clipSourceSize, streamSize);
-        if (mWorkSpace.getClipAPI().getClipByIndex(clipIndex).getRotateAngle() % 180 != 0) {
-          targetSize = QESizeUtil.getFitOutSize(new VeMSize(clipSourceSize.height, clipSourceSize.width), streamSize);
-        }
-        if (targetSize == null) {
-          return;
-        }
-        if (targetSize.width == streamSize.width) {
-          clipPosInfo.heightScale = clipPosInfo.widthScale = ((float) targetSize.height) / streamSize.height;
-        } else if (targetSize.height == streamSize.height) {
-          clipPosInfo.heightScale = clipPosInfo.widthScale = ((float) targetSize.width) / streamSize.width;
-        } else {
-          return;
-        }
-        ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, clipPosInfo);
+        ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, true);
         mWorkSpace.handleOperation(clipOPPosInfo);
       }
     }

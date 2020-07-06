@@ -69,7 +69,7 @@ public class GalleryFile {
     if (TextUtils.isEmpty(mMediaPath)) {
       String appMediaDir = getAppMediaDir(context);
       mMediaPath = appMediaDir + SDCARD_PHOTO_MEDIA_PATH_END;
-      createNoMediaFileInPath(mMediaPath);
+      FileUtils.createNoMediaFileInPath(mMediaPath);
     }
     if (TextUtils.isEmpty(mMediaPath)) {
       throw new RuntimeException("path is null, can't run anymore");
@@ -81,7 +81,7 @@ public class GalleryFile {
     if (TextUtils.isEmpty(mNetMediaPath)) {
       String appMediaDir = getAppMediaDir(context);
       mNetMediaPath = appMediaDir + SDCARD_NET_MEDIA_PATH_END;
-      createNoMediaFileInPath(mNetMediaPath);
+      FileUtils.createNoMediaFileInPath(mNetMediaPath);
     }
     if (TextUtils.isEmpty(mNetMediaPath)) {
       throw new RuntimeException("path is null, can't run anymore");
@@ -99,27 +99,6 @@ public class GalleryFile {
       }
     }
     return appMediaDir;
-  }
-
-  private static void createNoMediaFileInPath(String strPath) {
-    if (strPath == null) {
-      return;
-    }
-    if (!strPath.endsWith(File.separator)) {
-      strPath += File.separator;
-    }
-    FileUtils.createMultilevelDirectory(strPath);
-    strPath += ".nomedia";
-    File fileNoMedia = new File(strPath);
-    try {
-      if (!fileNoMedia.exists()) {
-        fileNoMedia.createNewFile();
-      } else if (fileNoMedia.isDirectory()) {
-        fileNoMedia.delete();
-        fileNoMedia.createNewFile();
-      }
-    } catch (Exception ignore) {
-    }
   }
 
   public static boolean isGifFile(String path) {

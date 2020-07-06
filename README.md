@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.1.10"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.2.1"
 }
 ```
 
@@ -1410,9 +1410,18 @@ ClipBgData构造器
 
 19）位置修改
 ```
+  // 方式一：
 	// clipIndex表示第几个片段，从0开始
 	// clipPosInfo镜头位置数据 {@see ClipPosInfo}
 	ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, clipPosInfo);
+	mWorkSpace.handleOperation(clipOPPosInfo);
+```
+
+```
+  // 方式二：
+	// clipIndex表示第几个片段，从0开始
+	// isFitOut镜头位置是否自适应裁切（true：裁切  false：自适应。对应imageview的scaleType的fitCenter和centerCrop）
+	ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, isFitOut);
 	mWorkSpace.handleOperation(clipOPPosInfo);
 ```
 

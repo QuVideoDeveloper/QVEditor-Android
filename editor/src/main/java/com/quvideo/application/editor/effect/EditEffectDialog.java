@@ -17,12 +17,12 @@ import com.quvideo.application.editor.base.BaseEffectMenuView;
 import com.quvideo.application.editor.base.IEffectEditClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.chroma.EffectChromaDialog;
+import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
 import com.quvideo.application.editor.fake.FakePosInfo;
 import com.quvideo.application.editor.fake.FakePosUtils;
 import com.quvideo.application.editor.fake.IFakeViewApi;
 import com.quvideo.application.editor.fake.IFakeViewListener;
 import com.quvideo.application.editor.fake.draw.PosDraw;
-import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
 import com.quvideo.application.editor.sound.EditDubDialog;
 import com.quvideo.application.editor.sound.EffectAddMusicDialog;
 import com.quvideo.application.gallery.GalleryClient;
@@ -51,8 +51,10 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioReplace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPCopy;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPPosInfo;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleText;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -117,6 +119,15 @@ public class EditEffectDialog extends BaseEffectMenuView {
         }
         if (groupId == QEGroupConst.GROUP_ID_BGMUSIC && mEffectOperateAdapter != null) {
           mEffectOperateAdapter.updateList(getOperateList());
+        }
+      } else if (operate instanceof EffectOPMultiSubtitleText) {
+        int selectIndex = mEffectAdapter.getSelectIndex();
+        if (selectIndex >= 0 && selectIndex == ((EffectOPMultiSubtitleText) operate).getEffectIndex()) {
+          BaseEffect curEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);
+          if (curEffect != null) {
+            EffectPosInfo effectPosInfo = ((FloatEffect) curEffect).mEffectPosInfo;
+            mFakeApi.setTarget(new PosDraw(), effectPosInfo);
+          }
         }
       }
     }
@@ -290,7 +301,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         }
       };
 
-  private void updateFakeView(final int index, BaseEffect baseEffect) {
+  private void updateFakeView(final int index, BaseEffect curEffect) {
     if (mFakeApi == null) {
       return;
     }
@@ -300,7 +311,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         || groupId == QEGroupConst.GROUP_ID_WATERMARK
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
-      EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
+      EffectPosInfo effectPosInfo = ((FloatEffect) curEffect).mEffectPosInfo;
       mFakeApi.setTarget(new PosDraw(), effectPosInfo);
       mFakeApi.setFakeViewListener(new IFakeViewListener() {
 

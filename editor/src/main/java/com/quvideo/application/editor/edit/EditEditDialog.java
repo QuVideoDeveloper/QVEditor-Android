@@ -233,7 +233,7 @@ public class EditEditDialog extends BaseMenuView {
   }
 
   private void doClipDuplicate(int selClipIndex) {
-    if (mWorkSpace.getClipAPI().getClipList().size() > 1
+    if (mWorkSpace.getClipAPI().getClipList().size() > 0
         && selClipIndex >= 0
         && selClipIndex < mWorkSpace.getClipAPI().getClipList().size()) {
       ClipOPCopy clipOPCopy = new ClipOPCopy(selClipIndex);
