@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.2.1"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.2.2"
 }
 ```
 
@@ -2045,13 +2045,13 @@ public class ClipOPReverseMute extends BaseOperate {
     this.clipIndex = clipIndex;
   }
 
-  @Override public boolean operateRun(IEngine engine) {
+  @Override protected boolean operateRun(IEngine engine) {
     // 编辑倒放
     ClipOPReverse clipOPReverse = new ClipOPReverse(clipIndex, true);
-    clipOPReverse.operateRun(engine);
+    clipOPReverse.operate(engine);
     // 编辑静音
     ClipOPMute clipOPMute = new ClipOPMute(clipIndex, true);
-    clipOPMute.operateRun(engine);
+    clipOPMute.operate(engine);
     // 返回最终的成功/失败
     return true;
   }
