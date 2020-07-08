@@ -93,4 +93,9 @@
   <color name="black_p30">#4D000000</color>
 
   <color name="gallery_main_ripple_color">@color/color_33ffffff</color>
+
+  <!-- 基础按钮颜色 -->
+  <color name="color_btn_start">#1db4ff</color>
+  <color name="color_btn_end">#478DFF</color>
+
 </resources>

@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Fri, 03 Jul 2020 10:25:42 +0800
+ Exported at: Tue, 07 Jul 2020 14:46:14 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -75,6 +75,7 @@
     <string name="mn_edit_title_change_voice">变声</string>
     <string name="mn_edit_title_chroma">抠像</string>
     <string name="mn_edit_title_collages">画中画</string>
+    <string name="mn_edit_title_crop">裁剪</string>
     <string name="mn_edit_title_delete">删除</string>
     <string name="mn_edit_title_dub_record">录音</string>
     <string name="mn_edit_title_dubbing">音效</string>

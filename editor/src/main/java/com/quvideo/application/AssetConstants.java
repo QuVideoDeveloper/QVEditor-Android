@@ -173,7 +173,7 @@ public class AssetConstants {
   }
 
   /**
-   * 根据xyttype获取素材列表。
+   * 根据xyttype获取素材列表
    * 这种判断是非正规的，实际的id不一定会这样，仅测试素材是这样的规则。开发者请勿这样使用
    */
   public static EditFilterTemplate[] getXytListByType(XytType xytType) {

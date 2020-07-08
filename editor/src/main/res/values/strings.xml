@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Fri, 03 Jul 2020 10:25:42 +0800
+ Exported at: Tue, 07 Jul 2020 14:46:14 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -75,6 +75,7 @@
     <string name="mn_edit_title_change_voice">Voice</string>
     <string name="mn_edit_title_chroma">Chroma</string>
     <string name="mn_edit_title_collages">Collages</string>
+    <string name="mn_edit_title_crop">Crop</string>
     <string name="mn_edit_title_delete">Delete</string>
     <string name="mn_edit_title_dub_record">Record</string>
     <string name="mn_edit_title_dubbing">Dubbing</string>

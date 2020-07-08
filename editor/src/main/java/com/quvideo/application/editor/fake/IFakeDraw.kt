@@ -83,9 +83,14 @@ abstract class IFakeDraw {
     return false
   }
 
-  /** 是否支持多指缩放旋转，不是所有的都需要支持 */
+  /** 是否支持多指缩放，不是所有的都需要支持 */
   open fun supportMultiScale(): Boolean {
     return false
+  }
+
+  /** 是否支持多指旋转，不是所有的都需要支持 */
+  open fun supportMultiRotate(): Boolean {
+    return true
   }
 
   fun onTouchEvent(event: MotionEvent): Boolean {
@@ -257,15 +262,17 @@ abstract class IFakeDraw {
           mInitialDistance = FakePosUtils.distance(event)
         }
       }
-      if (mIsInRomating) {
-        fakePosInfo?.degrees = mOldMaskRotation + disRotate
-        fakePosInfo?.degrees = FakePosUtils.calcNewRotation(fakePosInfo?.degrees!!)
-        isChanged = true
-      } else if (Math.abs(disRotate) > 5) {
-        // disRotate保证一定是正数了，大于5度才开始转圈圈，这样才能在缩放的时候比较稳定
-        mIsInRomating = true
-        mInitialRotation = FakePosUtils.getRotation(event)
-        mOldMaskRotation = fakePosInfo?.degrees!!
+      if (supportMultiRotate()) {
+        if (mIsInRomating) {
+          fakePosInfo?.degrees = mOldMaskRotation + disRotate
+          fakePosInfo?.degrees = FakePosUtils.calcNewRotation(fakePosInfo?.degrees!!)
+          isChanged = true
+        } else if (Math.abs(disRotate) > 5) {
+          // disRotate保证一定是正数了，大于5度才开始转圈圈，这样才能在缩放的时候比较稳定
+          mIsInRomating = true
+          mInitialRotation = FakePosUtils.getRotation(event)
+          mOldMaskRotation = fakePosInfo?.degrees!!
+        }
       }
       if (isChanged) {
         fakeViewListener?.onEffectMoving()
@@ -288,17 +295,17 @@ abstract class IFakeDraw {
     val originalPoint: PointF = FakePosUtils.calcNewPoint(
         PointF(firstLastX, firstLastY),
         PointF(fakePosInfo!!.centerX, fakePosInfo!!.centerY), -fakePosInfo!!.degrees)
-    if (originalPoint.y <= fakePosInfo!!.centerY - fakePosInfo!!.height / 2) {
+    if (originalPoint.y <= fakePosInfo!!.centerY - fakePosInfo!!.height / 2 + fakePosInfo!!.height / 10) {
       // 正方形的上下两边是拉高的区域,区域上方
       return SINGLE_MODE_SCALE_Y_TOP
-    } else if (originalPoint.y >= fakePosInfo!!.centerY + fakePosInfo!!.height / 2) {
+    } else if (originalPoint.y >= fakePosInfo!!.centerY + fakePosInfo!!.height / 2 - fakePosInfo!!.height / 10) {
       // 正方形的上下两边是拉高的区域,区域下方
       return SINGLE_MODE_SCALE_Y_BOTTOM
     } else {
-      if (originalPoint.x <= fakePosInfo!!.centerX - fakePosInfo!!.width / 2) {
+      if (originalPoint.x <= fakePosInfo!!.centerX - fakePosInfo!!.width / 2 + fakePosInfo!!.width / 10) {
         // 正方形的左右两边是拉宽的区域,区域右方
         return SINGLE_MODE_SCALE_X_LEFT
-      } else if (originalPoint.x >= fakePosInfo!!.centerX + fakePosInfo!!.width / 2) {
+      } else if (originalPoint.x >= fakePosInfo!!.centerX + fakePosInfo!!.width / 2 - fakePosInfo!!.width / 10) {
         return SINGLE_MODE_SCALE_X_RIGHT
       } else {
         // 中间，移动处理

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,6 +74,8 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   private IQEWorkSpace mWorkSpace;
 
   private MenuContainer mMenuLayout;
+
+  private AppCompatImageView mCropImageView;
 
   private FakeView mFakeView;
 
@@ -173,6 +176,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     mPlayerControllerView = findViewById(R.id.edit_enter_play_controller);
     editorPlayerView = findViewById(R.id.editor_play_view);
     mMenuLayout = findViewById(R.id.menu_container);
+    mCropImageView = findViewById(R.id.editor_crop_image);
     mFakeView = findViewById(R.id.editor_fake_layer);
 
     mMenuLayout.setOnMenuListener(new MenuContainer.OnMenuListener() {
@@ -212,7 +216,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   @Override
   public void onClick(View view, EditOperate operate) {
     if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
-      new EditEditDialog(this, mMenuLayout, mWorkSpace, this, mFakeView);
+      new EditEditDialog(this, mMenuLayout, mWorkSpace, this, mCropImageView, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER,
           mFakeView);

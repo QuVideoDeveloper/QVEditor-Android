@@ -1,5 +1,6 @@
 package com.quvideo.application.editor.fake
 
+import android.graphics.Rect
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectMaskInfo
@@ -8,7 +9,10 @@ import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 interface IFakeViewApi {
 
   /** 设置对应的clip */
-  fun setClipTarget(iFakeDraw: IFakeDraw?, clipPosInfo: ClipPosInfo?)
+  fun setClipTarget(iFakeDraw: IFakeDraw?, cropRect: Rect)
+
+  /** 设置对应的clip */
+  fun setClipTarget(iFakeDraw: IFakeDraw?, clipPosInfo: ClipPosInfo?, size: VeMSize)
 
   /** 设置对应的Effect */
   fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?)

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.sub.EditAdjustDialog;
+import com.quvideo.application.editor.edit.sub.EditClipCropDialog;
 import com.quvideo.application.editor.edit.sub.EditClipPosInfoDialog;
 import com.quvideo.application.editor.edit.sub.EditFilterDialog;
 import com.quvideo.application.editor.edit.sub.EditFxFilterDialog;
@@ -54,9 +56,12 @@ public class EditEditDialog extends BaseMenuView {
 
   private EditClipAdapter clipAdapter;
 
+  private AppCompatImageView mCropImageView;
+
   public EditEditDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
-      ItemOnClickListener l, IFakeViewApi iFakeViewApi) {
+      ItemOnClickListener l, AppCompatImageView cropImageView,IFakeViewApi iFakeViewApi) {
     super(context, workSpace);
+    this.mCropImageView = cropImageView;
     showMenu(container, l, iFakeViewApi);
   }
 
@@ -117,6 +122,7 @@ public class EditEditDialog extends BaseMenuView {
       add(new EditOperate(R.drawable.edit_icon_speed_nor, context.getString(R.string.mn_edit_title_speed)));
       add(new EditOperate(R.drawable.edit_icon_adjust_nor, context.getString(R.string.mn_edit_title_adjust)));
       add(new EditOperate(R.drawable.edit_icon_reserve_nor, context.getString(R.string.mn_edit_title_reserve)));
+      add(new EditOperate(R.drawable.edit_icon_crop_n, context.getString(R.string.mn_edit_title_crop)));
     }};
     RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
     editRecyclerView.setLayoutManager(
@@ -184,6 +190,9 @@ public class EditEditDialog extends BaseMenuView {
   @Override protected void releaseAll() {
     mWorkSpace.removeObserver(mBaseObserver);
     mWorkSpace.getPlayerAPI().unregisterListener(mPlayerListener);
+    if (clipAdapter != null) {
+      clipAdapter.release();
+    }
   }
 
   private void initData() {
@@ -229,6 +238,8 @@ public class EditEditDialog extends BaseMenuView {
       new EditTransDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
     } else if (operate.getResId() == R.drawable.edit_icon_adjust_nor) {
       new EditAdjustDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, this);
+    } else if (operate.getResId() == R.drawable.edit_icon_crop_n) {
+      new EditClipCropDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, mCropImageView, mFakeApi);
     }
   }
 

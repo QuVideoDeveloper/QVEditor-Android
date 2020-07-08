@@ -20,11 +20,19 @@ public class EffectBarItem {
   private int action;
   private int resId;
   private String title;
+  private boolean isEnabled;
 
   public EffectBarItem(int action, int resId, String title) {
     this.action = action;
     this.resId = resId;
     this.title = title;
+  }
+
+  public EffectBarItem(int action, int resId, String title, boolean enabled) {
+    this.action = action;
+    this.resId = resId;
+    this.title = title;
+    this.isEnabled = enabled;
   }
 
   public int getAction() {
@@ -37,5 +45,9 @@ public class EffectBarItem {
 
   public String getTitle() {
     return title;
+  }
+
+  public boolean isEnabled() {
+    return isEnabled;
   }
 }

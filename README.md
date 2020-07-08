@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.2.2"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.2.3"
 }
 ```
 
@@ -1484,6 +1484,7 @@ EffectAddItem参数说明：
 | destRange | effect在storyboard上的 mVeRange（起始点，时长） | VeRange | 非必须 |
 | effectLayerId | 效果的层级信息，是一个浮点数，数字越大 层级越高 | float | 非必须 |
 | mEffectPosInfo | 素材位置数据,基于steamsize的，使用的话EffectPosInfo有关于surfacesize的转化 | EffectPosInfo | 非必须 |
+| subtitleTexts | 字幕时，可以设置字幕的文字 | String | 非必须 |
 
 
 2）复制

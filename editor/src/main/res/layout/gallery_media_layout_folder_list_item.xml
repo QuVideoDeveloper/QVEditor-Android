@@ -59,7 +59,7 @@
     android:layout_marginRight="16dp"
     android:layout_marginEnd="16dp"
     android:layout_gravity="center_vertical"
-    android:src="@drawable/gallery_media_check_icon"
+    android:src="@drawable/gallery_pic_preview_item_slc"
     android:visibility="invisible"/>
 
 </LinearLayout>

@@ -9,12 +9,18 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.DPUtils;
 import com.quvideo.application.editor.R;
+import com.quvideo.application.utils.DeviceSizeUtil;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by santa on 2020-04-17.
@@ -27,6 +33,14 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
   private int selectIndex = 0;
 
   private OnClipAddListener onAddClipListener;
+
+  private List<ClipData> mClipData = new ArrayList<>();
+
+  private HashMap<String, Bitmap> thumbnailCache = new HashMap<>();
+
+  private HashMap<String, String> loadingCache = new HashMap<>();
+
+  private int thumbnailSize = (int) DeviceSizeUtil.dpToPixel(60f);
 
   public interface OnClipAddListener {
     void onClipAdd();
@@ -41,12 +55,60 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
   }
 
   void updateClipList() {
-    clipSize = workSpace.getClipAPI().getClipList().size();
+    mClipData = workSpace.getClipAPI().getClipList();
+    clipSize = mClipData.size();
     notifyDataSetChanged();
+  }
+
+  void release() {
+    mClipData.clear();
+    notifyDataSetChanged();
+    Set<String> keys = thumbnailCache.keySet();
+    Iterator<String> iterator = keys.iterator();
+    for (; iterator.hasNext(); ) {
+      String key = iterator.next();
+      Bitmap bitmap = thumbnailCache.get(key);
+      if (bitmap != null && !bitmap.isRecycled()) {
+        bitmap.recycle();
+      }
+    }
+    thumbnailCache.clear();
   }
 
   void setOnAddClipListener(OnClipAddListener listener) {
     onAddClipListener = listener;
+  }
+
+  private void loadCacheBitmap(int position, final String clipKey) {
+    if (!loadingCache.containsKey(clipKey)) {
+      loadingCache.put(clipKey, clipKey);
+      Observable.just(true)
+          .subscribeOn(Schedulers.newThread())
+          .observeOn(Schedulers.newThread())
+          .map(aBoolean -> {
+            return workSpace.getClipThumbnail(position, thumbnailSize, thumbnailSize);
+          })
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new io.reactivex.Observer<Bitmap>() {
+            @Override public void onSubscribe(Disposable d) {
+            }
+
+            @Override public void onNext(Bitmap bitmap) {
+              if (bitmap != null) {
+                thumbnailCache.put(clipKey, bitmap);
+                notifyDataSetChanged();
+              }
+              loadingCache.remove(clipKey);
+            }
+
+            @Override public void onError(Throwable e) {
+              loadingCache.remove(clipKey);
+            }
+
+            @Override public void onComplete() {
+            }
+          });
+    }
   }
 
   @NonNull
@@ -85,30 +147,13 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
       holder.mImageView.setBackgroundResource(R.drawable.cam_sel_filter_item_bg);
       int dp2 = DPUtils.dpToPixel(holder.itemView.getContext(), 2);
       holder.mImageView.setPadding(dp2, dp2, dp2, dp2);
-      Observable.just(true)
-          .subscribeOn(Schedulers.newThread())
-          .observeOn(Schedulers.newThread())
-          .map(aBoolean -> {
-            int size = DPUtils.dpToPixel(holder.itemView.getContext(), 60);
-            return workSpace.getClipThumbnail(position, size, size);
-          })
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new io.reactivex.Observer<Bitmap>() {
-            @Override public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override public void onNext(Bitmap bitmap) {
-              holder.mImageView.setImageBitmap(bitmap);
-            }
-
-            @Override public void onError(Throwable e) {
-            }
-
-            @Override public void onComplete() {
-            }
-          });
-
+      ClipData clipData = mClipData.get(position);
+      Bitmap bitmap = thumbnailCache.get(clipData.getUniqueId());
+      if (bitmap != null) {
+        holder.mImageView.setImageBitmap(bitmap);
+      } else {
+        loadCacheBitmap(position, clipData.getUniqueId());
+      }
       holder.mImageView.setSelected(isSelected);
     }
     holder.mImageView.setOnClickListener(v -> {

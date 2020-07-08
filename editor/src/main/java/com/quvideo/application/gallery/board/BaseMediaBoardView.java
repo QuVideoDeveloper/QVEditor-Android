@@ -26,6 +26,9 @@ public class BaseMediaBoardView extends RelativeLayout {
   public static final int DEF_NEGATIVE_ONE = -1;
   public static final int DEF_CHOOSE_POS = -2;
   public static final int DEF_FULL_CHOOSE_POS = Integer.MAX_VALUE;
+
+  private static final String COLOR_FOCUS = "#ff203D";
+
   protected View mRootView;
   protected TextView mNextBtn;
   protected SpannableTextView mClipCountTv;
@@ -121,7 +124,7 @@ public class BaseMediaBoardView extends RelativeLayout {
       int end = start + String.valueOf(minSelectCount).length();
 
       if (tmpText.contains("%d") && end <= text.length()) {
-        mClipCountTv.setSpanText(text, start, end, Color.parseColor("#ff5e13"), null);
+        mClipCountTv.setSpanText(text, start, end, Color.parseColor(COLOR_FOCUS), null);
       } else {
         mClipCountTv.setText(text);
       }
@@ -136,7 +139,7 @@ public class BaseMediaBoardView extends RelativeLayout {
         int end = start + String.valueOf(minSelectCount).length();
 
         if (tmpText.contains("%d") && end <= text.length()) {
-          mClipCountTv.setSpanText(text, start, end, Color.parseColor("#ff5e13"), null);
+          mClipCountTv.setSpanText(text, start, end, Color.parseColor(COLOR_FOCUS), null);
         } else {
           mClipCountTv.setText(text);
         }
@@ -152,7 +155,7 @@ public class BaseMediaBoardView extends RelativeLayout {
         int end = start + countStr.length();
 
         if (tmpText.contains("%s") && end <= text.length()) {
-          mClipCountTv.setSpanText(text, start, end, Color.parseColor("#ff5e13"), null);
+          mClipCountTv.setSpanText(text, start, end, Color.parseColor(COLOR_FOCUS), null);
         } else {
           mClipCountTv.setText(text);
         }
@@ -196,7 +199,7 @@ public class BaseMediaBoardView extends RelativeLayout {
     int start = tmpText.indexOf("%s");
     int end = start + String.valueOf(count).length();
     if (tmpText.contains("%s") && end <= text.length()) {
-      mClipCountTv.setSpanText(text, start, end, Color.parseColor("#ff5e13"), null);
+      mClipCountTv.setSpanText(text, start, end, Color.parseColor(COLOR_FOCUS), null);
     } else {
       mClipCountTv.setText(text);
     }

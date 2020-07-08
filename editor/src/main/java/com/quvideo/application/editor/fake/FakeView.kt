@@ -3,6 +3,7 @@ package com.quvideo.application.editor.fake
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.PointF
+import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -59,7 +60,22 @@ class FakeView @JvmOverloads constructor(
     invalidate()
   }
 
-  override fun setClipTarget(iFakeDraw: IFakeDraw?, clipPosInfo: ClipPosInfo?) {
+  override fun setClipTarget(iFakeDraw: IFakeDraw?, cropRect: Rect) {
+    val fakeLimitPos = FakeLimitPos(RectF(offsetX.toFloat(), offsetY.toFloat(),
+        (measuredWidth - offsetX).toFloat(), (measuredHeight - offsetY).toFloat()),
+        0F,
+        ((measuredWidth - 2 * offsetX) * 2).toFloat(),
+        ((measuredHeight - 2 * offsetY) * 2).toFloat())
+    var fakePosInfo = FakePosInfo(
+        (cropRect.left + cropRect.right) * scaleWidth / 2 + offsetX,
+        (cropRect.top + cropRect.bottom) * scaleHeight / 2 + offsetY,
+        (cropRect.right - cropRect.left) * scaleWidth,
+        (cropRect.bottom - cropRect.top) * scaleHeight,
+        0F)
+    this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
+  }
+
+  override fun setClipTarget(iFakeDraw: IFakeDraw?, clipPosInfo: ClipPosInfo?, size: VeMSize) {
     val fakeLimitPos = FakeLimitPos(RectF(offsetX.toFloat() - (measuredWidth - 2 * offsetY),
         offsetY.toFloat() - (measuredHeight - 2 * offsetY),
         (measuredWidth - offsetX).toFloat() + (measuredWidth - 2 * offsetY),
@@ -74,8 +90,8 @@ class FakeView @JvmOverloads constructor(
     var fakePosInfo = FakePosInfo(
         clipPosInfo.centerPosX * scaleWidth + offsetX,
         clipPosInfo.centerPosY * scaleHeight + offsetY,
-        clipPosInfo.widthScale * measuredWidth * scaleWidth,
-        clipPosInfo.heightScale * measuredHeight * scaleHeight,
+        clipPosInfo.widthScale * size.width * scaleWidth,
+        clipPosInfo.heightScale * size.height * scaleHeight,
         clipPosInfo.degree)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }

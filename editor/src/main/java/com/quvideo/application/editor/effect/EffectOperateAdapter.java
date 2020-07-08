@@ -41,6 +41,13 @@ public class EffectOperateAdapter extends RecyclerView.Adapter<EffectOperateAdap
   public void onBindViewHolder(@NonNull Holder holder, final int position) {
     holder.mTextView.setText(mlist.get(position).getTitle());
     holder.mImageView.setImageResource(mlist.get(position).getResId());
+    if (mlist.get(position).isEnabled()) {
+      holder.mImageView.setAlpha(1f);
+      holder.mTextView.setAlpha(1f);
+    } else {
+      holder.mImageView.setAlpha(0.5f);
+      holder.mTextView.setAlpha(0.5f);
+    }
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

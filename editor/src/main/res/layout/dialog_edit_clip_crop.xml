@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <View
+      android:id="@+id/root_bg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:background="@color/transparent"
+      />
+
+  <View
+      android:id="@+id/viewBg"
+      android:layout_width="0dp"
+      android:layout_height="239dp"
+      android:background="#101112"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+  <include
+    android:id="@+id/layout_bottom"
+    layout="@layout/view_edit_dialog_bottom"
+    android:layout_width="0dp"
+    android:layout_height="46dp"
+    app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <TextView
+    android:id="@+id/btnZoomIn"
+    android:layout_width="64dp"
+    android:layout_height="wrap_content"
+    android:drawableTop="@drawable/edit_icon_scale_more_nor"
+    android:drawablePadding="4dp"
+    android:gravity="center_horizontal"
+    android:text="@string/mn_edit_zoom_in"
+    android:textColor="@color/white"
+    android:textSize="10sp"
+    android:layout_marginBottom="60dp"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintHorizontal_chainStyle="packed"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/btnZoomOut"  />
+
+  <TextView
+    android:id="@+id/btnZoomOut"
+    android:layout_width="64dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:drawableTop="@drawable/edit_icon_scale_less_nor"
+    android:drawablePadding="4dp"
+    android:gravity="center_horizontal"
+    android:text="@string/mn_edit_zoom_out"
+    android:textColor="@color/white"
+    android:textSize="10sp"
+    android:layout_marginBottom="60dp"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/btnZoomIn"
+    app:layout_constraintHorizontal_chainStyle="packed" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

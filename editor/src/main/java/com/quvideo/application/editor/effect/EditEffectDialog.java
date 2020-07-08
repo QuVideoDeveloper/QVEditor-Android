@@ -117,7 +117,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
             mFakeApi.setTarget(null, null);
           }
         }
-        if (groupId == QEGroupConst.GROUP_ID_BGMUSIC && mEffectOperateAdapter != null) {
+        if (mEffectOperateAdapter != null) {
           mEffectOperateAdapter.updateList(getOperateList());
         }
       } else if (operate instanceof EffectOPMultiSubtitleText) {
@@ -351,6 +351,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         @Override public void checkEffectTouchHit(@NotNull PointF pointF) {
           List<BaseEffect> list = mWorkSpace.getEffectAPI().getEffectList(groupId);
           if (list == null || list.isEmpty()) {
+            mEffectAdapter.setSelectIndex(-1);
             return;
           }
 
@@ -441,25 +442,27 @@ public class EditEffectDialog extends BaseEffectMenuView {
 
   private List<EffectBarItem> getOperateList() {
     List<EffectBarItem> list = new ArrayList<>();
+    int selectIndex = mEffectAdapter.getSelectIndex();
+    boolean isOpEnabled = selectIndex >= 0;
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_EDIT, R.drawable.edit_icon_edit_nor,
-              getContext().getString(R.string.mn_edit_bgm_edit)));
+              getContext().getString(R.string.mn_edit_bgm_edit), isOpEnabled));
     }
     if (groupId != QEGroupConst.GROUP_ID_BGMUSIC) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
-              getContext().getString(R.string.mn_edit_title_trim)));
+              getContext().getString(R.string.mn_edit_title_trim), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_DUPLICATE, R.drawable.edit_icon_duplicate,
-          getContext().getString(R.string.mn_edit_duplicate_title)));
+          getContext().getString(R.string.mn_edit_duplicate_title), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_INPUT, R.drawable.edit_icon_key_nor,
-          getContext().getString(R.string.mn_edit_subtitle_input)));
+          getContext().getString(R.string.mn_edit_subtitle_input), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING
@@ -468,39 +471,39 @@ public class EditEffectDialog extends BaseEffectMenuView {
         || groupId == QEGroupConst.GROUP_ID_STICKER_FX
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_VOLUME, R.drawable.edit_icon_muteoff_n,
-          getContext().getString(R.string.mn_edit_title_volume)));
+          getContext().getString(R.string.mn_edit_title_volume), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
         || groupId == QEGroupConst.GROUP_ID_WATERMARK
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_ALPHA, R.drawable.edit_icon_alpha_nor,
-          getContext().getString(R.string.mn_edit_alpha_change)));
+          getContext().getString(R.string.mn_edit_alpha_change), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING
         || groupId == QEGroupConst.GROUP_ID_RECORD) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_MAGIC, R.drawable.edit_icon_changevoice_nor,
-          getContext().getString(R.string.mn_edit_title_change_voice)));
+          getContext().getString(R.string.mn_edit_title_change_voice), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_MIRROR, R.drawable.edit_icon_mirror_nor,
-          getContext().getString(R.string.mn_edit_title_mirror)));
+          getContext().getString(R.string.mn_edit_title_mirror), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_MASK, R.drawable.editor_icon_collage_tool_mask,
-          getContext().getString(R.string.mn_edit_title_mask)));
+          getContext().getString(R.string.mn_edit_title_mask), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_CHROMA, R.drawable.editor_icon_collage_tool_chroma,
-          getContext().getString(R.string.mn_edit_title_chroma)));
+          getContext().getString(R.string.mn_edit_title_chroma), isOpEnabled));
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
-        getContext().getString(R.string.mn_edit_title_delete)));
+        getContext().getString(R.string.mn_edit_title_delete), isOpEnabled));
     return list;
   }
 }
