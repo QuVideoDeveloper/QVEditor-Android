@@ -1,5 +1,7 @@
 package com.quvideo.application.editor;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +32,7 @@ import com.quvideo.application.editor.sound.EditSoundMainDialog;
 import com.quvideo.application.editor.theme.EditThemeDialog;
 import com.quvideo.application.export.ExportChooseDialog;
 import com.quvideo.application.export.ExportDialog;
+import com.quvideo.application.export.PreviewActivity;
 import com.quvideo.application.player.PlayerControllerView;
 import com.quvideo.application.utils.FileUtils;
 import com.quvideo.application.utils.ToastUtils;
@@ -191,7 +194,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     });
 
     mEditOperates = new ArrayList<EditOperate>() {{
-      add(new EditOperate(R.drawable.edit_icon_edit_nor, getString(R.string.mn_edit_title_edit)));
+      add(new EditOperate(R.drawable.edit_icon_crop_n, getString(R.string.mn_edit_title_edit)));
       add(new EditOperate(R.drawable.edit_icon_sticker_nor,
           getString(R.string.mn_edit_title_sticker)));
       add(new EditOperate(R.drawable.edit_icon_effect_nor, getString(R.string.mn_edit_title_fx)));
@@ -215,7 +218,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   @Override
   public void onClick(View view, EditOperate operate) {
-    if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
+    if (operate.getResId() == R.drawable.edit_icon_crop_n) {
       new EditEditDialog(this, mMenuLayout, mWorkSpace, this, mCropImageView, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER,
@@ -223,7 +226,8 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     } else if (operate.getResId() == R.drawable.edit_icon_effect_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER_FX, null);
     } else if (operate.getResId() == R.drawable.edit_icon_midpic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_COLLAGES, mFakeView);
+      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_COLLAGES,
+          mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_watermark_nor) {// 水印
       if (mWorkSpace.getEffectAPI().getEffect(QEGroupConst.GROUP_ID_WATERMARK, 0)
           != null) {
@@ -348,5 +352,14 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     if (editorPlayerView != null) {
       editorPlayerView = null;
     }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    if (requestCode == PreviewActivity.REQUEST_CODE_PREVIEW && resultCode == Activity.RESULT_OK) {
+      finish();
+      return;
+    }
+    super.onActivityResult(requestCode, resultCode, data);
   }
 }

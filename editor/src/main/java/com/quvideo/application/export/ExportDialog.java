@@ -2,10 +2,16 @@ package com.quvideo.application.export;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -52,9 +58,22 @@ public class ExportDialog {
     if (loadingDialog != null) {
       dismissLoading();
     }
-    loadingDialog = new ProgressDialog(activity, R.style.MyAlertDialogStyle);
+    loadingDialog = new ProgressDialog(activity, R.style.DimDisAlertDialogStyle);
     loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
     try {
+      Window window = loadingDialog.getWindow();
+      WindowManager manager = window.getWindowManager();
+      DisplayMetrics outMetrics = new DisplayMetrics();
+      manager.getDefaultDisplay().getMetrics(outMetrics);
+      window.getDecorView().setPadding(0, 0, 0, 0);
+      window.setBackgroundDrawableResource(android.R.color.transparent);
+      ViewGroup root = window.getDecorView().findViewById(android.R.id.content);
+      //设置窗口大小为屏幕大小
+      WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+      Point screenSize = new Point();
+      wm.getDefaultDisplay().getSize(screenSize);
+      root.setLayoutParams(new LinearLayout.LayoutParams(screenSize.x, screenSize.y));
+
       loadingDialog.show();
     } catch (Throwable e) {
       e.printStackTrace();

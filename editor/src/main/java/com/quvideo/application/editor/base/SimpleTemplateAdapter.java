@@ -19,7 +19,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.quvideo.application.DPUtils;
 import com.quvideo.application.editor.R;
@@ -97,7 +99,8 @@ public class SimpleTemplateAdapter
     if (!TextUtils.isEmpty(item.getTitle())) {
       holder.mTextView.setText(item.getTitle());
     } else {
-      holder.mTextView.setText(xytInfo.getTitle(mActivity.getResources().getConfiguration().locale));
+      holder.mTextView.setText(
+          xytInfo.getTitle(mActivity.getResources().getConfiguration().locale));
     }
     boolean isSelected = position == mSelected.getValue().get(mSelected.getValue().size() - 1);
     if (item.getThumbnailResId() <= 0) {
@@ -106,18 +109,28 @@ public class SimpleTemplateAdapter
         String thumbnail = xytInfo.filePath.replace("assets_android://", "file:///android_asset/")
             .replace(".xyt", "/thumbnail.webp");
         Uri uri = Uri.parse(thumbnail);
-        Glide.with(holder.mImageView).load(uri).into(holder.mImageView);
+        int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
+        Glide.with(holder.mImageView)
+            .load(uri)
+            .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
+            .into(holder.mImageView);
       } else {
         final String filterPath = XytManager.getXytInfo(item.getTemplateId()).filePath;
         int thumbWidth = DPUtils.dpToPixel(holder.mImageView.getContext(), 60);
-        int thumbHeight = DPUtils.dpToPixel(holder.mImageView.getContext(), 60);
+        int thumbHeight = DPUtils.dpToPixel(holder.mImageView.getContext(), 68);
+        int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
         EffectThumbParams effectThumbParams =
             new EffectThumbParams(filterPath, thumbWidth, thumbHeight);
-        Glide.with(holder.mImageView).load(effectThumbParams).into(holder.mImageView);
+        Glide.with(holder.mImageView)
+            .load(effectThumbParams)
+            .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
+            .into(holder.mImageView);
       }
     } else {
+      int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
       Glide.with(mActivity)
           .load(item.getThumbnailResId())
+          .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
           .listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable final GlideException e, final Object model,
@@ -137,20 +150,17 @@ public class SimpleTemplateAdapter
           })
           .into(holder.mImageView);
     }
-    holder.mImageView.setSelected(isSelected);
-    holder.mImageView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (mOnItemClickListener != null) {
-          mOnItemClickListener.onItemSelected(item);
-          mSelected.postValue(new LinkedList<Integer>() {{
-            offer(mSelected.getValue().get(mSelected.getValue().size() - 1));
-            offer(position);
-          }});
-        } else {
-          item.onClick(mActivity);
-          mBaseMenuView.dismissMenu();
-        }
+    holder.mImgFocus.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+    holder.mImageView.setOnClickListener(v -> {
+      if (mOnItemClickListener != null) {
+        mOnItemClickListener.onItemSelected(item);
+        mSelected.postValue(new LinkedList<Integer>() {{
+          offer(mSelected.getValue().get(mSelected.getValue().size() - 1));
+          offer(position);
+        }});
+      } else {
+        item.onClick(mActivity);
+        mBaseMenuView.dismissMenu();
       }
     });
   }
@@ -164,11 +174,13 @@ public class SimpleTemplateAdapter
 
     private AppCompatTextView mTextView;
     private AppCompatImageView mImageView;
+    private AppCompatImageView mImgFocus;
 
     public TemplateHolder(@NonNull View itemView) {
       super(itemView);
       mTextView = itemView.findViewById(R.id.home_template_item_text);
       mImageView = itemView.findViewById(R.id.home_template_item_image);
+      mImgFocus = itemView.findViewById(R.id.imgFocus);
     }
   }
 }

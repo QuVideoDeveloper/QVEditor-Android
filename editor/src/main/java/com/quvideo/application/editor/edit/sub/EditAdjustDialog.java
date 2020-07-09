@@ -62,11 +62,24 @@ public class EditAdjustDialog extends BaseMenuView {
 
   private class AdjustListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
+    private int titleWidth;
+
     @NonNull @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
       View rootView = LayoutInflater.from(parent.getContext())
           .inflate(R.layout.view_edit_seekbar, parent, false);
-      return new ItemViewHolder(rootView);
+
+      ItemViewHolder holder = new ItemViewHolder(rootView);
+      if (titleWidth == 0) {
+        for (int titleId : ADJUST_ITEM_TITLE_RES) {
+          String title = getContext().getString(titleId);
+          float textWidth =
+              holder.seekBarController.getTvTitle().getPaint().measureText(title) + 0.5f;
+          titleWidth = Math.max((int) textWidth, titleWidth);
+        }
+      }
+      holder.seekBarController.getTvTitle().getLayoutParams().width = titleWidth;
+      return holder;
     }
 
     @Override public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {

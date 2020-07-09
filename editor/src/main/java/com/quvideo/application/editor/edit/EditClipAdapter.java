@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.quvideo.application.DPUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.utils.DeviceSizeUtil;
 import com.quvideo.mobile.engine.model.ClipData;
@@ -41,6 +43,7 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
   private HashMap<String, String> loadingCache = new HashMap<>();
 
   private int thumbnailSize = (int) DeviceSizeUtil.dpToPixel(60f);
+  private int thumbRoundedCorners = (int) DeviceSizeUtil.dpToPixel(4);
 
   public interface OnClipAddListener {
     void onClipAdd();
@@ -142,24 +145,26 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
     if (position == clipSize) {
       holder.mImageView.setImageBitmap(null);
       holder.mImageView.setBackgroundResource(R.drawable.edit_icon_add_clip);
-      holder.mImageView.setPadding(0, 0, 0, 0);
     } else {
-      holder.mImageView.setBackgroundResource(R.drawable.cam_sel_filter_item_bg);
-      int dp2 = DPUtils.dpToPixel(holder.itemView.getContext(), 2);
-      holder.mImageView.setPadding(dp2, dp2, dp2, dp2);
+      holder.mImageView.setBackground(null);
       ClipData clipData = mClipData.get(position);
       Bitmap bitmap = thumbnailCache.get(clipData.getUniqueId());
       if (bitmap != null) {
-        holder.mImageView.setImageBitmap(bitmap);
+        Glide.with(holder.mImageView)
+            .load(bitmap)
+            .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
+            .into(holder.mImageView);
       } else {
         loadCacheBitmap(position, clipData.getUniqueId());
       }
-      holder.mImageView.setSelected(isSelected);
+      holder.mImageFocus.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     }
     holder.mImageView.setOnClickListener(v -> {
       if (position < clipSize) {
         changeSelect(position);
-        if (workSpace != null && workSpace.getPlayerAPI() != null && workSpace.getPlayerAPI().getPlayerControl() != null) {
+        if (workSpace != null
+            && workSpace.getPlayerAPI() != null
+            && workSpace.getPlayerAPI().getPlayerControl() != null) {
           ClipData item = workSpace.getClipAPI().getClipByIndex(position);
           int time = 0;
           if (item != null) {
@@ -178,13 +183,15 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
     return clipSize + 1;
   }
 
-  class TemplateHolder extends RecyclerView.ViewHolder {
+  static class TemplateHolder extends RecyclerView.ViewHolder {
 
     private AppCompatImageView mImageView;
+    private AppCompatImageView mImageFocus;
 
     public TemplateHolder(@NonNull View itemView) {
       super(itemView);
       mImageView = itemView.findViewById(R.id.home_template_item_image);
+      mImageFocus = itemView.findViewById(R.id.imgFocus);
     }
   }
 }

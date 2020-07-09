@@ -9,6 +9,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.quvideo.application.AssetConstants;
 import com.quvideo.application.DPUtils;
 import com.quvideo.application.EditorApp;
@@ -38,7 +40,8 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
 
   private int selectIndex = -1;
 
-  public EditEffectAdapter(LifecycleOwner activity, int groupId, OnEffectlickListener effectlickListener) {
+  public EditEffectAdapter(LifecycleOwner activity, int groupId,
+      OnEffectlickListener effectlickListener) {
     this.mOnEffectlickListener = effectlickListener;
     this.groupId = groupId;
     addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
@@ -74,10 +77,15 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
       return;
     }
     boolean isSelected = position == selectIndex + addOffset;
-    holder.mImageView.setSelected(isSelected);
+    holder.mImgFocus.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     final BaseEffect item = mDataList.get(position - addOffset);
+    int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
     if (item.groupId == QEGroupConst.GROUP_ID_COLLAGES && !TextUtils.isEmpty(item.mEffectPath)) {
-      Glide.with(EditorApp.Companion.getInstance().getApp()).load(item.mEffectPath).into(holder.mImageView);
+      Glide.with(EditorApp.Companion.getInstance().getApp())
+          .load(item.mEffectPath)
+          .apply(
+              RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
+          .into(holder.mImageView);
     } else if (item.groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || item.groupId == QEGroupConst.GROUP_ID_DUBBING) {
       // 音乐/音效
@@ -95,11 +103,18 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
         }
       }
       if (thumbRes != 0) {
-        Glide.with(holder.mImageView).load(thumbRes).into(holder.mImageView);
+        Glide.with(holder.mImageView)
+            .load(thumbRes)
+            .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
+            .into(holder.mImageView);
       }
     } else if (!TextUtils.isEmpty(item.mEffectPath)) {
-      EffectThumbParams effectThumbParams = new EffectThumbParams(item.mEffectPath, thumbWidth, thumbHeight);
-      Glide.with(holder.mImageView).load(effectThumbParams).into(holder.mImageView);
+      EffectThumbParams effectThumbParams =
+          new EffectThumbParams(item.mEffectPath, thumbWidth, thumbHeight);
+      Glide.with(holder.mImageView)
+          .load(effectThumbParams)
+          .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
+          .into(holder.mImageView);
     }
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -137,10 +152,12 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
   class TemplateHolder extends RecyclerView.ViewHolder {
 
     private AppCompatImageView mImageView;
+    private AppCompatImageView mImgFocus;
 
     public TemplateHolder(@NonNull View itemView) {
       super(itemView);
       mImageView = itemView.findViewById(R.id.home_template_item_image);
+      mImgFocus = itemView.findViewById(R.id.imgFocus);
     }
   }
 

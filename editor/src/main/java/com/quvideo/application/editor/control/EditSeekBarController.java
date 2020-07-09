@@ -57,4 +57,17 @@ public class EditSeekBarController {
     tvSeekStart.setTextColor(color);
     tvSeekEnd.setTextColor(color);
   }
+
+  public void setTitleVisible(boolean isVisible) {
+    tvTitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+  }
+
+  public TextView getTvTitle() {
+    return tvTitle;
+  }
+
+  public void offProgressHighlight() {
+    seekBar.setProgressDrawable(
+        seekBar.getResources().getDrawable(R.drawable.edit_layer_seekbar_progress_no_highlight));
+  }
 }

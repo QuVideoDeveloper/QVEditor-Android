@@ -1,5 +1,6 @@
 package com.quvideo.application.export;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -54,14 +55,16 @@ public class PreviewActivity extends AppCompatActivity {
   private String coverPath;
   private String videoPath;
 
+  public static final int REQUEST_CODE_PREVIEW = 0x1001;
+
   /**
    * 进入预览页
    */
-  public static void go2PreviewActivity(Context context, String coverPath, String videoPath) {
+  public static void go2PreviewActivity(Activity context, String coverPath, String videoPath) {
     Intent intent = new Intent(context, PreviewActivity.class);
     intent.putExtra(INTENT_KEY_COVER_PATH, coverPath);
     intent.putExtra(INTENT_KEY_VIDEO_PATH, videoPath);
-    context.startActivity(intent);
+    context.startActivityForResult(intent, REQUEST_CODE_PREVIEW);
   }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,8 +107,9 @@ public class PreviewActivity extends AppCompatActivity {
       handleBack();
     });
     btnBackHome.setOnClickListener(v -> {
-        //startActivity(new Intent(this, MainActivity.class));
-        finish();
+      //startActivity(new Intent(this, MainActivity.class));
+      setResult(Activity.RESULT_OK);
+      finish();
     });
     textureView.setOnClickListener(v -> {
       if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
@@ -236,6 +240,7 @@ public class PreviewActivity extends AppCompatActivity {
   }
 
   public void handleBack() {
+    setResult(Activity.RESULT_CANCELED);
     finish();
   }
 

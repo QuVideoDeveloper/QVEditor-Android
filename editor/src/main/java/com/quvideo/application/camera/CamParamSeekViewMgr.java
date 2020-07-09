@@ -27,6 +27,7 @@ class CamParamSeekViewMgr {
   }
 
   enum ParamMode {
+    MODE_NONE,
     MODE_ZOOM,
     MODE_EXPOSURE,
     MODE_FACE_BEAUTY
@@ -37,7 +38,7 @@ class CamParamSeekViewMgr {
   private AppCompatTextView tvParamValue;
   private SeekBar paramSeekBar;
 
-  private ParamMode paramMode = ParamMode.MODE_ZOOM;
+  private ParamMode paramMode = ParamMode.MODE_NONE;
   private OnParamChangedListener onParamChangedListener;
 
   void bindView(@NonNull Activity activity, @NonNull OnParamChangedListener listener) {
@@ -131,6 +132,7 @@ class CamParamSeekViewMgr {
   }
 
   void hideView() {
+    paramMode = ParamMode.MODE_NONE;
     rootView.setVisibility(View.GONE);
   }
 

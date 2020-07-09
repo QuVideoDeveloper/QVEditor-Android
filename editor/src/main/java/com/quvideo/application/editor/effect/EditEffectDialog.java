@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.View;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.quvideo.application.DPUtils;
 import com.quvideo.application.EditorApp;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseEffectMenuView;
@@ -54,7 +57,6 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPPosInfo;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
-import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleText;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -122,7 +124,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
         }
       } else if (operate instanceof EffectOPMultiSubtitleText) {
         int selectIndex = mEffectAdapter.getSelectIndex();
-        if (selectIndex >= 0 && selectIndex == ((EffectOPMultiSubtitleText) operate).getEffectIndex()) {
+        if (selectIndex >= 0
+            && selectIndex == ((EffectOPMultiSubtitleText) operate).getEffectIndex()) {
           BaseEffect curEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);
           if (curEffect != null) {
             EffectPosInfo effectPosInfo = ((FloatEffect) curEffect).mEffectPosInfo;
@@ -148,6 +151,14 @@ public class EditEffectDialog extends BaseEffectMenuView {
     mRecyclerView.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
     mRecyclerView.setAdapter(mEffectAdapter);
+    mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+          @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        int dp2 = DPUtils.dpToPixel(getContext(), 2);
+        outRect.left = dp2;
+        outRect.right = dp2;
+      }
+    });
     List<BaseEffect> dataList = mWorkSpace.getEffectAPI().getEffectList(groupId);
     mEffectAdapter.updateList(dataList);
     int selectIndex = mEffectAdapter.getSelectIndex();
@@ -255,7 +266,12 @@ public class EditEffectDialog extends BaseEffectMenuView {
           new EffectMaskDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
           break;
         case EffectBarItem.ACTION_CHROMA:
-          new EffectChromaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
+          new EffectChromaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
+              mFakeApi);
+          break;
+        case EffectBarItem.ACTION_MOSAIC_DEGREE:
+          new EditEffectMosaicDegreeDialog(getContext(), mMenuContainer, mWorkSpace, groupId,
+              index);
           break;
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
@@ -467,8 +483,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING
         || groupId == QEGroupConst.GROUP_ID_RECORD
-        || groupId == QEGroupConst.GROUP_ID_STICKER
-        || groupId == QEGroupConst.GROUP_ID_STICKER_FX
+        //  暂时隐藏，后续支持在线贴纸后打开
+        /*|| groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_STICKER_FX*/
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_VOLUME, R.drawable.edit_icon_muteoff_n,
           getContext().getString(R.string.mn_edit_title_volume), isOpEnabled));
@@ -492,15 +509,23 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(new EffectBarItem(EffectBarItem.ACTION_MIRROR, R.drawable.edit_icon_mirror_nor,
           getContext().getString(R.string.mn_edit_title_mirror), isOpEnabled));
     }
-    if (groupId == QEGroupConst.GROUP_ID_STICKER
+    if (EditorApp.Companion.getInstance().getEditorConfig().isEffectMaskValid()
+        && (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
-        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_MASK, R.drawable.editor_icon_collage_tool_mask,
-          getContext().getString(R.string.mn_edit_title_mask), isOpEnabled));
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES)) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_MASK, R.drawable.editor_icon_collage_tool_mask,
+              getContext().getString(R.string.mn_edit_title_mask), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_COLLAGES) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_CHROMA, R.drawable.editor_icon_collage_tool_chroma,
-          getContext().getString(R.string.mn_edit_title_chroma), isOpEnabled));
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_CHROMA, R.drawable.editor_icon_collage_tool_chroma,
+              getContext().getString(R.string.mn_edit_title_chroma), isOpEnabled));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_MOSAIC) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_MOSAIC_DEGREE, R.drawable.edit_icon_adjust_nor,
+              getContext().getString(R.string.mn_edit_mosaic_degree), isOpEnabled));
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
         getContext().getString(R.string.mn_edit_title_delete), isOpEnabled));

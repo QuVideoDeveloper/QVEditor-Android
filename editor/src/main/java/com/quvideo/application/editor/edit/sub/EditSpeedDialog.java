@@ -48,6 +48,7 @@ public class EditSpeedDialog extends BaseMenuView {
   }
 
   private void initData() {
+    seekBarController.setTitleVisible(false);
     seekBarController.setSeekBarStartText("0.25x");
     seekBarController.setSeekBarEndText("4x");
     seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

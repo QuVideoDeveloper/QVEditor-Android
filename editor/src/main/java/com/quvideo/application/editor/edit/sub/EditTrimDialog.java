@@ -48,6 +48,9 @@ public class EditTrimDialog extends BaseMenuView {
     startSeekBarController.setTitle(context.getString(R.string.mn_edit_title_start));
     endSeekBarController.setTitle(context.getString(R.string.mn_edit_title_end));
 
+    startSeekBarController.offProgressHighlight();
+    endSeekBarController.offProgressHighlight();
+
     initData();
   }
 

@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.2.3"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.2.4"
 }
 ```
 
@@ -1313,7 +1313,7 @@ ClipAddItem参数说明：
 10）分割
 ```
 	// clipIndex表示第几个片段，从0开始
-	// splitTime分割时间，在加入片段的时间，如从片段的第5s分割，则splitTime=5
+	// splitTime分割时间，在加入片段的相对时间，如从片段的第5s分割，则splitTime=5
 	ClipOPSplit clipOPSplit = new ClipOPSplit(clipIndex, splitTime);
 	mWorkSpace.handleOperation(clipOPSplit);
 ```

@@ -45,8 +45,8 @@ public class EffectOperateAdapter extends RecyclerView.Adapter<EffectOperateAdap
       holder.mImageView.setAlpha(1f);
       holder.mTextView.setAlpha(1f);
     } else {
-      holder.mImageView.setAlpha(0.5f);
-      holder.mTextView.setAlpha(0.5f);
+      holder.mImageView.setAlpha(0.1f);
+      holder.mTextView.setAlpha(0.1f);
     }
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override

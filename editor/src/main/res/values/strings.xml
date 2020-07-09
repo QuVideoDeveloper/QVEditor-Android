@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Tue, 07 Jul 2020 14:46:14 +0800
+ Exported at: Wed, 08 Jul 2020 14:33:50 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -54,6 +54,7 @@
     <string name="mn_edit_mask_mirror">Mirror</string>
     <string name="mn_edit_mask_radial">Radial</string>
     <string name="mn_edit_mask_rectangle">Rectangle</string>
+    <string name="mn_edit_mosaic_degree">Degree</string>
     <string name="mn_edit_none">None</string>
     <string name="mn_edit_reset">Reset</string>
     <string name="mn_edit_reset_text">reset</string>

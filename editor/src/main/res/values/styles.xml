@@ -96,4 +96,19 @@
     <item name="android:windowBackground">@color/transparent</item>
   </style>
 
+  <style name="DimDisAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+    <!-- Used for the buttons -->
+    <item name="colorAccent">@color/color_00b300</item>
+    <!-- Used for the title and text -->
+    <item name="android:textColorPrimary">@color/color_3493f2</item>
+    <!-- Used for the background -->
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:windowBackground">@color/transparent</item>
+
+    <item name="android:windowFrame">@null</item>
+    <item name="android:backgroundDimEnabled">false</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+  </style>
+
 </resources>

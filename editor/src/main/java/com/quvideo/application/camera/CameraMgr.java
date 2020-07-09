@@ -23,8 +23,6 @@ import xiaoying.utils.WorkThreadTaskItem;
 
 class CameraMgr implements LifecycleObserver {
 
-  private static final String TAG = "CameraActivity";
-
   private AppCompatActivity mActivity;
 
   private boolean mIsFlashOn = false;
@@ -175,10 +173,7 @@ class CameraMgr implements LifecycleObserver {
       return;
     }
 
-    mXYCamera.getCameraDevice().autoFocus(new Camera.AutoFocusCallback() {
-      @Override public void onAutoFocus(boolean success, Camera camera) {
-        Toast.makeText(mActivity, "autoFocus result  = " + success, Toast.LENGTH_SHORT).show();
-      }
+    mXYCamera.getCameraDevice().autoFocus((success, camera) -> {
     });
   }
 

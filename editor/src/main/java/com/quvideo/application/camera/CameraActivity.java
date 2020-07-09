@@ -57,6 +57,7 @@ public class CameraActivity extends AppCompatActivity {
         }
         cameraControlViewMgr.onRecording(TimeFormatUtil.INSTANCE.formatTime(realDuration));
         cameraControlViewMgr.setBtnRatioValid(false);
+        cameraParamViewMgr.hideView();
       }
 
       @Override public void onRecorderPaused() {
@@ -145,19 +146,25 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override public void onZoomBtnClick() {
-          cameraParamViewMgr.showView(CamParamSeekViewMgr.ParamMode.MODE_ZOOM,
-              cameraMgr.getCamZoom(),
-              cameraMgr.getCamZoomMax());
-          cameraControlViewMgr.hideView();
+          if (cameraParamViewMgr.getCurMode() == CamParamSeekViewMgr.ParamMode.MODE_ZOOM) {
+            cameraParamViewMgr.hideView();
+          } else {
+            cameraParamViewMgr.showView(CamParamSeekViewMgr.ParamMode.MODE_ZOOM,
+                cameraMgr.getCamZoom(),
+                cameraMgr.getCamZoomMax());
+          }
         }
 
         @Override public void onExposureBtnClick() {
-          int defaultValue = cameraMgr.getCamExposure();
-          int offsetProgress = cameraMgr.getCamExposureMin();
-          cameraParamViewMgr.showView(CamParamSeekViewMgr.ParamMode.MODE_EXPOSURE,
-              defaultValue - offsetProgress,
-              cameraMgr.getCamExposureMax() - offsetProgress);
-          cameraControlViewMgr.hideView();
+          if (cameraParamViewMgr.getCurMode() == CamParamSeekViewMgr.ParamMode.MODE_EXPOSURE) {
+            cameraParamViewMgr.hideView();
+          } else {
+            int defaultValue = cameraMgr.getCamExposure();
+            int offsetProgress = cameraMgr.getCamExposureMin();
+            cameraParamViewMgr.showView(CamParamSeekViewMgr.ParamMode.MODE_EXPOSURE,
+                defaultValue - offsetProgress,
+                cameraMgr.getCamExposureMax() - offsetProgress);
+          }
         }
 
         @Override public XYCameraConst.RatioMode onRatioBtnClick() {
@@ -172,13 +179,18 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override public void onFilterBtnClick() {
           cameraControlViewMgr.hideView();
+          cameraParamViewMgr.hideView();
           camFilterControlViewMgr.showView();
         }
 
         @Override public void onFbModeBtnClick() {
-          cameraControlViewMgr.hideView();
-          int defaultValue = cameraMgr.setFbModeOn(50);
-          cameraParamViewMgr.showView(CamParamSeekViewMgr.ParamMode.MODE_FACE_BEAUTY, defaultValue, 100);
+          if (cameraParamViewMgr.getCurMode() == CamParamSeekViewMgr.ParamMode.MODE_FACE_BEAUTY) {
+            cameraParamViewMgr.hideView();
+          } else {
+            int defaultValue = cameraMgr.setFbModeOn(50);
+            cameraParamViewMgr.showView(CamParamSeekViewMgr.ParamMode.MODE_FACE_BEAUTY,
+                defaultValue, 100);
+          }
         }
 
         @Override public void onRecordBtnClick() {

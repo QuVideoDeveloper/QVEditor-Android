@@ -48,6 +48,7 @@ public class EditMagicSoundDialog extends BaseMenuView {
   }
 
   private void initData() {
+    seekBarController.setTitleVisible(false);
     seekBarController.setSeekBarStartText("-50");
     seekBarController.setSeekBarEndText("50");
     seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
