@@ -10,9 +10,7 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc A {@link BitmapTransformation} which rotate the Angle of a bitmap.
- * @since 6/13/2019
  */
 public class RotateTransformation extends BitmapTransformation {
 

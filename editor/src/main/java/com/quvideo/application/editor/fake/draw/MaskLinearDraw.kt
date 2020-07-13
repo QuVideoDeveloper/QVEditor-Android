@@ -5,10 +5,6 @@ import android.graphics.Path
 import com.quvideo.application.editor.fake.FakePosInfo
 import com.quvideo.application.utils.DeviceSizeUtil
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 class MaskLinearDraw : IMaskFakeDraw() {
 
   override fun drawView(

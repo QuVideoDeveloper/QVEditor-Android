@@ -6,10 +6,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import java.util.ArrayList;
 
-/**
- * @author wuzhongyou
- * @date 2020/5/27.
- */
 public class MenuContainer extends RelativeLayout {
 
   private ArrayList<BaseMenuLayer> mBaseMenuLayers = new ArrayList<>();

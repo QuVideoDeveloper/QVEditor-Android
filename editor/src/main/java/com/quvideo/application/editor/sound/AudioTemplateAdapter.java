@@ -57,9 +57,7 @@ public class AudioTemplateAdapter extends RecyclerView.Adapter<AudioTemplateAdap
   public void onBindViewHolder(@NonNull TemplateHolder holder, final int position) {
     final AudioTemplate item = mTemplates.get(position);
     holder.mTextView.setText(item.getTitle());
-    boolean isSelected = false;
     Glide.with(holder.mImageView).load(item.getThumbnailResId()).into(holder.mImageView);
-    holder.mImageView.setSelected(isSelected);
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

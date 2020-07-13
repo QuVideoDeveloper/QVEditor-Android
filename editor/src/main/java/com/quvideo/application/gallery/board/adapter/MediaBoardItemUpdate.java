@@ -1,9 +1,5 @@
 package com.quvideo.application.gallery.board.adapter;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/6/2019
- */
 public class MediaBoardItemUpdate {
   private Boolean showOrderEntity;
 

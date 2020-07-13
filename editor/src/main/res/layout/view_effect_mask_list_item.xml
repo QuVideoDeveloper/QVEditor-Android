@@ -17,7 +17,7 @@
       android:layout_gravity="center"
       android:gravity="center"
       android:textSize="10sp"
-      android:textColor="#E6E6E6"/>
+      android:textColor="@color/color_ffe6e6e6"/>
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/home_template_item_image"

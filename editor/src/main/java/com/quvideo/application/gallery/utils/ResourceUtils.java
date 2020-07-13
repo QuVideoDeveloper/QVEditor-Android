@@ -5,9 +5,6 @@ import android.text.TextUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Create by zhengjunfei on 2019/9/2
- */
 public class ResourceUtils {
   public static AssetManager mAssetsManager;
   public static void setContext(AssetManager assetsManager) {

@@ -10,9 +10,7 @@ import androidx.annotation.NonNull;
 import com.quvideo.application.editor.R;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc gallery toast util
- * @since 2019/9/28
  */
 public class GalleryToast {
 

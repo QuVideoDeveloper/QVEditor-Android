@@ -5,10 +5,6 @@ import android.graphics.PointF
 import android.view.MotionEvent
 import com.quvideo.application.utils.DeviceSizeUtil
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 abstract class IFakeDraw {
 
   protected var dp1px = DeviceSizeUtil.dpToPixel(1f)

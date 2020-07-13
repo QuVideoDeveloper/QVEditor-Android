@@ -14,10 +14,6 @@ import com.quvideo.application.gallery.utils.GalleryUtil;
 import com.quvideo.application.utils.pop.Pop;
 import com.quvideo.application.utils.rx.RxViewUtil;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 8/30/2019
- */
 public class GalleryTitleView extends RelativeLayout {
   ImageButton backBtn;
   ImageView folderEntranceIv;

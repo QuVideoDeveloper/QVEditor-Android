@@ -10,9 +10,6 @@ import android.widget.TextView;
 import com.quvideo.application.editor.BuildConfig;
 import com.quvideo.application.editor.R;
 
-/**
- * Create by zhengjunfei on 2019/9/4
- */
 public class DialogueUtils {
 
   private static ProgressDialog mDialog = null;

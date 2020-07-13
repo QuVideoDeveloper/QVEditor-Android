@@ -52,8 +52,8 @@ class FakeView @JvmOverloads constructor(
       }
 
       override fun checkEffectTouchHit(pointF: PointF) {
-        pointF.x -= offsetX
-        pointF.y -= offsetY
+        pointF.x = (pointF.x - offsetX) / scaleWidth
+        pointF.y = (pointF.y - offsetY) / scaleHeight
         fakeViewListener?.checkEffectTouchHit(pointF)
       }
     }

@@ -18,10 +18,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.quvideo.application.editor.R;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 6/10/2019
- */
 public class GalleryLoading {
 
   private static ProgressDialog loadingDialog = null;

@@ -110,8 +110,7 @@ public class CameraActivity extends AppCompatActivity {
       cameraControlViewMgr.showView();
       return;
     } else if (camFilterControlViewMgr.isViewShown()) {
-      camFilterControlViewMgr.hideView();
-      cameraControlViewMgr.showView();
+      hideFilterControlIfShown();
       return;
     }
 
@@ -146,6 +145,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override public void onZoomBtnClick() {
+          hideFilterControlIfShown();
           if (cameraParamViewMgr.getCurMode() == CamParamSeekViewMgr.ParamMode.MODE_ZOOM) {
             cameraParamViewMgr.hideView();
           } else {
@@ -156,6 +156,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override public void onExposureBtnClick() {
+          hideFilterControlIfShown();
           if (cameraParamViewMgr.getCurMode() == CamParamSeekViewMgr.ParamMode.MODE_EXPOSURE) {
             cameraParamViewMgr.hideView();
           } else {
@@ -178,12 +179,17 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override public void onFilterBtnClick() {
-          cameraControlViewMgr.hideView();
-          cameraParamViewMgr.hideView();
-          camFilterControlViewMgr.showView();
+          if (camFilterControlViewMgr.isViewShown()) {
+            hideFilterControlIfShown();
+          } else {
+            cameraParamViewMgr.hideView();
+            cameraControlViewMgr.hideRecordBtn();
+            camFilterControlViewMgr.showView();
+          }
         }
 
         @Override public void onFbModeBtnClick() {
+          hideFilterControlIfShown();
           if (cameraParamViewMgr.getCurMode() == CamParamSeekViewMgr.ParamMode.MODE_FACE_BEAUTY) {
             cameraParamViewMgr.hideView();
           } else {
@@ -194,7 +200,8 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override public void onRecordBtnClick() {
-          String filePath = getExternalCacheDir().getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp4";
+          String filePath =
+              getExternalCacheDir().getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp4";
           cameraMgr.handleRecordAction(filePath);
         }
 
@@ -234,6 +241,13 @@ public class CameraActivity extends AppCompatActivity {
           cameraMgr.setMusicModeOn(filePath, this::onRecorderDoneBtnClick);
         }
       };
+
+  private void hideFilterControlIfShown() {
+    if (camFilterControlViewMgr.isViewShown()) {
+      camFilterControlViewMgr.hideView();
+      cameraControlViewMgr.showRecordBtn();
+    }
+  }
 
   private CamParamSeekViewMgr.OnParamChangedListener onParamChangedListener =
       new CamParamSeekViewMgr.OnParamChangedListener() {

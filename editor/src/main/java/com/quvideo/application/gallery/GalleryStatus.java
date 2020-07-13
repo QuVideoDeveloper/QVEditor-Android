@@ -4,11 +4,6 @@ import com.quvideo.application.gallery.model.MediaModel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @desc Gallery status
- * @since 5/24/2019
- */
 public class GalleryStatus {
   private static GalleryStatus instance;
 

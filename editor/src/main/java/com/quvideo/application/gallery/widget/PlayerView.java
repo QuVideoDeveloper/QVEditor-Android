@@ -18,9 +18,6 @@ import com.quvideo.application.gallery.utils.GalleryToast;
 import com.quvideo.application.gallery.utils.GalleryUtil;
 import java.io.File;
 
-/**
- * Create by zhengjunfei on 2019/9/16
- */
 public class PlayerView extends FrameLayout implements PlayerCallback {
   private ImageView mCoverView;
   private StretchTextureView mTextureView;

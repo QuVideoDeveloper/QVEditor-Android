@@ -4,10 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Path
 import com.quvideo.application.editor.fake.FakePosInfo
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 class ClipCropDraw : IMaskFakeDraw() {
 
   override fun drawView(

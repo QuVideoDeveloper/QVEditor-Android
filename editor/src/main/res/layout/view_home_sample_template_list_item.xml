@@ -10,35 +10,43 @@
 
   <androidx.appcompat.widget.AppCompatTextView
     android:id="@+id/home_template_item_text"
-    android:layout_width="60dp"
+    android:layout_width="62dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
     android:singleLine="true"
-    android:textColor="#E6E6E6"
+    android:textColor="@color/color_ffe6e6e6"
     android:textSize="10sp"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"
+    app:round_corner="4dp" />
 
-  <androidx.appcompat.widget.AppCompatImageView
-    android:id="@+id/home_template_item_image"
+  <com.quvideo.application.widget.round.RCRelativeLayout
+    android:id="@+id/layoutCover"
     android:layout_width="60dp"
     android:layout_height="68dp"
     android:layout_marginTop="4dp"
-    android:padding="1dp"
-    android:scaleType="centerInside"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/home_template_item_text" />
+    app:layout_constraintEnd_toEndOf="@id/home_template_item_text"
+    app:layout_constraintStart_toStartOf="@id/home_template_item_text"
+    app:layout_constraintTop_toBottomOf="@+id/home_template_item_text"
+    app:round_corner="4dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/home_template_item_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop" />
+  </com.quvideo.application.widget.round.RCRelativeLayout>
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/imgFocus"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:visibility="gone"
+    android:layout_width="62dp"
+    android:layout_height="70dp"
+    android:layout_marginTop="3dp"
     android:background="@drawable/edit_shape_clip_item_sel"
-    app:layout_constraintBottom_toBottomOf="@id/home_template_item_image"
-    app:layout_constraintEnd_toEndOf="@id/home_template_item_image"
-    app:layout_constraintStart_toStartOf="@+id/home_template_item_image"
-    app:layout_constraintTop_toTopOf="@id/home_template_item_image" />
+    android:visibility="gone"
+    app:layout_constraintEnd_toEndOf="@id/home_template_item_text"
+    app:layout_constraintStart_toStartOf="@id/home_template_item_text"
+    app:layout_constraintTop_toBottomOf="@+id/home_template_item_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

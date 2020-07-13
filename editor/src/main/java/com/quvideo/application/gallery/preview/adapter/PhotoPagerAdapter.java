@@ -15,9 +15,6 @@ import com.quvideo.application.utils.image.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2019/9/12
- */
 public class PhotoPagerAdapter extends PagerAdapter {
   private PhotoView mCurrentView;
 

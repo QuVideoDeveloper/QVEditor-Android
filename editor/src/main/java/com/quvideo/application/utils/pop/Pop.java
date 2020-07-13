@@ -10,9 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc Pop Animation
- * @since 2019/5/13
  */
 public class Pop {
 

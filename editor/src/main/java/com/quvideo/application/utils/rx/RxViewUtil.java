@@ -12,9 +12,7 @@ import io.reactivex.functions.Consumer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc 目前屏蔽闪击
- * @since 2018/11/13
  */
 public class RxViewUtil {
 

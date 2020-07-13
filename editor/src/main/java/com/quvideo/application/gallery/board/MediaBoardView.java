@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 8/30/2019
  * GalleryType ： GallerySettings.GalleryType.GALLERY_TYPE_BOARD_NORAML
  * 普通type样式对应的MediaBoardView
  */

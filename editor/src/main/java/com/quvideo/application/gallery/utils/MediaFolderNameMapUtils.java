@@ -11,7 +11,6 @@ import java.util.Map;
  * 文件夹名字映射关系工具类
  * </p>
  *
- * @author johnson
  */
 public class MediaFolderNameMapUtils {
   private static Map<String, Integer> mDisplayNameMap = null;

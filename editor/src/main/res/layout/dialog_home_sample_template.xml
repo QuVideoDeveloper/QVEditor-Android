@@ -19,6 +19,6 @@
             android:text="@string/mn_app_mode_template"
             android:layout_gravity="center"
             android:textSize="14sp"
-            android:textColor="#E6E6E6"/>
+            android:textColor="@color/color_ffe6e6e6"/>
     </FrameLayout>
 </LinearLayout>

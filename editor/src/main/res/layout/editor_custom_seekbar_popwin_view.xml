@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+  <TextView
+      android:id="@+id/seekbar_pop_tv_tip"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/editor_bg_seekbar_top_tip"
+      android:gravity="center"
+      android:maxLines="1"
+      android:paddingBottom="7dip"
+      android:paddingEnd="8dip"
+      android:paddingLeft="8dip"
+      android:paddingRight="8dip"
+      android:paddingStart="8dip"
+      android:textColor="@color/black"
+      android:textSize="12sp"
+      />
+</RelativeLayout>

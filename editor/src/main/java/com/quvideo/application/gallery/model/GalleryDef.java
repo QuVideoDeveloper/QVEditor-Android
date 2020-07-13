@@ -6,10 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/2/2019
- */
 public class GalleryDef {
 
   public static final int BASE_TIME_DELAY = 100;

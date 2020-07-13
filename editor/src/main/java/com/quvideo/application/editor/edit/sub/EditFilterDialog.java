@@ -1,11 +1,9 @@
 package com.quvideo.application.editor.edit.sub;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +14,9 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.base.SimpleTemplateAdapter;
-import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.application.template.SimpleTemplate;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import com.quvideo.mobile.engine.model.ClipData;
@@ -32,15 +31,13 @@ public class EditFilterDialog extends BaseMenuView {
 
   private int clipIndex = 0;
 
-  private EditSeekBarController seekBarController;
-  private View seekView;
+  private CustomSeekbarPop mCustomSeekbarPop;
   private int curFilterLevel = 100;
 
   public EditFilterDialog(Context context, MenuContainer container,
       IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
-    seekBarController = new EditSeekBarController();
     showMenu(container, l);
   }
 
@@ -53,8 +50,8 @@ public class EditFilterDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekView = view.findViewById(R.id.seekbar);
-    seekView.setVisibility(INVISIBLE);
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
+    mCustomSeekbarPop.setVisibility(INVISIBLE);
     RecyclerView clipRecyclerView = view.findViewById(R.id.clip_recyclerview);
     clipRecyclerView.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
@@ -80,33 +77,31 @@ public class EditFilterDialog extends BaseMenuView {
     clipRecyclerView.setAdapter(adapter);
     adapter.setOnItemClickListener(this::applyTemplate);
 
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setSeekBarTextColor(Color.parseColor("#80FFFFFF"));
-    seekBarController.setSeekBarStartText("0");
-    seekBarController.setSeekBarEndText("100");
-    seekBarController.setMaxProgress(100);
-
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekBarController.setProgressText(progress + "");
-        curFilterLevel = progress;
-        ClipData oldClipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
-        if (oldClipData != null) {
-          FilterInfo filterInfo = oldClipData.getFilterInfo();
-          if (filterInfo != null) {
-            filterInfo.filterLevel = curFilterLevel;
-            ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
-            mWorkSpace.handleOperation(clipOPFilter);
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("0")
+        .end("100")
+        .progress(0)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, 100))
+        .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
           }
-        }
-      }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+            curFilterLevel = progress;
+            ClipData oldClipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
+            if (oldClipData != null) {
+              FilterInfo filterInfo = oldClipData.getFilterInfo();
+              if (filterInfo != null) {
+                filterInfo.filterLevel = curFilterLevel;
+                ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
+                mWorkSpace.handleOperation(clipOPFilter);
+              }
+            }
+          }
+        }));
 
     ClipData clipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
     if (clipData.getFilterInfo() != null && !TextUtils.isEmpty(clipData.getFilterInfo().filterPath)) {
@@ -115,15 +110,14 @@ public class EditFilterDialog extends BaseMenuView {
       for (SimpleTemplate editFilterTemplate : filterTemplates) {
         if (editFilterTemplate.getTemplateId() == xytInfo.getTtidLong()) {
           adapter.changeFocus(select);
-          seekView.setVisibility(select == 0 ? INVISIBLE : VISIBLE);
+          mCustomSeekbarPop.setVisibility(select == 0 ? INVISIBLE : VISIBLE);
           curFilterLevel = clipData.getFilterInfo().filterLevel;
           break;
         }
         select++;
       }
     }
-    seekBarController.setSeekBarProgress(curFilterLevel);
-    seekBarController.setProgressText(curFilterLevel + "");
+    mCustomSeekbarPop.setProgress(curFilterLevel);
   }
 
   @Override protected void releaseAll() {
@@ -135,14 +129,13 @@ public class EditFilterDialog extends BaseMenuView {
       // 无滤镜
       filterInfo = null;
       curFilterLevel = 100;
-      seekBarController.setSeekBarProgress(curFilterLevel);
-      seekBarController.setProgressText(curFilterLevel + "");
-      seekView.setVisibility(INVISIBLE);
+      mCustomSeekbarPop.setProgress(curFilterLevel);
+      mCustomSeekbarPop.setVisibility(INVISIBLE);
     } else {
       XytInfo info = XytManager.getXytInfo(template.getTemplateId());
       filterInfo = new FilterInfo(info.getFilePath());
       filterInfo.filterLevel = curFilterLevel;
-      seekView.setVisibility(VISIBLE);
+      mCustomSeekbarPop.setVisibility(VISIBLE);
     }
     ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
     mWorkSpace.handleOperation(clipOPFilter);

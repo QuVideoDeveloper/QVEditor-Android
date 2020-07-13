@@ -12,11 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @desc
- * @since 2019/5/20
- */
 public class GalleryUtil {
 
   private static final int DEFAULT_DOUBLE_CLICK_DURATION = 500;

@@ -117,7 +117,7 @@ public class EditEffectInputDialog extends BaseMenuView {
   public void dismissMenu() {
     hideKeyboard();
     if (mMenuContainer != null) {
-      mMenuContainer.removeView(this);
+      mMenuContainer.removeMenuLayer(this);
     }
   }
 

@@ -57,8 +57,8 @@
     android:text="@string/mn_cam_func_flash"
     android:textColor="@android:color/white"
     android:textSize="11sp"
-    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnFront" />
 
   <androidx.appcompat.widget.AppCompatTextView
@@ -71,8 +71,8 @@
     android:text="@string/mn_cam_func_zoom"
     android:textColor="@android:color/white"
     android:textSize="11sp"
-    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnFlash" />
 
   <androidx.appcompat.widget.AppCompatTextView
@@ -85,8 +85,8 @@
     android:text="@string/mn_cam_func_exposure"
     android:textColor="@android:color/white"
     android:textSize="11sp"
-    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnZoom" />
 
   <androidx.appcompat.widget.AppCompatTextView
@@ -99,8 +99,8 @@
     android:text="@string/mn_edit_title_ratio"
     android:textColor="@android:color/white"
     android:textSize="11sp"
-    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnExposure" />
 
   <androidx.appcompat.widget.AppCompatTextView
@@ -113,8 +113,8 @@
     android:text="@string/mn_edit_title_filter"
     android:textColor="@android:color/white"
     android:textSize="11sp"
-    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnRatio" />
 
   <androidx.appcompat.widget.AppCompatTextView
@@ -127,70 +127,80 @@
     android:text="@string/mn_cam_func_face_beauty"
     android:textColor="@android:color/white"
     android:textSize="11sp"
-    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintEnd_toEndOf="@+id/btnFront"
+    app:layout_constraintStart_toStartOf="@+id/btnFront"
     app:layout_constraintTop_toBottomOf="@+id/btnFilter" />
 
-  <androidx.appcompat.widget.AppCompatImageView
-    android:id="@+id/btnCapture"
-    android:layout_width="48dp"
-    android:layout_height="48dp"
-    android:layout_marginStart="20dp"
-    android:layout_marginBottom="30dp"
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/layoutRecorder"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
     app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:srcCompat="@drawable/cam_shape_capture_bg" />
+    app:layout_constraintTop_toTopOf="parent">
 
-  <androidx.appcompat.widget.AppCompatTextView
-    android:id="@+id/btnRecording"
-    android:layout_width="68dp"
-    android:layout_height="68dp"
-    android:layout_marginBottom="20dp"
-    android:background="@drawable/cam_shape_recording_bg"
-    android:gravity="center"
-    android:textColor="@android:color/white"
-    android:textSize="16sp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btnCapture"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginBottom="30dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:srcCompat="@drawable/cam_shape_capture_bg" />
 
-  <androidx.appcompat.widget.AppCompatImageView
-    android:id="@+id/btnDel"
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:layout_marginEnd="30dp"
-    android:visibility="invisible"
-    app:layout_constraintBottom_toBottomOf="@id/btnRecording"
-    app:layout_constraintEnd_toStartOf="@+id/btnRecording"
-    app:layout_constraintTop_toTopOf="@+id/btnRecording"
-    app:srcCompat="@drawable/cam_icon_clip_del_nor" />
+    <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/btnRecording"
+      android:layout_width="68dp"
+      android:layout_height="68dp"
+      android:layout_marginBottom="20dp"
+      android:background="@drawable/cam_shape_recording_bg"
+      android:gravity="center"
+      android:textColor="@android:color/white"
+      android:textSize="16sp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
 
-  <androidx.appcompat.widget.AppCompatTextView
-    android:id="@+id/tvRecorderTime"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
-    android:textColor="@android:color/white"
-    android:textSize="16sp"
-    android:visibility="invisible"
-    app:layout_constraintBottom_toTopOf="@+id/btnRecording"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btnDel"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_marginEnd="30dp"
+      android:visibility="invisible"
+      app:layout_constraintBottom_toBottomOf="@id/btnRecording"
+      app:layout_constraintEnd_toStartOf="@+id/btnRecording"
+      app:layout_constraintTop_toTopOf="@+id/btnRecording"
+      app:srcCompat="@drawable/cam_icon_clip_del_nor" />
 
-  <androidx.appcompat.widget.AppCompatTextView
-    android:id="@+id/btnRecorderDone"
-    android:layout_width="60dp"
-    android:layout_height="36dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="36dp"
-    android:background="@drawable/cam_shape_recorder_done_bg"
-    android:gravity="center"
-    android:text="@string/mn_app_done"
-    android:textColor="@android:color/white"
-    android:textSize="12sp"
-    android:visibility="invisible"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
+    <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/tvRecorderTime"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="20dp"
+      android:textColor="@android:color/white"
+      android:textSize="16sp"
+      android:visibility="invisible"
+      app:layout_constraintBottom_toTopOf="@+id/btnRecording"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/btnRecorderDone"
+      android:layout_width="60dp"
+      android:layout_height="36dp"
+      android:layout_marginEnd="20dp"
+      android:layout_marginBottom="36dp"
+      android:background="@drawable/cam_shape_recorder_done_bg"
+      android:gravity="center"
+      android:text="@string/mn_app_done"
+      android:textColor="@android:color/white"
+      android:textSize="12sp"
+      android:visibility="invisible"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

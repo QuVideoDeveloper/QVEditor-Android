@@ -2,10 +2,6 @@ package com.quvideo.application.editor.fake
 
 import android.graphics.RectF
 
-/**
- * @author wuzhongyou
- * @date 2020/6/28.
- */
 data class FakeLimitPos(
 
   /**

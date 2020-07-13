@@ -11,10 +11,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by wangjieming on 28/12/2017.
  * 申请SystemAlertWindow权限.signature权限
  */
-
 public class SignaturePermissionRequest {
 
   private Activity mTarget;//目标页面,只有有context就可以.

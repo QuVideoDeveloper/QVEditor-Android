@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Wed, 08 Jul 2020 14:33:50 +0800
+ Exported at: Fri, 10 Jul 2020 10:54:50 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -13,13 +13,16 @@
     <string name="mn_app_brvah_loading">Loading</string>
     <string name="mn_app_cancel">Cancel</string>
     <string name="mn_app_confirm">Confirm</string>
+    <string name="mn_app_contact_us">Contact us\u0020</string>
     <string name="mn_app_done">Done</string>
     <string name="mn_app_home_title">Create</string>
     <string name="mn_app_mode_camera">Camera</string>
     <string name="mn_app_mode_editor">Editor</string>
     <string name="mn_app_mode_template">Template</string>
+    <string name="mn_app_privacy_title">Privacy Agreements</string>
     <string name="mn_app_setting">Setting</string>
     <string name="mn_app_splash_slogan">Easy editing, free expression</string>
+    <string name="mn_app_user_terms">User Agreement</string>
     <string name="mn_cam_func_add_bgm">Add music</string>
     <string name="mn_cam_func_camera_id_switch">Camera</string>
     <string name="mn_cam_func_exposure">Exposure</string>

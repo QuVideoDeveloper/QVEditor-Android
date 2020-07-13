@@ -2,10 +2,6 @@ package com.quvideo.application.gallery;
 
 import com.quvideo.application.gallery.constant.StorageInfo;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/10/2019
- */
 public class MediaConfig {
   public static String VIVA_GALLERY_KEY_HTTP_HEADER_REFERER = "http://xiaoying.tv";
 

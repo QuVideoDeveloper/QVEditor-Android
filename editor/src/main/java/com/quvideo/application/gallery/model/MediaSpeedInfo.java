@@ -5,9 +5,6 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2020-02-28
- */
 public class MediaSpeedInfo implements Parcelable {
   public static final int ERROR_DURATION = -1;
 

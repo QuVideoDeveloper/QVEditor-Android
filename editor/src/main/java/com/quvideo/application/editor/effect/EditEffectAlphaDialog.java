@@ -1,13 +1,13 @@
 package com.quvideo.application.editor.effect;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.net.Uri;
 import android.view.View;
-import android.widget.SeekBar;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.FloatEffect;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -15,7 +15,7 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPAlpha;
 
 public class EditEffectAlphaDialog extends BaseMenuView {
 
-  private EditSeekBarController seekBarController;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   private int groupId = 0;
   private int effectIndex = 0;
@@ -25,7 +25,6 @@ public class EditEffectAlphaDialog extends BaseMenuView {
     super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
-    seekBarController = new EditSeekBarController();
     showMenu(container, null);
   }
 
@@ -38,8 +37,7 @@ public class EditEffectAlphaDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setSeekBarTextColor(Color.parseColor("#80FFFFFF"));
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     initData();
   }
 
@@ -52,28 +50,26 @@ public class EditEffectAlphaDialog extends BaseMenuView {
     if (baseEffect instanceof FloatEffect) {
       alpha = ((FloatEffect) baseEffect).alpha;
     }
-    seekBarController.setSeekBarProgress(alpha);
-    seekBarController.setSeekBarStartText("0");
-    seekBarController.setSeekBarEndText("100");
-    seekBarController.setMaxProgress(100);
-    seekBarController.setProgressText(alpha + "");
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("0")
+        .end("100")
+        .progress(alpha)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, 100))
+        .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
+          }
 
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekBarController.setProgressText(progress + "");
-        setClipVolume(progress);
-      }
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+            setClipVolume(progress);
+          }
+        }));
   }
 
   @Override public void onClick(View v) {
-    int alpha = seekBarController.getSeekBarProgress();
+    int alpha = mCustomSeekbarPop.getProgress();
     setClipVolume(alpha);
     dismissMenu();
   }

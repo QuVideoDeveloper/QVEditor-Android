@@ -145,7 +145,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
     rootView.setOnClickListener(v -> {
       // 只是为了拦击点击事件
     });
-    mEffectAdapter = new EditEffectAdapter(getActivity(), groupId, mOnEffectlickListener);
+    mEffectAdapter =
+        new EditEffectAdapter(mWorkSpace, getActivity(), groupId, mOnEffectlickListener);
     // effect
     mRecyclerView = view.findViewById(R.id.clip_recyclerview);
     mRecyclerView.setLayoutManager(
@@ -210,6 +211,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
           break;
         case EffectBarItem.ACTION_TRIM:
           new EditEffectTrimDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+          break;
+        case EffectBarItem.ACTION_CUT:
+          new EditEffectCutDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           break;
         case EffectBarItem.ACTION_DUPLICATE:
           EffectOPCopy effectOPCopy = new EffectOPCopy(groupId, index);
@@ -375,10 +379,17 @@ public class EditEffectDialog extends BaseEffectMenuView {
             BaseEffect effect = list.get(i);
             EffectPosInfo effectPosInfo = ((FloatEffect) effect).mEffectPosInfo;
             RectF targetRect = effectPosInfo.getRectArea();
-            if (mEffectAdapter.getSelectIndex() != i && targetRect != null
+            if (targetRect != null
                 && targetRect.contains(pointF.x, pointF.y)) {
-              updateFakeView(i, effect);
-              mEffectAdapter.setSelectIndex(i);
+              if (mEffectAdapter.getSelectIndex() != i) {
+                // focus选中的效果
+                updateFakeView(i, effect);
+                mEffectAdapter.setSelectIndex(i);
+              } else if (groupId == QEGroupConst.GROUP_ID_SUBTITLE
+                  && effect instanceof SubtitleEffect) {
+                // 点击同一个字幕弹起编辑
+                new EditEffectInputDialog(getContext(), mMenuContainer, mWorkSpace, groupId, i);
+              }
               return;
             }
           }
@@ -469,6 +480,14 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
               getContext().getString(R.string.mn_edit_title_trim), isOpEnabled));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
+        || groupId == QEGroupConst.GROUP_ID_DUBBING
+        || groupId == QEGroupConst.GROUP_ID_RECORD
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_CUT, R.drawable.edit_icon_crop_n,
+              getContext().getString(R.string.mn_edit_title_crop), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE

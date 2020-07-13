@@ -44,7 +44,6 @@ import com.quvideo.application.gallery.widget.crop.edge.Edge;
 import com.quvideo.application.gallery.widget.crop.util.PaintUtil;
 
 /**
- * @author 765
  */
 public class PhotoView extends AppCompatImageView {
 
@@ -865,7 +864,6 @@ public class PhotoView extends AppCompatImageView {
    * Gesture Listener detects a single click or long click and passes that on
    * to the view's listener.
    *
-   * @author Ortiz
    */
   private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
@@ -928,7 +926,6 @@ public class PhotoView extends AppCompatImageView {
    * Responsible for all touch events. Handles the heavy lifting of drag and also sends
    * touch events to Scale Detector and Gesture Detector.
    *
-   * @author Ortiz
    */
   private class PrivateOnTouchListener implements OnTouchListener {
 
@@ -997,7 +994,6 @@ public class PhotoView extends AppCompatImageView {
   /**
    * ScaleListener detects user two finger scaling and scales image.
    *
-   * @author Ortiz
    */
   private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
     @Override public boolean onScaleBegin(ScaleGestureDetector detector) {
@@ -1214,7 +1210,6 @@ public class PhotoView extends AppCompatImageView {
    * the fling graphic to the image. The values for the translation
    * are interpolated by the Scroller.
    *
-   * @author Ortiz
    */
   private class Fling implements Runnable {
 

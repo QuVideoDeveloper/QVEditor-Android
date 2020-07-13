@@ -30,4 +30,17 @@
     <attr format="integer" name="aspectRatioY"/>
 
   </declare-styleable>
+
+
+  <declare-styleable name="RCAttrs">
+    <attr name="round_as_circle" format="boolean"/>
+    <attr name="round_corner" format="dimension" />
+    <attr name="round_corner_top_left" format="dimension"/>
+    <attr name="round_corner_top_right" format="dimension"/>
+    <attr name="round_corner_bottom_left" format="dimension"/>
+    <attr name="round_corner_bottom_right" format="dimension"/>
+    <attr name="stroke_color" format="color"/>
+    <attr name="stroke_width" format="dimension"/>
+    <attr name="clip_background" format="boolean"/>
+  </declare-styleable>
 </resources>

@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.utils.RTLUtil;
 
 /**
- * @author Elijah <a href="zhonghu.liu@quvideo.com">Contact me.</a>
  * @desc CLip List ItemDecoration
- * @since 2018/03/09
  */
 
 public class ClipItemDecoration extends RecyclerView.ItemDecoration {

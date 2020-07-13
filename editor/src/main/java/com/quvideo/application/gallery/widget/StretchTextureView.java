@@ -12,9 +12,6 @@ import android.view.TextureView;
 import com.quvideo.application.gallery.preview.listener.PlayerCallback;
 import java.io.IOException;
 
-/**
- * Create by zhengjunfei on 2019/9/17
- */
 public class StretchTextureView extends TextureView
     implements TextureView.SurfaceTextureListener {
   private String TEXTUREVIDEO_TAG = StretchTextureView.class.getSimpleName();

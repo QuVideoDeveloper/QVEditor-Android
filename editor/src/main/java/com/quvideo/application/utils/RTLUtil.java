@@ -11,8 +11,6 @@ import java.util.Locale;
 import static android.content.pm.ApplicationInfo.FLAG_SUPPORTS_RTL;
 
 /**
- * @author wangjieming
- * @date 2019-05-17.
  */
 public class RTLUtil {
 

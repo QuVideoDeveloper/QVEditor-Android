@@ -1,16 +1,13 @@
 package com.quvideo.application.editor.effect.mask;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PointF;
 import android.view.View;
-import android.widget.SeekBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseEffectMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.application.editor.fake.FakePosInfo;
 import com.quvideo.application.editor.fake.FakePosUtils;
 import com.quvideo.application.editor.fake.IFakeViewApi;
@@ -19,6 +16,8 @@ import com.quvideo.application.editor.fake.draw.MaskLinearDraw;
 import com.quvideo.application.editor.fake.draw.MaskMirrorDraw;
 import com.quvideo.application.editor.fake.draw.MaskRadialDraw;
 import com.quvideo.application.editor.fake.draw.MaskRectDraw;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.model.AnimEffect;
 import com.quvideo.mobile.engine.model.effect.EffectMaskInfo;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
@@ -31,15 +30,13 @@ public class EffectMaskDialog extends BaseEffectMenuView {
 
   private int groupId = 0;
   private int effectIndex = 0;
-  private EditSeekBarController seekBarController;
-  private View seekView;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   public EffectMaskDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       int groupId, int effectIndex, IFakeViewApi fakeViewApi) {
     super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
-    seekBarController = new EditSeekBarController();
     showMenu(container, null, fakeViewApi);
   }
 
@@ -52,35 +49,33 @@ public class EffectMaskDialog extends BaseEffectMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekView = view.findViewById(R.id.seekbar);
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     RecyclerView clipRecyclerView = view.findViewById(R.id.clip_recyclerview);
     clipRecyclerView.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
 
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setSeekBarTextColor(Color.parseColor("#80FFFFFF"));
-    seekBarController.setSeekBarStartText("0");
-    seekBarController.setSeekBarEndText("10000");
-    seekBarController.setMaxProgress(10000);
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("0")
+        .end("10000")
+        .progress(0)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, 10000))
+        .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
+          }
 
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekBarController.setProgressText(progress + "");
-        AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
-        if (baseEffect.mEffectMaskInfo != null) {
-          EffectMaskInfo effectMaskInfo = baseEffect.mEffectMaskInfo;
-          effectMaskInfo.softness = progress;
-          EffectOPMaskInfo effectOPMaskInfo = new EffectOPMaskInfo(groupId, effectIndex, effectMaskInfo);
-          mWorkSpace.handleOperation(effectOPMaskInfo);
-        }
-      }
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+            AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+            if (baseEffect.mEffectMaskInfo != null) {
+              EffectMaskInfo effectMaskInfo = baseEffect.mEffectMaskInfo;
+              effectMaskInfo.softness = progress;
+              EffectOPMaskInfo effectOPMaskInfo = new EffectOPMaskInfo(groupId, effectIndex, effectMaskInfo);
+              mWorkSpace.handleOperation(effectOPMaskInfo);
+            }
+          }
+        }));
 
     ArrayList<EffectMaskAdapter.MaskItem> maskItems = new ArrayList<>();
     maskItems.add(new EffectMaskAdapter.MaskItem(EffectMaskInfo.MaskType.MASK_NONE, R.drawable.editor_icon_collage_mask_none_n,
@@ -100,8 +95,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
     AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
     if (baseEffect.mEffectMaskInfo != null) {
       adapter.setSelectType(baseEffect.mEffectMaskInfo.maskType, baseEffect.mEffectMaskInfo.reverse);
-      seekBarController.setProgressText("" + baseEffect.mEffectMaskInfo.softness);
-      seekBarController.setSeekBarProgress(baseEffect.mEffectMaskInfo.softness);
+      mCustomSeekbarPop.setProgress(baseEffect.mEffectMaskInfo.softness);
     }
     initFakeView();
     adapter.setOnItemClickListener(this::changeMaskType);
@@ -115,7 +109,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
       changeFakeView(animEffect.mEffectMaskInfo.maskType, effectPosInfo, animEffect.mEffectMaskInfo);
     } else {
       mFakeApi.setTarget(null, null);
-      seekView.setVisibility(View.INVISIBLE);
+      mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     }
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
@@ -148,27 +142,23 @@ public class EffectMaskDialog extends BaseEffectMenuView {
   private void changeFakeView(EffectMaskInfo.MaskType maskType, EffectPosInfo effectPosInfo, EffectMaskInfo effectMaskInfo) {
     if (maskType == EffectMaskInfo.MaskType.MASK_LINEAR) {
       mFakeApi.setTarget(new MaskLinearDraw(), effectPosInfo, effectMaskInfo);
-      seekView.setVisibility(View.VISIBLE);
-      seekBarController.setProgressText("" + effectMaskInfo.softness);
-      seekBarController.setSeekBarProgress(effectMaskInfo.softness);
+      mCustomSeekbarPop.setVisibility(View.VISIBLE);
+      mCustomSeekbarPop.setProgress(effectMaskInfo.softness);
     } else if (maskType == EffectMaskInfo.MaskType.MASK_MIRROR) {
       mFakeApi.setTarget(new MaskMirrorDraw(), effectPosInfo, effectMaskInfo);
-      seekView.setVisibility(View.VISIBLE);
-      seekBarController.setProgressText("" + effectMaskInfo.softness);
-      seekBarController.setSeekBarProgress(effectMaskInfo.softness);
+      mCustomSeekbarPop.setVisibility(View.VISIBLE);
+      mCustomSeekbarPop.setProgress(effectMaskInfo.softness);
     } else if (maskType == EffectMaskInfo.MaskType.MASK_RADIAL) {
       mFakeApi.setTarget(new MaskRadialDraw(), effectPosInfo, effectMaskInfo);
-      seekView.setVisibility(View.VISIBLE);
-      seekBarController.setProgressText("" + effectMaskInfo.softness);
-      seekBarController.setSeekBarProgress(effectMaskInfo.softness);
+      mCustomSeekbarPop.setVisibility(View.VISIBLE);
+      mCustomSeekbarPop.setProgress(effectMaskInfo.softness);
     } else if (maskType == EffectMaskInfo.MaskType.MASK_RECTANGLE) {
       mFakeApi.setTarget(new MaskRectDraw(), effectPosInfo, effectMaskInfo);
-      seekView.setVisibility(View.VISIBLE);
-      seekBarController.setProgressText("" + effectMaskInfo.softness);
-      seekBarController.setSeekBarProgress(effectMaskInfo.softness);
+      mCustomSeekbarPop.setVisibility(View.VISIBLE);
+      mCustomSeekbarPop.setProgress(effectMaskInfo.softness);
     } else {
       mFakeApi.setTarget(null, null);
-      seekView.setVisibility(View.INVISIBLE);
+      mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     }
   }
 
@@ -194,7 +184,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
       changeFakeView(maskItem.maskType, baseEffect.mEffectPosInfo, effectMaskInfo);
     } else {
       mFakeApi.setTarget(null, null);
-      seekView.setVisibility(View.INVISIBLE);
+      mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     }
     EffectOPMaskInfo effectOPMaskInfo = new EffectOPMaskInfo(groupId, effectIndex, effectMaskInfo);
     mWorkSpace.handleOperation(effectOPMaskInfo);

@@ -8,7 +8,6 @@ import com.quvideo.application.gallery.widget.crop.util.AspectRatioUtil;
 /**
  * Enum representing an edge in the crop window.
  *
- * @author 765
  */
 public enum Edge {
 

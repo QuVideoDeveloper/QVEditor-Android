@@ -1,8 +1,6 @@
 package com.quvideo.application.utils.mvp;
 
 /**
- * @author Elijah <a href="zhonghu.liu@quvideo.com">Contact me.</a>
- * @since 2018/1/12
  * Every Controller in the app must either implement this interface or extend BaseController
  * indicating the MvpView type that wants to be attached with.
  */

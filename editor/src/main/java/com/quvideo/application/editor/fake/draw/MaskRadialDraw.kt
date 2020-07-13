@@ -3,10 +3,6 @@ package com.quvideo.application.editor.fake.draw
 import android.graphics.Canvas
 import com.quvideo.application.editor.fake.FakePosInfo
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 class MaskRadialDraw : IMaskFakeDraw() {
 
   override fun drawView(

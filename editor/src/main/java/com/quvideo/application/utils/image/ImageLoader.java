@@ -12,8 +12,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 /**
- * @author wangjieming
- * @date 2019-05-17.
  */
 public class ImageLoader {
 

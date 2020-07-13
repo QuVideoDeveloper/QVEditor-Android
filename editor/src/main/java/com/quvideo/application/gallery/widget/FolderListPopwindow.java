@@ -19,9 +19,6 @@ import com.quvideo.application.gallery.model.MediaGroupItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2019/9/9
- */
 public class FolderListPopwindow extends PopupWindow {
   private Activity mActivity;
   private TextView mTitle;

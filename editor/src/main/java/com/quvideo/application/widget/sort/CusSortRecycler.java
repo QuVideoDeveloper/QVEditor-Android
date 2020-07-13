@@ -8,10 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * Create by shengsheng(Kyle)
- * on 2019/11/26
- */
 public class CusSortRecycler extends RecyclerView implements OnItemMoveListener {
 
   private SelectSceneListener sceneListener;

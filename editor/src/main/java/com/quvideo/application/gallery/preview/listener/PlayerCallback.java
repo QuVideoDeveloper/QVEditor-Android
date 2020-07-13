@@ -1,8 +1,5 @@
 package com.quvideo.application.gallery.preview.listener;
 
-/**
- * Create by zhengjunfei on 2019/9/18
- */
 public interface PlayerCallback {
   void onStartListener();
 

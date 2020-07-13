@@ -1,8 +1,6 @@
 package com.quvideo.application.utils.mvp;
 
 /**
- * @author Elijah <a href="zhonghu.liu@quvideo.com">Contact me.</a>
- * @since 2018/1/12
  * Base class that implements the Controller interface and provides a base implementation for
  * {@link #attachView(T mvpView)}and {@link #detachView()}. It also handles keeping a reference
  * to the MvpView that

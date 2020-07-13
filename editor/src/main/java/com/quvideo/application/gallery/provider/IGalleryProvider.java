@@ -3,10 +3,6 @@ package com.quvideo.application.gallery.provider;
 import com.quvideo.application.gallery.model.MediaModel;
 import java.util.ArrayList;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/10/2019
- */
 public class IGalleryProvider {
 
   /**

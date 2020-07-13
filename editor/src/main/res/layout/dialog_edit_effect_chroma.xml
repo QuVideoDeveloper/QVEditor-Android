@@ -28,8 +28,7 @@
       app:layout_constraintStart_toStartOf="parent"
       />
 
-  <include
-      layout="@layout/view_edit_seekbar"
+  <com.quvideo.application.widget.seekbar.CustomSeekbarPop
       android:id="@+id/seekbar"
       android:layout_width="match_parent"
       android:layout_height="80dp"
@@ -39,8 +38,7 @@
       android:visibility="invisible"
       app:layout_constraintBottom_toTopOf="@id/btn_chroma_pick"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      />
+      app:layout_constraintStart_toStartOf="parent"/>
 
   <TextView
       android:id="@+id/btn_chroma_pick"

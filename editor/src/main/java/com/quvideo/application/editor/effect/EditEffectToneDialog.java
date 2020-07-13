@@ -1,13 +1,11 @@
 package com.quvideo.application.editor.effect;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
-import android.widget.SeekBar;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.mobile.engine.model.AudioEffect;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -15,7 +13,7 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioTone;
 
 public class EditEffectToneDialog extends BaseMenuView {
 
-  private EditSeekBarController seekBarController;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   private int groupId = 0;
   private int effectIndex = 0;
@@ -25,7 +23,6 @@ public class EditEffectToneDialog extends BaseMenuView {
     super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
-    seekBarController = new EditSeekBarController();
     showMenu(container, null);
   }
 
@@ -38,9 +35,7 @@ public class EditEffectToneDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setSeekBarTextColor(Color.parseColor("#80FFFFFF"));
-
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     initData();
   }
 
@@ -53,23 +48,11 @@ public class EditEffectToneDialog extends BaseMenuView {
     if (baseEffect instanceof AudioEffect) {
       tone = (int) ((AudioEffect) baseEffect).getAudioInfo().soundTone;
     }
-    seekBarController.setSeekBarStartText("-60");
-    seekBarController.setSeekBarEndText("60");
-    seekBarController.setMaxProgress(120);
-    seekBarController.setProgressText(getToneStr(tone + 60));
-    seekBarController.setSeekBarProgress(tone + 60);
-
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekBarController.setProgressText(getToneStr(progress));
-      }
-
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("-60")
+        .end("60")
+        .progress(tone)
+        .seekRange(new CustomSeekbarPop.SeekRange(-60, 60)));
   }
 
   private String getToneStr(int progress) {
@@ -81,7 +64,7 @@ public class EditEffectToneDialog extends BaseMenuView {
   }
 
   private void setClipVolume() {
-    int toVolume = seekBarController.getSeekBarProgress() - 60;
+    int toVolume = mCustomSeekbarPop.getProgress();
     EffectOPAudioTone effectOpTone = new EffectOPAudioTone(groupId, effectIndex, toVolume);
     mWorkSpace.handleOperation(effectOpTone);
 

@@ -8,9 +8,7 @@ import com.quvideo.application.gallery.db.impl.MediaDaoImpl;
 import org.greenrobot.greendao.database.Database;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc Gallery DB Factory
- * @since 6/27/2019
  */
 public class GalleryDBFactory {
 

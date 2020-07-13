@@ -19,9 +19,6 @@ import com.quvideo.application.utils.rx.RxViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2020-03-11
- */
 public class BaseMediaBoardView extends RelativeLayout {
   public static final int DEF_NEGATIVE_ONE = -1;
   public static final int DEF_CHOOSE_POS = -2;

@@ -11,10 +11,6 @@ import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 6/27/2019
- */
 public class MediaDaoImpl {
 
   private DaoSession mediaDaoSession;

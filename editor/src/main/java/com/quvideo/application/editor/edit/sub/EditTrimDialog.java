@@ -8,8 +8,9 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.application.utils.ToastUtils;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -18,18 +19,16 @@ import xiaoying.utils.LogUtils;
 
 public class EditTrimDialog extends BaseMenuView {
 
-  private EditSeekBarController startSeekBarController;
-  private EditSeekBarController endSeekBarController;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   private int clipIndex = 0;
+
+  private boolean isChanged = false;
 
   public EditTrimDialog(Context context, MenuContainer container,
       IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
-
-    startSeekBarController = new EditSeekBarController();
-    endSeekBarController = new EditSeekBarController();
     showMenu(container, l);
   }
 
@@ -42,15 +41,7 @@ public class EditTrimDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    startSeekBarController.bindView(view.findViewById(R.id.seekbar_start));
-    endSeekBarController.bindView(view.findViewById(R.id.seekbar_end));
-
-    startSeekBarController.setTitle(context.getString(R.string.mn_edit_title_start));
-    endSeekBarController.setTitle(context.getString(R.string.mn_edit_title_end));
-
-    startSeekBarController.offProgressHighlight();
-    endSeekBarController.offProgressHighlight();
-
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar_trim);
     initData();
   }
 
@@ -59,10 +50,27 @@ public class EditTrimDialog extends BaseMenuView {
 
   private void initData() {
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-    startSeekBarController.setSeekBarStartText(TimeFormatUtil.INSTANCE.formatTime(0));
-    endSeekBarController.setSeekBarStartText(TimeFormatUtil.INSTANCE.formatTime(0));
-    startSeekBarController.setSeekBarEndText(TimeFormatUtil.INSTANCE.formatTime(clipData.getSrcRange().getTimeLength()));
-    endSeekBarController.setSeekBarEndText(TimeFormatUtil.INSTANCE.formatTime(clipData.getSrcRange().getTimeLength()));
+    int start = (int) (clipData.getSrcRange().getPosition() * clipData.getTimeScale())
+        + (clipData.getSrcRange().getPosition() == 0 ? 0 : 1);
+    int end = (int) (clipData.getSrcRange().getLimitValue() * clipData.getTimeScale());
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start(TimeFormatUtil.INSTANCE.formatTime(start))
+        .end(TimeFormatUtil.INSTANCE.formatTime(end))
+        .progress(clipData.getTrimRange().getPosition())
+        .secondProgress(clipData.getTrimRange().getLimitValue())
+        .minRange(1)
+        .seekRange(new CustomSeekbarPop.SeekRange(start, end))
+        .isDoubleMode(true).seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
+            isChanged = true;
+          }
+
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
+
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+          }
+        }));
   }
 
   @Override public void onClick(View v) {
@@ -70,21 +78,18 @@ public class EditTrimDialog extends BaseMenuView {
   }
 
   private void trimClip() {
-    int progressStart = startSeekBarController.getSeekBarProgress();
-    int progressEnd = endSeekBarController.getSeekBarProgress();
+    if (isChanged) {
+      int progressStart = mCustomSeekbarPop.getFirstProgress();
+      int progressEnd = mCustomSeekbarPop.getSecondProgress();
 
-    if (progressStart >= progressEnd) {
-      ToastUtils.show(getContext(), R.string.mn_edit_tips_no_allow_trim, Toast.LENGTH_SHORT);
-      return;
+      if (progressStart >= progressEnd) {
+        ToastUtils.show(getContext(), R.string.mn_edit_tips_no_allow_trim, Toast.LENGTH_SHORT);
+        return;
+      }
+      LogUtils.d("ClipOP", "progressStart = " + progressStart + " , progressEnd = " + progressEnd);
+      ClipOPTrimRange clipOPTrimRange = new ClipOPTrimRange(clipIndex, new VeRange(progressStart, progressEnd - progressStart));
+      mWorkSpace.handleOperation(clipOPTrimRange);
     }
-
-    ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-    int trimStart = progressStart * clipData.getSrcRange().getTimeLength() / 100 + clipData.getSrcRange().getPosition();
-    int trimEnd = progressEnd * clipData.getSrcRange().getTimeLength() / 100 + clipData.getSrcRange().getPosition();
-    LogUtils.d("ClipOP", "trimStart = " + trimStart + " , trimEnd = " + trimEnd);
-    ClipOPTrimRange clipOPTrimRange = new ClipOPTrimRange(clipIndex, new VeRange(trimStart, trimEnd - trimStart));
-    mWorkSpace.handleOperation(clipOPTrimRange);
-
     dismissMenu();
   }
 

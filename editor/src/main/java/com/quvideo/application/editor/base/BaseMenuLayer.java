@@ -4,10 +4,6 @@ import android.content.Context;
 import android.widget.RelativeLayout;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 
-/**
- * @author wuzhongyou
- * @date 2020/5/27.
- */
 public abstract class BaseMenuLayer extends RelativeLayout {
 
   protected IQEWorkSpace mWorkSpace;

@@ -112,6 +112,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
           }
           ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
           mWorkSpace.handleOperation(clipOPAdd);
+          addWaterMarkWithRes();
         } else if (albumChoose != null && albumChoose.size() > 0) {
           // 它来自相册
           mWorkSpace = qeWorkSpace;
@@ -124,6 +125,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
           }
           ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
           mWorkSpace.handleOperation(clipOPAdd);
+          addWaterMarkWithRes();
         } else {
           ToastUtils.show(EditorActivity.this, "No Video or Pic selected", Toast.LENGTH_LONG);
           EditorActivity.this.finish();
@@ -234,11 +236,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         EffectOPDel effectOPDel = new EffectOPDel(QEGroupConst.GROUP_ID_WATERMARK, 0);
         mWorkSpace.handleOperation(effectOPDel);
       } else {
-        EffectAddItem effectAddItem = new EffectAddItem();
-        effectAddItem.mEffectPath = "assets_android://quvideo/watermark/water_mark_logo.png";
-        EffectOPAdd effectOPAdd =
-            new EffectOPAdd(QEGroupConst.GROUP_ID_WATERMARK, 0, effectAddItem);
-        mWorkSpace.handleOperation(effectOPAdd);
+        addWaterMarkWithRes();
       }
     } else if (operate.getResId() == R.drawable.edit_icon_mosaic_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_MOSAIC,
@@ -255,6 +253,14 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         || operate.getResId() == R.drawable.edit_icon_pic_nor) {
       doClipRatioChange();
     }
+  }
+
+  private void addWaterMarkWithRes() {
+    EffectAddItem effectAddItem = new EffectAddItem();
+    effectAddItem.mEffectPath = "assets_android://quvideo/watermark/water_mark_logo.png";
+    EffectOPAdd effectOPAdd =
+        new EffectOPAdd(QEGroupConst.GROUP_ID_WATERMARK, 0, effectAddItem);
+    mWorkSpace.handleOperation(effectOPAdd);
   }
 
   @Override public void onBackPressed() {

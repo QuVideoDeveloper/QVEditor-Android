@@ -3,10 +3,6 @@ package com.quvideo.application.gallery;
 import com.quvideo.application.gallery.model.GalleryDef;
 import com.quvideo.application.gallery.model.MediaSpeedInfo;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/4/2019
- */
 public class GallerySettings {
 
   public static int NO_LIMIT_UP_FLAG = -1;

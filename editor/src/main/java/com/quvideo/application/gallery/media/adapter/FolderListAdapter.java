@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Create by zhengjunfei on 2019/9/9
- */
 public class FolderListAdapter extends BaseQuickAdapter<MediaGroupItem, BaseViewHolder> {
   public static final int TYPE_SINGLE = 1;
   public static final int TYPE_MULTI = 2;

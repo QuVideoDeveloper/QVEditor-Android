@@ -8,11 +8,6 @@ import androidx.fragment.app.Fragment;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.utils.NotchUtil;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @desc Common Gallery activity
- * @since 8/29/2019
- */
 public class GalleryActivity extends AppCompatActivity {
 
   Fragment mGalleryFragment;

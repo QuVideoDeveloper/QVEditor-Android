@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2019/9/16
- */
 public class TrimContentPanel {
   public static final int DEFAULT_PERFRAMEINTERVAL = 500;
   public static final int DEFAULT_SCALE_INTERVAL = 500;

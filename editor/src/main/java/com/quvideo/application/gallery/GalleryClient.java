@@ -10,10 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import com.quvideo.application.gallery.provider.IGalleryProvider;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/6/2019
- */
 public class GalleryClient {
   private static GalleryClient instance;
   private GallerySettings mGallerySettings;

@@ -18,9 +18,6 @@ import com.quvideo.application.gallery.utils.GalleryUtil;
 import com.quvideo.application.gallery.utils.RotateTransformation;
 import com.quvideo.application.utils.image.ImageLoader;
 
-/**
- * Create by zhengjunfei on 2020-03-03
- */
 public class BaseMediaBoardItemView extends ConstraintLayout {
   protected ImageView ivCover;
   protected TextView tvDuration, tvOrder;

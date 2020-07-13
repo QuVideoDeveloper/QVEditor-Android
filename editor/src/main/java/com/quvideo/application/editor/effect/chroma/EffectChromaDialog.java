@@ -1,20 +1,19 @@
 package com.quvideo.application.editor.effect.chroma;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PointF;
 import android.view.View;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseEffectMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.application.editor.fake.FakePosInfo;
 import com.quvideo.application.editor.fake.FakePosUtils;
 import com.quvideo.application.editor.fake.IFakeViewApi;
 import com.quvideo.application.editor.fake.IFakeViewListener;
 import com.quvideo.application.editor.fake.draw.ChromaDraw;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.entity.ChromaColor;
 import com.quvideo.mobile.engine.model.AnimEffect;
 import com.quvideo.mobile.engine.model.effect.EffectChromaInfo;
@@ -29,8 +28,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
 
   private int groupId = 0;
   private int effectIndex = 0;
-  private EditSeekBarController seekBarController;
-  private View seekView;
+  private CustomSeekbarPop mCustomSeekbarPop;
   private TextView btnPick;
   private TextView btnReset;
   private boolean isPicking = false;
@@ -41,7 +39,6 @@ public class EffectChromaDialog extends BaseEffectMenuView {
     super(context, workSpace);
     this.groupId = groupId;
     this.effectIndex = effectIndex;
-    seekBarController = new EditSeekBarController();
     mWorkSpace.addObserver(mBaseObserver);
     showMenu(container, null, fakeViewApi);
   }
@@ -55,41 +52,40 @@ public class EffectChromaDialog extends BaseEffectMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekView = view.findViewById(R.id.seekbar);
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     btnPick = view.findViewById(R.id.btn_chroma_pick);
     btnReset = view.findViewById(R.id.btn_chroma_reset);
 
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setSeekBarTextColor(Color.parseColor("#80FFFFFF"));
-    seekBarController.setSeekBarStartText("0");
-    seekBarController.setSeekBarEndText("5000");
-    seekBarController.setMaxProgress(5000);
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("0")
+        .end("5000")
+        .progress(1000)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, 5000))
+        .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
+          }
 
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekBarController.setProgressText(progress + "");
-        AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
-        if (baseEffect.mEffectChromaInfo != null) {
-          EffectChromaInfo effectChromaInfo = baseEffect.mEffectChromaInfo;
-          effectChromaInfo.accuracy = progress;
-          effectChromaInfo.enable = true;
-          EffectOPChroma effectOPChroma = new EffectOPChroma(groupId, effectIndex, effectChromaInfo);
-          mWorkSpace.handleOperation(effectOPChroma);
-        }
-      }
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+            AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+            if (baseEffect.mEffectChromaInfo != null) {
+              EffectChromaInfo effectChromaInfo = baseEffect.mEffectChromaInfo;
+              effectChromaInfo.accuracy = progress;
+              effectChromaInfo.enable = true;
+              EffectOPChroma effectOPChroma = new EffectOPChroma(groupId, effectIndex, effectChromaInfo);
+              mWorkSpace.handleOperation(effectOPChroma);
+            }
+          }
+        }));
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
     btnReset.setOnClickListener(new OnClickListener() {
       @Override public void onClick(View v) {
         EffectOPChroma effectOPChroma = new EffectOPChroma(groupId, effectIndex, null);
         mWorkSpace.handleOperation(effectOPChroma);
         mFakeApi.setTarget(null, null, null);
-        seekView.setVisibility(View.INVISIBLE);
+        mCustomSeekbarPop.setVisibility(View.INVISIBLE);
         isPicking = false;
       }
     });
@@ -101,19 +97,17 @@ public class EffectChromaDialog extends BaseEffectMenuView {
           AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
           mFakeApi.setChromaTarget(new ChromaDraw(), baseEffect.mEffectPosInfo);
           if (baseEffect.mEffectChromaInfo != null && baseEffect.mEffectChromaInfo.enable) {
-            seekBarController.setProgressText("" + baseEffect.mEffectChromaInfo.accuracy);
-            seekBarController.setSeekBarProgress(baseEffect.mEffectChromaInfo.accuracy);
-            seekView.setVisibility(View.VISIBLE);
+            mCustomSeekbarPop.setProgress(baseEffect.mEffectChromaInfo.accuracy);
+            mCustomSeekbarPop.setVisibility(View.VISIBLE);
           } else {
-            seekView.setVisibility(View.INVISIBLE);
+            mCustomSeekbarPop.setVisibility(View.INVISIBLE);
           }
         }
       }
     });
     AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
     if (baseEffect.mEffectChromaInfo != null) {
-      seekBarController.setProgressText("" + baseEffect.mEffectChromaInfo.accuracy);
-      seekBarController.setSeekBarProgress(baseEffect.mEffectChromaInfo.accuracy);
+      mCustomSeekbarPop.setProgress(baseEffect.mEffectChromaInfo.accuracy);
     }
     initFakeView();
   }
@@ -131,7 +125,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
   private void initFakeView() {
     mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
     mFakeApi.setTarget(null, null, null);
-    seekView.setVisibility(View.INVISIBLE);
+    mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
       @Override public void onEffectMoving() {
@@ -143,15 +137,13 @@ public class EffectChromaDialog extends BaseEffectMenuView {
         if (baseEffect.mEffectChromaInfo != null) {
           effectChromaInfo = baseEffect.mEffectChromaInfo;
           if (!effectChromaInfo.enable) {
-            seekBarController.setProgressText("" + effectChromaInfo.accuracy);
-            seekBarController.setSeekBarProgress(effectChromaInfo.accuracy);
-            seekView.setVisibility(View.VISIBLE);
+            mCustomSeekbarPop.setProgress(effectChromaInfo.accuracy);
+            mCustomSeekbarPop.setVisibility(View.VISIBLE);
           }
         } else {
           effectChromaInfo = new EffectChromaInfo();
-          seekView.setVisibility(View.VISIBLE);
-          seekBarController.setProgressText("" + effectChromaInfo.accuracy);
-          seekBarController.setSeekBarProgress(effectChromaInfo.accuracy);
+          mCustomSeekbarPop.setVisibility(View.VISIBLE);
+          mCustomSeekbarPop.setProgress(effectChromaInfo.accuracy);
         }
         FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
         PointF pointF = FakePosUtils.INSTANCE.getChromaColorPosByFakePos(curFakePos, baseEffect.mEffectPosInfo);

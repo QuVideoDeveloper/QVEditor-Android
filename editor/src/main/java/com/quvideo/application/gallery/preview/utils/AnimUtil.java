@@ -6,11 +6,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import com.quvideo.application.editor.R;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @desc
- * @since 5/24/2019
- */
 public class AnimUtil {
 
   public static void topViewAnim(View view, boolean bShow) {

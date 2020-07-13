@@ -8,10 +8,6 @@ import com.quvideo.application.EditorApp
 import com.quvideo.application.editor.R
 import com.quvideo.application.editor.fake.IFakeDraw
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 abstract class IMaskFakeDraw : IFakeDraw() {
 
   /** 实线画笔  */

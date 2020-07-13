@@ -1,21 +1,20 @@
 package com.quvideo.application.editor.edit.sub;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
-import android.widget.SeekBar;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPVolume;
 
 public class EditVolumeDialog extends BaseMenuView {
 
-  private EditSeekBarController seekBarController;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   private int clipIndex = 0;
 
@@ -23,7 +22,6 @@ public class EditVolumeDialog extends BaseMenuView {
     super(context, workSpace);
     this.clipIndex = clipIndex;
 
-    seekBarController = new EditSeekBarController();
     showMenu(container, l);
   }
 
@@ -36,9 +34,7 @@ public class EditVolumeDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setSeekBarTextColor(Color.parseColor("#80FFFFFF"));
-
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     initData();
   }
 
@@ -48,31 +44,25 @@ public class EditVolumeDialog extends BaseMenuView {
   private void initData() {
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
     int volume = clipData.getAudioVolume();
-    seekBarController.setTitleVisible(false);
-    seekBarController.setSeekBarProgress(volume);
-    seekBarController.setSeekBarStartText("0");
-    seekBarController.setSeekBarEndText("100");
-    seekBarController.setProgressText(volume + "");
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("0")
+        .end("100")
+        .progress(volume)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, 100))
+        .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
+          }
 
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekBarController.setProgressText(progress + "");
-        setClipVolume(progress);
-      }
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
-      }
-    });
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+            setClipVolume(progress);
+          }
+        }));
   }
 
   @Override public void onClick(View v) {
-    int toVolume = seekBarController.getSeekBarProgress();
-    setClipVolume(toVolume);
     dismissMenu();
   }
 

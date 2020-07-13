@@ -61,7 +61,7 @@ public class EffectAddAdapter extends RecyclerView.Adapter<EffectAddAdapter.Temp
   public TemplateHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     return new TemplateHolder(
         LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.view_home_sample_template_list_item, parent, false));
+            .inflate(R.layout.view_home_sample_template_list_item_square, parent, false));
   }
 
   @Override
@@ -73,7 +73,6 @@ public class EffectAddAdapter extends RecyclerView.Adapter<EffectAddAdapter.Temp
       XytInfo xytInfo = XytManager.getXytInfo(item.getTemplateId());
       holder.mTextView.setText(xytInfo.getTitle(mContext.getResources().getConfiguration().locale));
     }
-    boolean isSelected = false;
     if (item.getThumbnailResId() <= 0) {
       final String filterPath = XytManager.getXytInfo(item.getTemplateId()).filePath;
       int thumbWidth = DPUtils.dpToPixel(holder.mImageView.getContext(), 60);
@@ -103,16 +102,12 @@ public class EffectAddAdapter extends RecyclerView.Adapter<EffectAddAdapter.Temp
           })
           .into(holder.mImageView);
     }
-    holder.mImageView.setSelected(isSelected);
-    holder.mImageView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (mOnItemClickListener != null) {
-          mOnItemClickListener.onItemSelected(item);
-        } else {
-          item.onClick((Activity) mContext);
-          mBaseMenuView.dismissMenu();
-        }
+    holder.mImageView.setOnClickListener(v -> {
+      if (mOnItemClickListener != null) {
+        mOnItemClickListener.onItemSelected(item);
+      } else {
+        item.onClick((Activity) mContext);
+        mBaseMenuView.dismissMenu();
       }
     });
   }

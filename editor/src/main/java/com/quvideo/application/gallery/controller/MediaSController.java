@@ -35,10 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/2/2019
- */
 public class MediaSController extends BaseController<IMedia> {
 
   private static final String TAG = "MediaSController";

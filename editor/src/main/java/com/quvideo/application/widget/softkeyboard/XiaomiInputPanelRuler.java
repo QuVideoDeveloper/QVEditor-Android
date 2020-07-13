@@ -8,9 +8,6 @@ import android.view.Display;
 import android.view.WindowManager;
 import java.lang.reflect.Method;
 
-/**
- * Created by {@author xiawenhui} on 2019-12-10.
- */
 public class XiaomiInputPanelRuler extends BaseInputPanelRuler{
   @Override public int getDifference(Context ctx, Rect r) {
     int diff = super.getDifference(ctx,r);

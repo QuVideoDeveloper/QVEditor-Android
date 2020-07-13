@@ -19,9 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.quvideo.application.DPUtils;
 import com.quvideo.application.editor.R;
@@ -109,28 +107,22 @@ public class SimpleTemplateAdapter
         String thumbnail = xytInfo.filePath.replace("assets_android://", "file:///android_asset/")
             .replace(".xyt", "/thumbnail.webp");
         Uri uri = Uri.parse(thumbnail);
-        int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
         Glide.with(holder.mImageView)
             .load(uri)
-            .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
             .into(holder.mImageView);
       } else {
         final String filterPath = XytManager.getXytInfo(item.getTemplateId()).filePath;
         int thumbWidth = DPUtils.dpToPixel(holder.mImageView.getContext(), 60);
         int thumbHeight = DPUtils.dpToPixel(holder.mImageView.getContext(), 68);
-        int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
         EffectThumbParams effectThumbParams =
             new EffectThumbParams(filterPath, thumbWidth, thumbHeight);
         Glide.with(holder.mImageView)
             .load(effectThumbParams)
-            .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
             .into(holder.mImageView);
       }
     } else {
-      int thumbRoundedCorners = DPUtils.dpFloatToPixel(holder.mImageView.getContext(), 4);
       Glide.with(mActivity)
           .load(item.getThumbnailResId())
-          .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
           .listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable final GlideException e, final Object model,

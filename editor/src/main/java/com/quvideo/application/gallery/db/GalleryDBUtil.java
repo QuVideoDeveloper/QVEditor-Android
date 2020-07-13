@@ -6,11 +6,6 @@ import com.quvideo.application.gallery.model.MediaModel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @desc gallery db util
- * @since 6/27/2019
- */
 public class GalleryDBUtil {
 
   public static void initDB(Context context) {

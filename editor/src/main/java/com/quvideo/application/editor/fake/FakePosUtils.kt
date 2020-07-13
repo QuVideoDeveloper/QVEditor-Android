@@ -8,10 +8,6 @@ import com.quvideo.mobile.engine.model.effect.EffectMaskInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 object FakePosUtils {
 
   /**

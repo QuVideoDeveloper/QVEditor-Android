@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc 名副其实的smooth(润滑型)LinearLayoutManager
- * @since 2018/4/28
  */
 public class SmoothLayoutManager extends LinearLayoutManager {
 

@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Wed, 08 Jul 2020 14:33:50 +0800
+ Exported at: Fri, 10 Jul 2020 10:54:50 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -13,13 +13,16 @@
     <string name="mn_app_brvah_loading">正在加载中...</string>
     <string name="mn_app_cancel">取消</string>
     <string name="mn_app_confirm">确认</string>
+    <string name="mn_app_contact_us">联系我们</string>
     <string name="mn_app_done">完成</string>
     <string name="mn_app_home_title">开始制作</string>
     <string name="mn_app_mode_camera">视频录制</string>
     <string name="mn_app_mode_editor">视频剪辑</string>
     <string name="mn_app_mode_template">卡点视频</string>
+    <string name="mn_app_privacy_title">隐私协议</string>
     <string name="mn_app_setting">设置</string>
     <string name="mn_app_splash_slogan">轻松剪辑 自在表达</string>
+    <string name="mn_app_user_terms">用户协议</string>
     <string name="mn_cam_func_add_bgm">添加音乐</string>
     <string name="mn_cam_func_camera_id_switch">切换</string>
     <string name="mn_cam_func_exposure">曝光补偿</string>

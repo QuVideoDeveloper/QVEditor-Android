@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by wangjieming on 19/12/2017.
  * 代理申请权限的页面.透明的。
  * shouldShowRequestPermissionRationale 关键方法说明:
  * 申请权限前 false -->  申请后 true  第一次被拒绝

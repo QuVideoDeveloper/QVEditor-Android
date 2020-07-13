@@ -18,10 +18,6 @@ import com.quvideo.application.gallery.model.MediaModel;
 import com.quvideo.application.gallery.utils.GSizeUtil;
 import com.quvideo.application.gallery.utils.GalleryUtil;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/2/2019
- */
 public class GalleryViewHolder extends BaseViewHolder {
 
   private LinearLayout mOrderLayout;

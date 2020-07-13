@@ -59,6 +59,8 @@ class CamControlViewMgr {
   private AppCompatTextView btnAddMusic;
   private AppCompatImageView btnBack;
 
+  private View layoutRecorder;
+
   private boolean isRatioValid = true;
 
   void bindView(@NonNull final Activity activity,
@@ -178,10 +180,20 @@ class CamControlViewMgr {
     if (!EditorApp.Companion.getInstance().getEditorConfig().isMusicRecorderValid()) {
       btnAddMusic.setVisibility(View.GONE);
     }
+
+    layoutRecorder = activity.findViewById(R.id.layoutRecorder);
   }
 
   void showView() {
     rootView.setVisibility(View.VISIBLE);
+  }
+
+  void hideRecordBtn() {
+    layoutRecorder.setVisibility(View.INVISIBLE);
+  }
+
+  void showRecordBtn() {
+    layoutRecorder.setVisibility(View.VISIBLE);
   }
 
   void hideView() {

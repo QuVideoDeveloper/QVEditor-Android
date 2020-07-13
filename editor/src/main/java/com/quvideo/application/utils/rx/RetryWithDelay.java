@@ -5,9 +5,7 @@ import io.reactivex.functions.Function;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc rx error retrywhen with delay timemillis
- * @since 2018/7/6
  */
 
 public class RetryWithDelay implements Function<Observable<? extends Throwable>, Observable<?>> {

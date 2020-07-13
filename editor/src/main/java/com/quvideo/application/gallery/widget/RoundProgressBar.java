@@ -8,10 +8,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/12/2019
- */
 public class RoundProgressBar extends View {
   /**
    * 画笔对象的引用

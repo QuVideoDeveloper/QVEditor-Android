@@ -11,10 +11,6 @@ import com.quvideo.application.editor.fake.FakePosInfo
 import com.quvideo.application.editor.fake.IFakeDraw
 import com.quvideo.application.utils.DeviceSizeUtil
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 class ChromaDraw : IFakeDraw() {
 
   /**

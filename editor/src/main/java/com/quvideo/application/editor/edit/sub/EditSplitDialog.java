@@ -2,12 +2,12 @@ package com.quvideo.application.editor.edit.sub;
 
 import android.content.Context;
 import android.view.View;
-import com.quvideo.application.editor.R;
 import com.quvideo.application.TimeFormatUtil;
+import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPSplit;
@@ -15,7 +15,7 @@ import xiaoying.utils.LogUtils;
 
 public class EditSplitDialog extends BaseMenuView {
 
-  private EditSeekBarController seekBarController;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   private int clipIndex = 0;
 
@@ -23,8 +23,6 @@ public class EditSplitDialog extends BaseMenuView {
       IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
-
-    seekBarController = new EditSeekBarController();
     showMenu(container, l);
   }
 
@@ -37,9 +35,7 @@ public class EditSplitDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    seekBarController.setTitle(context.getString(R.string.mn_edit_split_progress_title));
-
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     initData();
   }
 
@@ -48,9 +44,11 @@ public class EditSplitDialog extends BaseMenuView {
 
   private void initData() {
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-    seekBarController.setSeekBarStartText(TimeFormatUtil.INSTANCE.formatTime(0));
-    seekBarController.setSeekBarEndText(
-        TimeFormatUtil.INSTANCE.formatTime(clipData.getTrimRange().getTimeLength()));
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start(TimeFormatUtil.INSTANCE.formatTime(0))
+        .end(TimeFormatUtil.INSTANCE.formatTime(clipData.getTrimRange().getTimeLength()))
+        .progress(0)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, clipData.getTrimRange().getTimeLength())));
   }
 
   @Override public void onClick(View v) {
@@ -58,12 +56,11 @@ public class EditSplitDialog extends BaseMenuView {
   }
 
   private void splitClip() {
-    int progress = seekBarController.getSeekBarProgress();
-    if (progress != 0 && progress != 100) {
-      ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-      int splitTime = progress * clipData.getTrimRange().getTimeLength() / 100;
-      LogUtils.d("ClipOP", "split time = " + splitTime);
-      ClipOPSplit clipOPSplit = new ClipOPSplit(clipIndex, splitTime);
+    ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
+    int progress = mCustomSeekbarPop.getProgress();
+    if (progress != 0 && progress != clipData.getTrimRange().getTimeLength()) {
+      LogUtils.d("ClipOP", "split time = " + progress);
+      ClipOPSplit clipOPSplit = new ClipOPSplit(clipIndex, progress);
       mWorkSpace.handleOperation(clipOPSplit);
     }
 

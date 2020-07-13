@@ -17,6 +17,7 @@ public class EffectBarItem {
   public static final int ACTION_MOSAIC_DEGREE = 9;
   public static final int ACTION_DUPLICATE = 10;
   public static final int ACTION_DEL = 11;
+  public static final int ACTION_CUT = 12;
 
   private int action;
   private int resId;

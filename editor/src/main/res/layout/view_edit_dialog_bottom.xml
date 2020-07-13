@@ -12,7 +12,7 @@
         android:text="@string/mn_edit_title_volume"
         android:layout_gravity="center"
         android:textSize="14sp"
-        android:textColor="#E6E6E6"/>
+        android:textColor="@color/color_ffe6e6e6"/>
     <ImageView
         android:id="@+id/confirm"
         android:layout_width="wrap_content"

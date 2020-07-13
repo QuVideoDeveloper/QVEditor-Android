@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc gallery size model
- * @since 6/10/2019
  */
 public class GSzie implements Parcelable {
   /** The width. */

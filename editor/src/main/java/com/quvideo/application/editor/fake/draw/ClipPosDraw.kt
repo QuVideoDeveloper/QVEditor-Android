@@ -4,10 +4,6 @@ import android.graphics.Canvas
 import com.quvideo.application.editor.fake.FakePosInfo
 import com.quvideo.application.editor.fake.IFakeDraw
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 class ClipPosDraw : IFakeDraw() {
 
   override fun drawView(

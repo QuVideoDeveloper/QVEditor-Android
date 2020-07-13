@@ -24,10 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/11/2019
- */
 public class GalleryFileController extends BaseController<IGalleryFile> {
   private Disposable compressDisposable, dismissDownloadDialogDisposable;
 

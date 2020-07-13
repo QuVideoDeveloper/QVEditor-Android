@@ -10,10 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.quvideo.application.editor.R;
 
-/**
- * Create by shengsheng(Kyle)
- * on 2019/10/21
- */
 public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
 
   private OnItemMoveListener mItemMoveListener;

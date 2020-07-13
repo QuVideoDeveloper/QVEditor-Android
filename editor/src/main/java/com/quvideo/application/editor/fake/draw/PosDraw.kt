@@ -7,10 +7,6 @@ import android.graphics.RectF
 import com.quvideo.application.editor.fake.FakePosInfo
 import com.quvideo.application.editor.fake.IFakeDraw
 
-/**
- * @author wuzhongyou
- * @date 2020/6/24.
- */
 class PosDraw : IFakeDraw() {
 
   private val targetRectPaint: Paint = Paint().apply {

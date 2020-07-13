@@ -8,8 +8,6 @@ import com.quvideo.application.gallery.model.GalleryDef;
 import com.quvideo.application.gallery.model.MediaModel;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/4/2019
  * 普通样式的BoardView
  */
 public class MediaBoardItemView extends BaseMediaBoardItemView {

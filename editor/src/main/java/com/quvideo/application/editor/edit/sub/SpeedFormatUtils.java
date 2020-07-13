@@ -3,9 +3,6 @@ package com.quvideo.application.editor.edit.sub;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-/**
- * Create by zhengjunfei on 2019-10-26
- */
 public class SpeedFormatUtils {
 
   public static String mathSpeedText(int progress, int maxProgress) {

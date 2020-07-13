@@ -5,10 +5,6 @@ import android.text.TextUtils;
 import com.quvideo.application.utils.FileUtils;
 import java.io.File;
 
-/**
- * @author wangjieming
- * @date 2019-10-16.
- */
 public class StorageUtils {
 
   private static final String PATH_ROOT = ".demo/";

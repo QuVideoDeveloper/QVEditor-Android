@@ -14,8 +14,6 @@ import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 
 /**
- * @author wangjieming
- * @date 2019-05-17.
  */
 public class GlideUtils {
 

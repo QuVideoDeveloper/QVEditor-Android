@@ -13,10 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 8/30/2019
- */
 public class MediaAdapter
     extends BaseMultiItemQuickAdapter<PinnedHeaderEntity<MediaModel>, GalleryViewHolder> {
 

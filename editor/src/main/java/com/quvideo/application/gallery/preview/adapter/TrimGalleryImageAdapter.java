@@ -14,9 +14,6 @@ import com.quvideo.application.gallery.utils.GSizeUtil;
 import com.quvideo.application.gallery.widget.trim.VeGallery;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2019/9/17
- */
 public class TrimGalleryImageAdapter extends BaseAdapter {
   private Context mContext;
   private int mItemWidth;

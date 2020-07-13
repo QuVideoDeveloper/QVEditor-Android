@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc gallery range model
- * @since 5/25/2019
  */
 public class GRange implements Parcelable, Comparable<GRange> {
   private int mLeftValue;

@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * @author Elijah <a href="zhonghu.liu@quvideo.com">Contact me.</a>
- * @since 2018/1/24
  */
 public class DragItemTouchCallback extends ItemTouchHelper.Callback {
 

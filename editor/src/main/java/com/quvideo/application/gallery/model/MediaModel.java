@@ -5,10 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.Gson;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/2/2019
- */
 public class MediaModel implements Parcelable {
   private String id;
   private @GalleryDef.SourceType int sourceType;

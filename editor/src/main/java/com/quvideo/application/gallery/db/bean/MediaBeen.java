@@ -10,10 +10,6 @@ import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.converter.PropertyConverter;
 import org.greenrobot.greendao.annotation.Generated;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 6/27/2019
- */
 @androidx.annotation.Keep @Entity(nameInDb = "Media") public class MediaBeen {
   @Id(autoincrement = true) @Property(nameInDb = "_id") public Long _id;
 

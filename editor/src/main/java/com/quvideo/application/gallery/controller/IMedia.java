@@ -9,10 +9,6 @@ import com.quvideo.application.gallery.model.MediaModel;
 import com.quvideo.application.utils.mvp.MvpView;
 import java.util.List;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/2/2019
- */
 public interface IMedia extends MvpView {
 
   Activity getActivity();

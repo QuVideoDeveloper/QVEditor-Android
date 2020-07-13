@@ -2,11 +2,6 @@ package com.quvideo.application.gallery.preview.utils;
 
 import java.util.Locale;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @desc
- * @since 2019/5/18
- */
 public class TimeUtil {
 
   public static String getFloatFormatDuration(int duration) {

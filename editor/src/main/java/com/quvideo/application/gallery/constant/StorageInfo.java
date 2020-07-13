@@ -9,9 +9,6 @@ import com.quvideo.application.utils.MD5;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Create by zhengjunfei on 2019/9/2
- */
 public class StorageInfo {
 
   private static ArrayList<String> mStorageList = null;

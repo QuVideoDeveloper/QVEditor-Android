@@ -1,10 +1,5 @@
 package com.quvideo.application.utils.image;
 
-/**
- * @author wangjieming
- * @date 2019-05-17.
- */
-
 import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

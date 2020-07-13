@@ -16,10 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 9/4/2019
- */
 public class MediaBoardAdapter extends RecyclerView.Adapter<MediaBoardAdapter.ClipViewHolder>
     implements DragItemTouchCallback.ItemTouchAdapter {
   private Context context;

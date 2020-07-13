@@ -36,30 +36,16 @@
       app:layout_constraintStart_toStartOf="parent"
       />
 
-  <include
-      layout="@layout/view_edit_seekbar"
-      android:id="@+id/seekbar_end"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
+  <com.quvideo.application.widget.seekbar.CustomSeekbarPop
+      android:id="@+id/seekbar_cut"
+      android:layout_width="match_parent"
+      android:layout_height="20dp"
       android:layout_marginBottom="52dp"
       android:layout_marginEnd="20dp"
       android:layout_marginStart="20dp"
       app:layout_constraintBottom_toTopOf="@id/layout_bottom"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      />
-
-  <include
-      layout="@layout/view_edit_seekbar"
-      android:id="@+id/seekbar_start"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="20dp"
-      android:layout_marginStart="20dp"
-      app:layout_constraintBottom_toTopOf="@+id/seekbar_end"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      />
+      app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -7,9 +7,7 @@ import android.animation.TimeInterpolator;
 import android.view.View;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc Pop Animation  util
- * @since 2019/5/13
  */
 public class AnimatorUtils {
 

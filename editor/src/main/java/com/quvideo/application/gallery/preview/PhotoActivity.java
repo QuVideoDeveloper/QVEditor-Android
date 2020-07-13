@@ -29,9 +29,6 @@ import com.quvideo.application.utils.rx.RxViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Create by zhengjunfei on 2019/9/12
- */
 public class PhotoActivity extends AppCompatActivity
     implements PhotoPagerAdapter.PhotoCropperCallback {
   public static final String INTENT_PHOTO_LIST_KEY = "intent_photo_list_key";

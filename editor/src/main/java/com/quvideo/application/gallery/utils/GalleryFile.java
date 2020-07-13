@@ -20,10 +20,6 @@ import static com.quvideo.application.gallery.model.GalleryDef.LIMIT_1080P;
 import static com.quvideo.application.gallery.model.GalleryDef.LIMIT_720P;
 import static com.quvideo.application.gallery.model.GalleryDef.LIMIT_VGA;
 
-/**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
- * @since 6/10/2019
- */
 public class GalleryFile {
 
   private static String mMediaPath = "";

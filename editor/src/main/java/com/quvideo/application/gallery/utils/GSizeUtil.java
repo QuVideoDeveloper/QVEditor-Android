@@ -6,9 +6,7 @@ import android.util.TypedValue;
 import androidx.annotation.NonNull;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @desc dp sp Pixel exchange
- * @since 2019/5/13
  */
 public class GSizeUtil {
 
