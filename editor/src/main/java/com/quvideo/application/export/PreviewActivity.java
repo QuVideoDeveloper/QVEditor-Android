@@ -1,7 +1,6 @@
 package com.quvideo.application.export;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
@@ -88,7 +87,7 @@ public class PreviewActivity extends AppCompatActivity {
     ivCover = findViewById(R.id.iv_cover);
     textureView = findViewById(R.id.export_textureview);
     ivPlay = findViewById(R.id.iv_play);
-    tvVideoPath.setText("视频地址: " + videoPath);
+    tvVideoPath.setText(videoPath);
 
     VideoInfo videoInfo = MediaFileUtils.getVideoInfo(videoPath);
     resetViewsParams(videoInfo);
@@ -164,9 +163,9 @@ public class PreviewActivity extends AppCompatActivity {
    */
   private void resetViewsParams(VideoInfo videoInfo) {
     float scale = 1f;
-    int maxW = DeviceSizeUtil.getsScreenWidth();
+    int maxW = DeviceSizeUtil.getScreenWidth();
     int maxH = DeviceSizeUtil.getScreenHeight() * 3 / 4;
-    int minWH = DeviceSizeUtil.getsScreenWidth() * 3 / 4;
+    int minWH = DeviceSizeUtil.getScreenWidth() * 3 / 4;
 
     Rect rectVisiable = new Rect();
     mExportContainerView.getGlobalVisibleRect(rectVisiable);

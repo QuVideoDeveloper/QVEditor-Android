@@ -60,6 +60,10 @@ public class EditTrimDialog extends BaseMenuView {
         .secondProgress(clipData.getTrimRange().getLimitValue())
         .minRange(1)
         .seekRange(new CustomSeekbarPop.SeekRange(start, end))
+        .progressExchange(progress -> {
+          String base = TimeFormatUtil.INSTANCE.formatTime(progress);
+          return base + "." + progress % 1000;
+        })
         .isDoubleMode(true).seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
           @Override public void onSeekStart(boolean isFirst, int progress) {
             isChanged = true;
@@ -87,7 +91,8 @@ public class EditTrimDialog extends BaseMenuView {
         return;
       }
       LogUtils.d("ClipOP", "progressStart = " + progressStart + " , progressEnd = " + progressEnd);
-      ClipOPTrimRange clipOPTrimRange = new ClipOPTrimRange(clipIndex, new VeRange(progressStart, progressEnd - progressStart));
+      ClipOPTrimRange clipOPTrimRange =
+          new ClipOPTrimRange(clipIndex, new VeRange(progressStart, progressEnd - progressStart));
       mWorkSpace.handleOperation(clipOPTrimRange);
     }
     dismissMenu();

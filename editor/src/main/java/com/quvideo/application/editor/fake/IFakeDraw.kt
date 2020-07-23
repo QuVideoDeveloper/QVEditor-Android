@@ -290,18 +290,19 @@ abstract class IFakeDraw {
     // 旋转前的坐标点
     val originalPoint: PointF = FakePosUtils.calcNewPoint(
         PointF(firstLastX, firstLastY),
-        PointF(fakePosInfo!!.centerX, fakePosInfo!!.centerY), -fakePosInfo!!.degrees)
-    if (originalPoint.y <= fakePosInfo!!.centerY - fakePosInfo!!.height / 2 + fakePosInfo!!.height / 10) {
+        PointF(fakePosInfo!!.centerX + fakePosInfo!!.anchorOffsetX, fakePosInfo!!.centerY + fakePosInfo!!.anchorOffsetY),
+        -fakePosInfo!!.degrees)
+    if (originalPoint.y <= fakePosInfo!!.centerY + fakePosInfo!!.anchorOffsetY - fakePosInfo!!.height / 2 + fakePosInfo!!.height / 10) {
       // 正方形的上下两边是拉高的区域,区域上方
       return SINGLE_MODE_SCALE_Y_TOP
-    } else if (originalPoint.y >= fakePosInfo!!.centerY + fakePosInfo!!.height / 2 - fakePosInfo!!.height / 10) {
+    } else if (originalPoint.y >= fakePosInfo!!.centerY + fakePosInfo!!.anchorOffsetY + fakePosInfo!!.height / 2 - fakePosInfo!!.height / 10) {
       // 正方形的上下两边是拉高的区域,区域下方
       return SINGLE_MODE_SCALE_Y_BOTTOM
     } else {
-      if (originalPoint.x <= fakePosInfo!!.centerX - fakePosInfo!!.width / 2 + fakePosInfo!!.width / 10) {
+      if (originalPoint.x <= fakePosInfo!!.centerX + fakePosInfo!!.anchorOffsetX - fakePosInfo!!.width / 2 + fakePosInfo!!.width / 10) {
         // 正方形的左右两边是拉宽的区域,区域右方
         return SINGLE_MODE_SCALE_X_LEFT
-      } else if (originalPoint.x >= fakePosInfo!!.centerX + fakePosInfo!!.width / 2 - fakePosInfo!!.width / 10) {
+      } else if (originalPoint.x >= fakePosInfo!!.centerX + fakePosInfo!!.anchorOffsetX + fakePosInfo!!.width / 2 - fakePosInfo!!.width / 10) {
         return SINGLE_MODE_SCALE_X_RIGHT
       } else {
         // 中间，移动处理
@@ -309,5 +310,4 @@ abstract class IFakeDraw {
       }
     }
   }
-
 }

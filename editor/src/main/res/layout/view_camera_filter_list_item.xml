@@ -6,11 +6,29 @@
   android:paddingTop="18dp"
   android:paddingBottom="18dp">
 
+  <com.quvideo.application.widget.round.RCRelativeLayout
+    android:id="@+id/layoutCover"
+    android:layout_width="60dp"
+    android:layout_height="68dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:round_corner="4dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/imgItem"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop" />
+  </com.quvideo.application.widget.round.RCRelativeLayout>
+
   <androidx.appcompat.widget.AppCompatImageView
-    android:id="@+id/imgItem"
-    android:layout_width="64dp"
-    android:layout_height="72dp"
-    android:padding="2dp"
+    android:id="@+id/imgFocus"
+    android:layout_width="62dp"
+    android:layout_height="70dp"
+    android:background="@drawable/edit_shape_clip_item_sel"
+    android:visibility="gone"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 

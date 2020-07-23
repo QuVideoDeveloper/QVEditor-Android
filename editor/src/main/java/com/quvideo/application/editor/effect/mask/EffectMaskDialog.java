@@ -173,11 +173,11 @@ public class EffectMaskDialog extends BaseEffectMenuView {
         effectMaskInfo = baseEffect.mEffectMaskInfo;
       } else {
         effectMaskInfo = new EffectMaskInfo();
-        effectMaskInfo.centerX = baseEffect.mEffectPosInfo.centerPosX;
-        effectMaskInfo.centerY = baseEffect.mEffectPosInfo.centerPosY;
-        effectMaskInfo.radiusX = baseEffect.mEffectPosInfo.width / 2;
-        effectMaskInfo.radiusY = baseEffect.mEffectPosInfo.height / 2;
-        effectMaskInfo.rotation = baseEffect.mEffectPosInfo.degree;
+        effectMaskInfo.centerX = baseEffect.mEffectPosInfo.center.x;
+        effectMaskInfo.centerY = baseEffect.mEffectPosInfo.center.y;
+        effectMaskInfo.radiusX = baseEffect.mEffectPosInfo.size.x / 2;
+        effectMaskInfo.radiusY = baseEffect.mEffectPosInfo.size.y / 2;
+        effectMaskInfo.rotation = baseEffect.mEffectPosInfo.degree.z;
       }
       effectMaskInfo.reverse = maskItem.reverse;
       effectMaskInfo.maskType = maskItem.maskType;

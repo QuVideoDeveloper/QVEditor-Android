@@ -47,7 +47,7 @@ public class EditClipCropDialog extends BaseMenuView {
   }
 
   @Override public MenuType getMenuType() {
-    return MenuType.EffectMask;
+    return MenuType.ClipCrop;
   }
 
   @Override protected int getCustomLayoutId() {

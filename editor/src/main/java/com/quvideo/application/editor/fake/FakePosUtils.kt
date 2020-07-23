@@ -20,11 +20,49 @@ object FakePosUtils {
     if (fakePosInfo == null || effectPosInfo == null) {
       return
     }
-    effectPosInfo.centerPosX = fakePosInfo.centerX
-    effectPosInfo.centerPosY = fakePosInfo.centerY
-    effectPosInfo.width = fakePosInfo.width
-    effectPosInfo.height = fakePosInfo.height
-    effectPosInfo.degree = fakePosInfo.degrees
+    effectPosInfo.center.x = fakePosInfo.centerX
+    effectPosInfo.center.y = fakePosInfo.centerY
+    effectPosInfo.size.x = fakePosInfo.width
+    effectPosInfo.size.y = fakePosInfo.height
+    effectPosInfo.degree.z = fakePosInfo.degrees
+  }
+
+  /**
+   * FakePosInfo转EffectPosInfo
+   */
+  fun updateEffectPosByFakePos(
+    fakePosInfo: FakePosInfo?,
+    effectPosInfo: EffectPosInfo?,
+    curAxle: Int,
+    oldAnchor: PointF?
+  ) {
+    if (fakePosInfo == null || effectPosInfo == null) {
+      return
+    }
+    effectPosInfo.size.x = fakePosInfo.width
+    effectPosInfo.size.y = fakePosInfo.height
+    if (curAxle == 0) {
+      effectPosInfo.degree.z = fakePosInfo.degrees
+    } else if (curAxle == 1) {
+      effectPosInfo.degree.x = fakePosInfo.degrees
+    } else if (curAxle == 2) {
+      effectPosInfo.degree.y = fakePosInfo.degrees
+    } else {
+      effectPosInfo.degree.z = fakePosInfo.degrees
+    }
+    if (curAxle == 3 && oldAnchor != null) {
+      effectPosInfo.center.x = oldAnchor.x
+      effectPosInfo.center.y = oldAnchor.y
+      val rotatePoint = calcNewPoint(PointF(fakePosInfo.centerX - oldAnchor.x, fakePosInfo.centerY - oldAnchor.y),
+          PointF(0f, 0f), -effectPosInfo.degree.z)
+      effectPosInfo.anchorOffset.x = -rotatePoint.x
+      effectPosInfo.anchorOffset.y = -rotatePoint.y
+    } else {
+      //      val rotatePoint = calcNewPoint(PointF(-effectPosInfo.anchor.x, -effectPosInfo.anchor.y),
+      //          PointF(0f, 0f), effectPosInfo.degree.z)
+      effectPosInfo.center.x = fakePosInfo.centerX
+      effectPosInfo.center.y = fakePosInfo.centerY
+    }
   }
 
   /**
@@ -80,9 +118,9 @@ object FakePosUtils {
     }
     val curRectF = effectPosInfo.rectArea;
     val newPointF = calcNewPoint(PointF(fakePosInfo.centerX, fakePosInfo.centerY),
-        PointF(effectPosInfo.centerPosX, effectPosInfo.centerPosY), effectPosInfo.degree)
-    return PointF(newPointF.x - effectPosInfo.centerPosX + effectPosInfo.width / 2,
-        newPointF.y - effectPosInfo.centerPosY + effectPosInfo.height / 2)
+        PointF(effectPosInfo.center.x, effectPosInfo.center.y), effectPosInfo.degree.z)
+    return PointF(newPointF.x - effectPosInfo.center.x + effectPosInfo.size.x / 2,
+        newPointF.y - effectPosInfo.center.y + effectPosInfo.size.y / 2)
   }
 
   fun distance(event: MotionEvent): Float {

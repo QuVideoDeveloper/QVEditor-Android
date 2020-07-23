@@ -40,7 +40,7 @@ public class EditClipPosInfoDialog extends BaseMenuView {
   }
 
   @Override public MenuType getMenuType() {
-    return MenuType.EffectMask;
+    return MenuType.ClipPosInfo;
   }
 
   @Override protected int getCustomLayoutId() {

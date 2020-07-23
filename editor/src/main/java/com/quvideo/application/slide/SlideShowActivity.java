@@ -59,7 +59,8 @@ public class SlideShowActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_slide_show);
     initView();
-    ArrayList<String> albumChoose = getIntent().getStringArrayListExtra(EditorConst.INTENT_EXT_KEY_ALBUM);
+    ArrayList<String> albumChoose =
+        getIntent().getStringArrayListExtra(EditorConst.INTENT_EXT_KEY_ALBUM);
     long themeId = getIntent().getLongExtra(EditorConst.INTENT_EXT_KEY_SLIDE_THEMEID, 0L);
     if (themeId == 0) {
       ToastUtils.show(this, R.string.mn_edit_tips_template_theme_error, Toast.LENGTH_LONG);
@@ -94,15 +95,15 @@ public class SlideShowActivity extends AppCompatActivity {
         //boolean[] expDialogShowCfgs = new boolean[] { true, bShow720P, bShow1080PItem, false, false };
         ExportChooseDialog dialog = new ExportChooseDialog(SlideShowActivity.this);
         dialog.setOnDialogItemListener(new ExportChooseDialog.OnDialogItemListener() {
-          @Override public void onItemClick(int expType) {
+
+          @Override public void onConfirmExport(ExportParams exportParams) {
             Bitmap bitmap = mSlideWorkSpace.getProjectThumbnail();
-            String thumbnail = "/sdcard/ExportTest/slide_test_thumbnail.jpg";
+            String thumbnail = FileUtils.getFileParentPath(exportParams.outputPath)
+                + FileUtils.getFileName(exportParams.outputPath) + "_thumbnail.jpg";
             FileUtils.saveBitmap(thumbnail, bitmap, 100);
             ExportDialog exportDialog = new ExportDialog();
-            ExportParams exportParams = new ExportParams();
-            exportParams.outputPath = "/sdcard/ExportTest/slideTest.mp4";
-            exportParams.expType = expType;
-            exportDialog.showExporting(SlideShowActivity.this, thumbnail, exportParams, mSlideWorkSpace);
+            exportDialog.showExporting(SlideShowActivity.this, thumbnail, exportParams,
+                mSlideWorkSpace);
           }
         });
         try {
@@ -205,7 +206,8 @@ public class SlideShowActivity extends AppCompatActivity {
       public void onGalleryFileDone(ArrayList<MediaModel> mediaList) {
         super.onGalleryFileDone(mediaList);
         if (mediaList != null && mediaList.size() > 0 && mSlideWorkSpace != null) {
-          SlideOPReplace slideOPReplace = new SlideOPReplace(position, mediaList.get(0).getFilePath());
+          SlideOPReplace slideOPReplace =
+              new SlideOPReplace(position, mediaList.get(0).getFilePath());
           mSlideWorkSpace.handleOperation(slideOPReplace);
         }
       }

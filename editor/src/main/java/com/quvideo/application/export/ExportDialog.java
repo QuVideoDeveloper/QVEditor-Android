@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.Target;
 import com.quvideo.application.EditorApp;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.utils.ToastUtils;
+import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.export.IExportListener;
 import com.quvideo.mobile.engine.model.export.ExportParams;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -37,19 +38,24 @@ public class ExportDialog {
   private Activity mActivity;
 
   private String thumbnail;
+  private VideoInfo videoInfo;
 
   public ExportDialog() {
   }
 
-  public void showExporting(Activity activity, String thumbnail, ExportParams exportParams, ISlideWorkSpace workSpace) {
+  public void showExporting(Activity activity, String thumbnail, ExportParams exportParams,
+      ISlideWorkSpace workSpace) {
     showLoading(activity);
     this.thumbnail = thumbnail;
     workSpace.startExport(exportParams, mIExportListener);
   }
 
-  public void showExporting(Activity activity, String thumbnail, ExportParams exportParams, IQEWorkSpace workSpace) {
+  public void showExporting(Activity activity, String thumbnail, ExportParams exportParams,
+      IQEWorkSpace workSpace) {
     showLoading(activity);
     this.thumbnail = thumbnail;
+    VeMSize size = workSpace.getStoryboardAPI().getStreamSize();
+    videoInfo = new VideoInfo(size.width, size.height, workSpace.getStoryboardAPI().getDuration());
     workSpace.startExport(exportParams, mIExportListener);
   }
 
@@ -85,7 +91,7 @@ public class ExportDialog {
 
       loadingTitle = loadingDialog.findViewById(R.id.tv_title);
       loadingTitle.setVisibility(View.VISIBLE);
-      loadingTitle.setText("开始导出...");
+      loadingTitle.setText(R.string.mn_edit_exporting);
 
       Glide.with(activity).load(R.drawable.loading_icon).listener(new RequestListener<Drawable>() {
         @Override
@@ -133,22 +139,32 @@ public class ExportDialog {
 
     @Override public void onExportRunning(int percent) {
       if (loadingTitle != null) {
-        loadingTitle.setText("导出中:" + percent + "%");
+        String text = EditorApp.Companion.getInstance().app.getString(R.string.mn_edit_exporting)
+            + percent + "%";
+        loadingTitle.setText(text);
       }
     }
 
     @Override public void onExportSuccess(String exportPath) {
+      if (videoInfo != null) {
+        DBUtils.delete(mActivity.getApplicationContext(), exportPath);
+        DBUtils.insert(mActivity.getApplicationContext(), exportPath, videoInfo);
+      }
+
       PreviewActivity.go2PreviewActivity(mActivity, thumbnail, exportPath);
       dismissLoading();
     }
 
     @Override public void onExportCancel() {
-      ToastUtils.show(EditorApp.Companion.getInstance().getApp(), R.string.mn_edit_tips_export_cancel, Toast.LENGTH_LONG);
+      ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+          R.string.mn_edit_tips_export_cancel, Toast.LENGTH_LONG);
       dismissLoading();
     }
 
     @Override public void onExportFailed(int nErrCode, String errMsg) {
-      ToastUtils.show(EditorApp.Companion.getInstance().getApp(), "导出失败：errCode=" + nErrCode + ", errMsg=" + errMsg, Toast.LENGTH_LONG);
+      String text = EditorApp.Companion.getInstance().app.getString(R.string.mn_edit_export_failed)
+          + " ：errCode=" + nErrCode + ", errMsg=" + errMsg;
+      ToastUtils.show(EditorApp.Companion.getInstance().getApp(), text, Toast.LENGTH_LONG);
       dismissLoading();
     }
 

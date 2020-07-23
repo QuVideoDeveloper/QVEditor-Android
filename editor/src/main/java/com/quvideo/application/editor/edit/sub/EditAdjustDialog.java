@@ -91,6 +91,9 @@ public class EditAdjustDialog extends BaseMenuView {
       initAdjustProgress(holder, position);
       holder.seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
         @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+          if (!fromUser) {
+            return;
+          }
           onAdjustChanged(ADJUST_ITEM_TITLE_RES[position], seekBar.getProgress());
         }
 

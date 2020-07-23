@@ -226,6 +226,24 @@ public class FileUtils {
     return outpath;
   }
 
+  /**
+   * get the file name only. ex:(sdcard/test/test.jpg)=test
+   */
+  public static String getFileName(String fullFilePath) {
+    File f = new File(fullFilePath);
+    String strFileName = "";
+    if (f != null) {
+      strFileName = f.getName();
+      if (!TextUtils.isEmpty(strFileName)) {
+        int pos = strFileName.lastIndexOf(".");
+        if (pos > 0) {
+          strFileName = strFileName.substring(0, pos);
+        }
+      }
+    }
+    return strFileName;
+  }
+
   public static void saveBitmap(String fullPath, Bitmap bitmap, int nQuality) {
     if (fullPath == null || bitmap == null) return;
     File f = new File(fullPath);

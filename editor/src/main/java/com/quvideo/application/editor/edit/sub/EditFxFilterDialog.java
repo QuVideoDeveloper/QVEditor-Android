@@ -51,14 +51,12 @@ public class EditFxFilterDialog extends BaseMenuView {
     clipRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
           @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        int dp2 = DPUtils.dpToPixel(getContext(), 2);
         int position = parent.getChildAdapterPosition(view);
         if (position == 0) {
           outRect.left = DPUtils.dpToPixel(getContext(), 16);
         } else {
-          outRect.left = dp2;
+          outRect.left = DPUtils.dpToPixel(getContext(), 8);
         }
-        outRect.right = dp2;
       }
     });
 

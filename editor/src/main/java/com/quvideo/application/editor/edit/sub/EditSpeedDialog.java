@@ -2,20 +2,22 @@ package com.quvideo.application.editor.edit.sub;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPSpeed;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class EditSpeedDialog extends BaseMenuView {
 
-  private EditSeekBarController seekBarController;
+  private CustomSeekbarPop mCustomSeekbarPop;
   private TextView tvProgress;
 
   private int clipIndex = 0;
@@ -25,7 +27,6 @@ public class EditSpeedDialog extends BaseMenuView {
     super(context, workSpace);
     this.clipIndex = clipIndex;
 
-    seekBarController = new EditSeekBarController();
     showMenu(container, l);
   }
 
@@ -38,7 +39,7 @@ public class EditSpeedDialog extends BaseMenuView {
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
     tvProgress = view.findViewById(R.id.tv_progress);
 
     initData();
@@ -48,26 +49,29 @@ public class EditSpeedDialog extends BaseMenuView {
   }
 
   private void initData() {
-    seekBarController.setTitleVisible(false);
-    seekBarController.setSeekBarStartText("0.25x");
-    seekBarController.setSeekBarEndText("4x");
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        tvProgress.setText(SpeedFormatUtils.mathClipSpeedText(progress, 100));
-      }
-
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
-      }
-    });
-
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
     int speed = exchangeScale2Progress(clipData.getTimeScale());
-    seekBarController.setSeekBarProgress(speed);
+    tvProgress.setText(mathClipSpeedText(speed, 100));
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("0.25x")
+        .end("4x")
+        .progress(speed)
+        .seekRange(new CustomSeekbarPop.SeekRange(0, 100))
+        .progressExchange(new CustomSeekbarPop.IProgressExchange() {
+          @Override public String onProgressExchange(int progress) {
+            return mathClipSpeedText(progress, 100);
+          }
+        }).seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
+          @Override public void onSeekStart(boolean isFirst, int progress) {
+          }
+
+          @Override public void onSeekOver(boolean isFirst, int progress) {
+          }
+
+          @Override public void onSeekChange(boolean isFirst, int progress) {
+            tvProgress.setText(mathClipSpeedText(progress, 100));
+          }
+        }));
   }
 
   private int exchangeScale2Progress(float scale) {
@@ -90,7 +94,7 @@ public class EditSpeedDialog extends BaseMenuView {
   }
 
   private void speedClip() {
-    float speedSel = SpeedFormatUtils.mathSpeednValue(seekBarController.getSeekBarProgress(), 100);
+    float speedSel = mathSpeednValue(mCustomSeekbarPop.getProgress(), 100);
     ClipOPSpeed clipOPSpeed = new ClipOPSpeed(clipIndex, 1.0f / speedSel, true);
     mWorkSpace.handleOperation(clipOPSpeed);
 
@@ -100,5 +104,42 @@ public class EditSpeedDialog extends BaseMenuView {
   @Override
   protected String getBottomTitle() {
     return getContext().getString(R.string.mn_edit_title_speed);
+  }
+
+  private static float mathSpeednValue(int progress, int maxProgress) {
+    int halfMaxProgress = maxProgress / 2;
+    if (progress == halfMaxProgress) {
+      return 1f;
+    }
+
+    if (progress < halfMaxProgress) {
+      float scale = 0.25f + 0.75f / halfMaxProgress * progress;
+      scale = Math.round(scale * 100) / 100f;
+      return scale;
+    }
+
+    float scale = 1f + 3f / halfMaxProgress * (progress - halfMaxProgress);
+    scale = Math.round(scale * 10) / 10f;
+    BigDecimal b = new BigDecimal(scale);
+    return b.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+  }
+
+  private static String mathClipSpeedText(int progress, int maxProgress) {
+    int halfMaxProgress = maxProgress / 2;
+    if (progress == halfMaxProgress) {
+      return "1.0";
+    }
+
+    if (progress < halfMaxProgress) {
+      float scale = 0.25f + 0.75f / halfMaxProgress * progress;
+      scale = Math.round(scale * 100) / 100f;
+      DecimalFormat df = new DecimalFormat(scale > 1f ? "#.00" : "0.00");
+      return df.format(scale);
+    }
+
+    float scale = 1f + 3f / halfMaxProgress * (progress - halfMaxProgress);
+    scale = Math.round(scale * 10) / 10f;
+    DecimalFormat df = new DecimalFormat(scale > 1f ? "#.00" : "0.00");
+    return df.format(scale);
   }
 }

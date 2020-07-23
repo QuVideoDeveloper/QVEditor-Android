@@ -24,7 +24,7 @@
 
   <TextView
     android:id="@+id/btnMirror"
-    android:layout_width="64dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:drawableTop="@drawable/editor_tool_transform_mirror_horizontal_nor"
     android:drawablePadding="4dp"
@@ -41,7 +41,7 @@
 
   <TextView
     android:id="@+id/btnFlip"
-    android:layout_width="64dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:drawableTop="@drawable/editor_tool_transform_mirror_vertical_nor"
@@ -57,7 +57,7 @@
 
   <TextView
     android:id="@+id/btnRotation"
-    android:layout_width="64dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:drawableTop="@drawable/edit_icon_rotate_nor"
@@ -73,7 +73,7 @@
 
   <TextView
     android:id="@+id/btnFitIn"
-    android:layout_width="64dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:drawableTop="@drawable/editor_tool_transform_fit_in"
@@ -89,7 +89,7 @@
 
   <TextView
     android:id="@+id/btnFitOut"
-    android:layout_width="64dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:drawableTop="@drawable/editor_tool_transform_fit_out"

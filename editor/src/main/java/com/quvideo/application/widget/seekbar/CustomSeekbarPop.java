@@ -33,13 +33,14 @@ public class CustomSeekbarPop extends RelativeLayout {
 
   private DoubleSeekbar.OnSeekbarListener mSeekOverListener;
 
+  private IProgressExchange mProgressExchange;
+
   private int seekbarY;
   private int tipHalfW;
   private int leftOffset = -1;
 
   private int dp1px;
-  private int dp10px;
-  private int dp15px;
+  private int dp2px;
 
   public CustomSeekbarPop(Context context) {
     super(context);
@@ -70,8 +71,7 @@ public class CustomSeekbarPop extends RelativeLayout {
     progressPopupWin = new ProgressPopupWin(mContext);
 
     dp1px = DeviceSizeUtil.getFitPxFromDp(1);
-    dp10px = dp1px * 10;
-    dp15px = dp1px * 15;
+    dp2px = dp1px * 2;
   }
 
   public void init(InitBuilder initBuilder) {
@@ -105,10 +105,29 @@ public class CustomSeekbarPop extends RelativeLayout {
     updateTipPosition(mSeekBar.getSeekbarPos(true));
     // 这个放更新前面，是因为设置文字有可能需要listener的转换
     mSeekOverListener = initBuilder.seekOverListener;
+    mProgressExchange = initBuilder.progressExchange;
+  }
+
+  public void updateRange(String start, String end, SeekRange seekRange) {
+    if (!TextUtils.isEmpty(start)) {
+      mTvStart.setVisibility(VISIBLE);
+      mTvStart.setText(start);
+    } else {
+      mTvStart.setVisibility(GONE);
+    }
+    if (!TextUtils.isEmpty(end)) {
+      mTvEnd.setVisibility(VISIBLE);
+      mTvEnd.setText(end);
+    } else {
+      mTvEnd.setVisibility(GONE);
+    }
+    if (seekRange != null) {
+      mSeekBar.setProgressRange(seekRange.min, seekRange.max, 1);
+    }
   }
 
   public void setProgress(int progress) {
-     mSeekBar.setFirstProgress(progress);
+    mSeekBar.setFirstProgress(progress);
   }
 
   public int getProgress() {
@@ -124,10 +143,13 @@ public class CustomSeekbarPop extends RelativeLayout {
   }
 
   /**
-   * @param realProgress 真实区间的进度
+   * @param progress 真实区间的进度
    */
-  private void updateProgress(int realProgress) {
-    String value = realProgress + "";
+  private void updateProgress(int progress) {
+    String value = progress + "";
+    if (mProgressExchange != null) {
+      value = mProgressExchange.onProgressExchange(progress);
+    }
     progressPopupWin.setPopValue(value);
   }
 
@@ -162,7 +184,7 @@ public class CustomSeekbarPop extends RelativeLayout {
     if (seekbarY == 0) {
       Rect rectP = new Rect();
       mSeekBar.getGlobalVisibleRect(rectP);
-      seekbarY = rectP.top - (rectP.bottom - rectP.top) - dp15px;
+      seekbarY = rectP.top - (rectP.bottom - rectP.top) - dp2px;
     }
     return seekbarY;
   }
@@ -215,9 +237,9 @@ public class CustomSeekbarPop extends RelativeLayout {
         }
       };
 
-  public interface ISeekOverListener {
-    /** 选择结束 */
-    void onSeekOver(int progress, int seekBegin, boolean fromUser);
+  public interface IProgressExchange {
+    /** 用于需要把获取的进度转换为其他显示值 */
+    String onProgressExchange(int progress);
   }
 
   /**
@@ -234,6 +256,7 @@ public class CustomSeekbarPop extends RelativeLayout {
     int minRange;
     SeekRange seekRange;
     DoubleSeekbar.OnSeekbarListener seekOverListener;
+    IProgressExchange progressExchange;
 
     public InitBuilder() {
     }
@@ -290,6 +313,11 @@ public class CustomSeekbarPop extends RelativeLayout {
      */
     public InitBuilder seekOverListener(DoubleSeekbar.OnSeekbarListener val) {
       seekOverListener = val;
+      return this;
+    }
+
+    public InitBuilder progressExchange(IProgressExchange val) {
+      progressExchange = val;
       return this;
     }
   }

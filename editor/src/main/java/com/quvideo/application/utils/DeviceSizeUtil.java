@@ -22,7 +22,7 @@ public class DeviceSizeUtil {
     return sScreenHeight;
   }
 
-  public static int getsScreenWidth() {
+  public static int getScreenWidth() {
     if (sScreenWidth != 0) {
       return sScreenWidth;
     }

@@ -186,19 +186,15 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatImageView
       android:id="@+id/btnRecorderDone"
-      android:layout_width="60dp"
-      android:layout_height="36dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_marginEnd="20dp"
-      android:layout_marginBottom="36dp"
-      android:background="@drawable/cam_shape_recorder_done_bg"
-      android:gravity="center"
-      android:text="@string/mn_app_done"
-      android:textColor="@android:color/white"
-      android:textSize="12sp"
+      app:srcCompat="@drawable/cam_icon_done"
       android:visibility="invisible"
-      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintBottom_toBottomOf="@id/btnRecording"
+      app:layout_constraintTop_toTopOf="@id/btnRecording"
       app:layout_constraintEnd_toEndOf="parent" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

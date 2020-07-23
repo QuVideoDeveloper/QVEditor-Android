@@ -33,6 +33,7 @@ public class EditTransDialog extends BaseMenuView {
 
   private CustomSeekbarPop mCustomSeekbarPop;
   private int curTransDuration = 0;
+  private String curTransPath = null;
 
   public EditTransDialog(Context context, MenuContainer container,
       IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
@@ -58,14 +59,12 @@ public class EditTransDialog extends BaseMenuView {
     clipRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
           @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        int dp2 = DPUtils.dpToPixel(getContext(), 2);
         int position = parent.getChildAdapterPosition(view);
         if (position == 0) {
           outRect.left = DPUtils.dpToPixel(getContext(), 16);
         } else {
-          outRect.left = dp2;
+          outRect.left = DPUtils.dpToPixel(getContext(), 8);
         }
-        outRect.right = dp2;
       }
     });
 
@@ -91,15 +90,6 @@ public class EditTransDialog extends BaseMenuView {
 
           @Override public void onSeekChange(boolean isFirst, int progress) {
             curTransDuration = progress;
-            ClipData oldClipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
-            if (oldClipData != null) {
-              CrossInfo crossInfo = oldClipData.getCrossInfo();
-              if (crossInfo != null) {
-                crossInfo.duration = curTransDuration;
-                ClipOPTrans clipOPTrans = new ClipOPTrans(clipIndex, crossInfo);
-                mWorkSpace.handleOperation(clipOPTrans);
-              }
-            }
           }
         }));
 
@@ -114,6 +104,7 @@ public class EditTransDialog extends BaseMenuView {
             mCustomSeekbarPop.setVisibility(select == 0 ? INVISIBLE : VISIBLE);
           }
           curTransDuration = clipData.getCrossInfo().duration;
+          curTransPath = clipData.getCrossInfo().crossPath;
           break;
         }
         select++;
@@ -126,21 +117,20 @@ public class EditTransDialog extends BaseMenuView {
   }
 
   private void applyTemplate(SimpleTemplate template) {
-    CrossInfo crossInfo;
     if (template.getTemplateId() <= 0) {
       // 无转场
-      crossInfo = null;
+      curTransPath = null;
       curTransDuration = 0;
       mCustomSeekbarPop.setProgress(curTransDuration);
       mCustomSeekbarPop.setVisibility(INVISIBLE);
     } else {
       XytInfo info = XytManager.getXytInfo(template.getTemplateId());
       curTransDuration = getTranDftDuration(info.getFilePath());
-      crossInfo = new CrossInfo(info.getFilePath(), curTransDuration, 0);
+      mCustomSeekbarPop.setProgress(curTransDuration);
+      curTransPath = info.getFilePath();
       if (isTransDurationEditable(info.getFilePath())) {
         if (curTransDuration == 0) {
           curTransDuration = 1500;
-          crossInfo.duration = curTransDuration;
         }
         mCustomSeekbarPop.setVisibility(VISIBLE);
         mCustomSeekbarPop.setProgress(curTransDuration);
@@ -148,11 +138,15 @@ public class EditTransDialog extends BaseMenuView {
         mCustomSeekbarPop.setVisibility(INVISIBLE);
       }
     }
-    ClipOPTrans clipOPTrans = new ClipOPTrans(clipIndex, crossInfo);
-    mWorkSpace.handleOperation(clipOPTrans);
   }
 
   @Override public void onClick(View v) {
+    CrossInfo crossInfo = null;
+    if (!TextUtils.isEmpty(curTransPath)) {
+      crossInfo = new CrossInfo(curTransPath, curTransDuration, 0);
+    }
+    ClipOPTrans clipOPTrans = new ClipOPTrans(clipIndex, crossInfo);
+    mWorkSpace.handleOperation(clipOPTrans);
     dismissMenu();
   }
 

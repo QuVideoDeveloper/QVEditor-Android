@@ -65,37 +65,45 @@ class ChromaDraw : IFakeDraw() {
   ) {
     canvas.save()
     //画外描边
-    canvas.drawCircle(fakePosInfo.centerX, fakePosInfo.centerY, outerRadius, strokePaint)
+    canvas.drawCircle(fakePosInfo.centerX - fakePosInfo.anchorOffsetX, fakePosInfo.centerY - fakePosInfo.anchorOffsetY,
+        outerRadius, strokePaint)
     //画圆环
-    canvas.drawCircle(fakePosInfo.centerX, fakePosInfo.centerY, strokeRadius, colorPaint)
+    canvas.drawCircle(fakePosInfo.centerX - fakePosInfo.anchorOffsetX, fakePosInfo.centerY - fakePosInfo.anchorOffsetY,
+        strokeRadius, colorPaint)
     //画内描边
-    canvas.drawCircle(fakePosInfo.centerX, fakePosInfo.centerY, innerRadius, strokePaint)
+    canvas.drawCircle(fakePosInfo.centerX - fakePosInfo.anchorOffsetX, fakePosInfo.centerY - fakePosInfo.anchorOffsetY,
+        innerRadius, strokePaint)
 
     //十字线左边
     boundRectF.set(
-        fakePosInfo.centerX - colorStrokeWidth, fakePosInfo.centerY - dp1px / 2,
-        fakePosInfo.centerX - dp1px,
-        fakePosInfo.centerY + dp1px / 2
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX - colorStrokeWidth,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY - dp1px / 2,
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX - dp1px,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY + dp1px / 2
     )
     canvas.drawRoundRect(boundRectF, dp1px / 2, dp1px / 2, normalPaint)
     //十字线右边
     boundRectF.set(
-        fakePosInfo.centerX + dp1px, fakePosInfo.centerY - dp1px / 2, fakePosInfo.centerX + colorStrokeWidth,
-        fakePosInfo.centerY + dp1px / 2
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX + dp1px,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY - dp1px / 2,
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX + colorStrokeWidth,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY + dp1px / 2
     )
     canvas.drawRoundRect(boundRectF, dp1px / 2, dp1px / 2, normalPaint)
     //十字线上边
     boundRectF.set(
-        fakePosInfo.centerX - dp1px / 2, fakePosInfo.centerY - colorStrokeWidth,
-        fakePosInfo.centerX + dp1px / 2,
-        fakePosInfo.centerY - dp1px
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX - dp1px / 2,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY - colorStrokeWidth,
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX + dp1px / 2,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY - dp1px
     )
     canvas.drawRoundRect(boundRectF, dp1px / 2, dp1px / 2, normalPaint)
     //十字线下边
     boundRectF.set(
-        fakePosInfo.centerX - dp1px / 2, fakePosInfo.centerY + dp1px,
-        fakePosInfo.centerX + dp1px / 2,
-        fakePosInfo.centerY + colorStrokeWidth
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX - dp1px / 2,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY + dp1px,
+        fakePosInfo.centerX - fakePosInfo.anchorOffsetX + dp1px / 2,
+        fakePosInfo.centerY - fakePosInfo.anchorOffsetY + colorStrokeWidth
     )
     canvas.drawRoundRect(boundRectF, dp1px / 2, dp1px / 2, normalPaint)
     canvas.restore()

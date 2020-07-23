@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Fri, 10 Jul 2020 10:54:50 +0800
+ Exported at: Mon, 20 Jul 2020 09:56:14 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -16,6 +16,7 @@
     <string name="mn_app_contact_us">Contact us\u0020</string>
     <string name="mn_app_done">Done</string>
     <string name="mn_app_home_title">Create</string>
+    <string name="mn_app_import">import</string>
     <string name="mn_app_mode_camera">Camera</string>
     <string name="mn_app_mode_editor">Editor</string>
     <string name="mn_app_mode_template">Template</string>
@@ -36,22 +37,38 @@
     <string name="mn_edit_adjust_highlight">Highlight</string>
     <string name="mn_edit_adjust_hue">Hue</string>
     <string name="mn_edit_adjust_luminance">Luminance</string>
+    <string name="mn_edit_adjust_noise">Noise</string>
     <string name="mn_edit_adjust_saturation">Saturation</string>
     <string name="mn_edit_adjust_shadow">Shadow</string>
     <string name="mn_edit_adjust_sharpness">Sharpness</string>
     <string name="mn_edit_adjust_vignette">Vignette</string>
     <string name="mn_edit_alpha_change">Alpha</string>
     <string name="mn_edit_back_home">Home</string>
+    <string name="mn_edit_background_blur">Blur</string>
+    <string name="mn_edit_background_color">Color</string>
+    <string name="mn_edit_background_custom">Custom</string>
+    <string name="mn_edit_background_gradual">Gradual</string>
     <string name="mn_edit_bgm_edit">Edit</string>
     <string name="mn_edit_change_style">Change Style</string>
     <string name="mn_edit_change_zoom">Zoom</string>
     <string name="mn_edit_chroma_accuracy">Accurate</string>
     <string name="mn_edit_clip_transform_fit_in">fit</string>
     <string name="mn_edit_clip_transform_fit_out">fill</string>
+    <string name="mn_edit_common_cancel">No</string>
+    <string name="mn_edit_common_yes">Yes</string>
+    <string name="mn_edit_dubbing_music_downmountain">down mountain</string>
     <string name="mn_edit_duplicate_title">Duplicate</string>
     <string name="mn_edit_effect_position">Position</string>
     <string name="mn_edit_exit_confirm_content">exit？</string>
+    <string name="mn_edit_export_bitrate">Bitrate</string>
+    <string name="mn_edit_export_failed">Export failed</string>
+    <string name="mn_edit_export_format">Format</string>
+    <string name="mn_edit_export_fps">Fps</string>
+    <string name="mn_edit_export_hardware">Hardware</string>
     <string name="mn_edit_export_resolution">Resolution</string>
+    <string name="mn_edit_export_soft_hard">Soft-Hardware</string>
+    <string name="mn_edit_export_software">Software</string>
+    <string name="mn_edit_exporting">Exporting...</string>
     <string name="mn_edit_mask_invert">Invert</string>
     <string name="mn_edit_mask_linear">Linear</string>
     <string name="mn_edit_mask_mirror">Mirror</string>
@@ -59,9 +76,11 @@
     <string name="mn_edit_mask_rectangle">Rectangle</string>
     <string name="mn_edit_mosaic_degree">Degree</string>
     <string name="mn_edit_none">None</string>
+    <string name="mn_edit_quit_confirm_title">Are you sure to quit editing? The edit will not be saved after exiting.</string>
     <string name="mn_edit_reset">Reset</string>
     <string name="mn_edit_reset_text">reset</string>
     <string name="mn_edit_split_progress_title">Split</string>
+    <string name="mn_edit_split_splitpoint">split point</string>
     <string name="mn_edit_subtitle_input">Input</string>
     <string name="mn_edit_tips_cannot_operate">Operation failed</string>
     <string name="mn_edit_tips_error_params">Error parameter</string>
@@ -75,6 +94,11 @@
     <string name="mn_edit_tips_no_support">Operation is not support</string>
     <string name="mn_edit_tips_template_theme_error">Theme error</string>
     <string name="mn_edit_title_adjust">Adjust</string>
+    <string name="mn_edit_title_axle_anchor">Anchor</string>
+    <string name="mn_edit_title_axle_x">X Axle</string>
+    <string name="mn_edit_title_axle_y">Y Axle</string>
+    <string name="mn_edit_title_axle_z">Z Axle</string>
+    <string name="mn_edit_title_background">Background</string>
     <string name="mn_edit_title_bgm">Music</string>
     <string name="mn_edit_title_change_voice">Voice</string>
     <string name="mn_edit_title_chroma">Chroma</string>

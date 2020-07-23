@@ -54,6 +54,7 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioReplace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPCopy;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPMirror;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPPosInfo;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
@@ -155,7 +156,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
     mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
           @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        int dp2 = DPUtils.dpToPixel(getContext(), 2);
+        int dp2 = DPUtils.dpToPixel(getContext(), 4);
         outRect.left = dp2;
         outRect.right = dp2;
       }
@@ -251,15 +252,28 @@ public class EditEffectDialog extends BaseEffectMenuView {
           }
           break;
         case EffectBarItem.ACTION_MIRROR:
+          //if (baseEffect instanceof SubtitleEffect) {
+          //  if (((SubtitleEffect) baseEffect).getTextBubbleInfo().isDftTemplate) {
+          //    // 默认字幕背景素材，不支持镜像翻转
+          //    ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+          //        getContext().getString(R.string.mn_edit_tips_no_support),
+          //        Toast.LENGTH_LONG);
+          //    return;
+          //  }
+          //}
           if (baseEffect instanceof FloatEffect) {
-            EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
-            if ((int) (Math.random() * 10f) % 2 == 0) {
-              effectPosInfo.isHorFlip = !effectPosInfo.isHorFlip;
+            FloatEffect.Mirror mirror = ((FloatEffect) baseEffect).mMirror;
+            if (mirror == FloatEffect.Mirror.EFFECT_FLIP_NONE) {
+              mirror = FloatEffect.Mirror.EFFECT_FLIP_X;
+            } else if (mirror == FloatEffect.Mirror.EFFECT_FLIP_X) {
+              mirror = FloatEffect.Mirror.EFFECT_FLIP_XY;
+            } else if (mirror == FloatEffect.Mirror.EFFECT_FLIP_XY) {
+              mirror = FloatEffect.Mirror.EFFECT_FLIP_Y;
             } else {
-              effectPosInfo.isVerFlip = !effectPosInfo.isVerFlip;
+              mirror = FloatEffect.Mirror.EFFECT_FLIP_NONE;
             }
-            EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, effectPosInfo);
-            mWorkSpace.handleOperation(effectOPPosInfo);
+            EffectOPMirror effectOPMirror = new EffectOPMirror(groupId, index, mirror);
+            mWorkSpace.handleOperation(effectOPMirror);
           } else {
             ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
                 getContext().getString(R.string.mn_edit_tips_no_support),
@@ -276,6 +290,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_MOSAIC_DEGREE:
           new EditEffectMosaicDegreeDialog(getContext(), mMenuContainer, mWorkSpace, groupId,
               index);
+          break;
+        case EffectBarItem.ACTION_ROTATE_AXLE:
+          new EffectRotateAxleDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
           break;
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
@@ -374,7 +391,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
             mEffectAdapter.setSelectIndex(-1);
             return;
           }
-
           for (int i = 0; i < list.size(); i++) {
             BaseEffect effect = list.get(i);
             EffectPosInfo effectPosInfo = ((FloatEffect) effect).mEffectPosInfo;
@@ -437,8 +453,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
           effectAddItem.destRange = new VeRange(currentTime, 0);
           VeMSize streamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
           EffectPosInfo effectPosInfo = new EffectPosInfo();
-          effectPosInfo.centerPosX = streamSize.width * RandomUtil.randInt(1000, 9000) / 10000f;
-          effectPosInfo.centerPosY = streamSize.height * RandomUtil.randInt(1000, 9000) / 10000f;
+          effectPosInfo.center.x = streamSize.width * RandomUtil.randInt(1000, 9000) / 10000f;
+          effectPosInfo.center.y = streamSize.height * RandomUtil.randInt(1000, 9000) / 10000f;
           effectAddItem.mEffectPosInfo = effectPosInfo;
           EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, 0, effectAddItem);
           mWorkSpace.handleOperation(effectOPAdd);
@@ -545,6 +561,15 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_MOSAIC_DEGREE, R.drawable.edit_icon_adjust_nor,
               getContext().getString(R.string.mn_edit_mosaic_degree), isOpEnabled));
+    }
+
+    if (EditorApp.Companion.getInstance().getEditorConfig().isEffectMaskValid()
+        && (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES)) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_ROTATE_AXLE, R.drawable.edit_icon_scale_nor,
+              getContext().getString(R.string.mn_edit_title_rotate), isOpEnabled));
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
         getContext().getString(R.string.mn_edit_title_delete), isOpEnabled));

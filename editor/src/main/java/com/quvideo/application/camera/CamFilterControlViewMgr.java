@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.quvideo.application.DPUtils;
 import com.quvideo.application.editor.R;
 
 class CamFilterControlViewMgr {
@@ -52,9 +53,9 @@ class CamFilterControlViewMgr {
         super.getItemOffsets(outRect, view, parent, state);
         int position = parent.getChildAdapterPosition(view);
         if (position == 0) {
-          outRect.left = 60;
+          outRect.left = DPUtils.dpToPixel(recyclerView.getContext(), 16);
         } else {
-          outRect.left = 15;
+          outRect.left = DPUtils.dpToPixel(recyclerView.getContext(), 8);
         }
       }
     });

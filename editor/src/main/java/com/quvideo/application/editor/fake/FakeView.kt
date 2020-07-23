@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.quvideo.application.editor.fake.draw.ChromaDraw
+import com.quvideo.application.editor.fake.draw.PosDraw
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectMaskInfo
@@ -71,7 +72,7 @@ class FakeView @JvmOverloads constructor(
         (cropRect.top + cropRect.bottom) * scaleHeight / 2 + offsetY,
         (cropRect.right - cropRect.left) * scaleWidth,
         (cropRect.bottom - cropRect.top) * scaleHeight,
-        0F)
+        0F, 0F, 0F)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -92,7 +93,7 @@ class FakeView @JvmOverloads constructor(
         clipPosInfo.centerPosY * scaleHeight + offsetY,
         clipPosInfo.widthScale * size.width * scaleWidth,
         clipPosInfo.heightScale * size.height * scaleHeight,
-        clipPosInfo.degree)
+        clipPosInfo.degree, 0F, 0F)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -107,11 +108,30 @@ class FakeView @JvmOverloads constructor(
       return
     }
     var fakePosInfo = FakePosInfo(
-        effectPosInfo.centerPosX * scaleWidth + offsetX,
-        effectPosInfo.centerPosY * scaleHeight + offsetY,
-        effectPosInfo.width * scaleWidth,
-        effectPosInfo.height * scaleHeight,
-        effectPosInfo.degree)
+        effectPosInfo.center.x * scaleWidth + offsetX,
+        effectPosInfo.center.y * scaleHeight + offsetY,
+        effectPosInfo.size.x * scaleWidth,
+        effectPosInfo.size.y * scaleHeight,
+        effectPosInfo.degree.z, effectPosInfo.anchorOffset.x * scaleWidth, effectPosInfo.anchorOffset.y * scaleHeight)
+    this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
+  }
+
+  override fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?, startDegree: Float) {
+    val fakeLimitPos = FakeLimitPos(RectF(offsetX.toFloat(), offsetY.toFloat(),
+        (measuredWidth - offsetX).toFloat(), (measuredHeight - offsetY).toFloat()),
+        0F,
+        ((measuredWidth - 2 * offsetX) * 2).toFloat(),
+        ((measuredHeight - 2 * offsetY) * 2).toFloat())
+    if (effectPosInfo == null) {
+      this.setTarget(iFakeDraw, null, fakeLimitPos)
+      return
+    }
+    var fakePosInfo = FakePosInfo(
+        effectPosInfo.center.x * scaleWidth + offsetX,
+        effectPosInfo.center.y * scaleHeight + offsetY,
+        effectPosInfo.size.x * scaleWidth,
+        effectPosInfo.size.y * scaleHeight,
+        startDegree, effectPosInfo.anchorOffset.x * scaleWidth, effectPosInfo.anchorOffset.y * scaleHeight)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -129,15 +149,15 @@ class FakeView @JvmOverloads constructor(
     var old = effectPosInfo.rectArea
     fakeLimitPos = FakeLimitPos(RectF(old.left * scaleWidth + offsetX, old.top * scaleHeight + offsetY,
         old.right * scaleWidth + offsetX, old.bottom * scaleHeight + offsetY),
-        effectPosInfo.degree,
-        effectPosInfo.width * 2 * scaleWidth,
-        effectPosInfo.height * 2 * scaleHeight)
+        effectPosInfo.degree.z,
+        effectPosInfo.size.x * 2 * scaleWidth,
+        effectPosInfo.size.y * 2 * scaleHeight)
     var fakePosInfo = FakePosInfo(
-        effectPosInfo.centerPosX * scaleWidth + offsetX,
-        effectPosInfo.centerPosY * scaleHeight + offsetY,
-        effectPosInfo.width * scaleWidth,
-        effectPosInfo.height * scaleHeight,
-        effectPosInfo.degree)
+        effectPosInfo.center.x * scaleWidth + offsetX,
+        effectPosInfo.center.y * scaleHeight + offsetY,
+        effectPosInfo.size.x * scaleWidth,
+        effectPosInfo.size.y * scaleHeight,
+        effectPosInfo.degree.z, effectPosInfo.anchorOffset.x * scaleWidth, effectPosInfo.anchorOffset.y * scaleHeight)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -155,14 +175,14 @@ class FakeView @JvmOverloads constructor(
     var old = effectPosInfo.rectArea
     fakeLimitPos = FakeLimitPos(RectF(old.left * scaleWidth + offsetX, old.top * scaleHeight + offsetY,
         old.right * scaleWidth + offsetX, old.bottom * scaleHeight + offsetY),
-        effectPosInfo.degree,
-        effectPosInfo.width * 2 * scaleWidth,
-        effectPosInfo.height * 2 * scaleHeight)
+        effectPosInfo.degree.z,
+        effectPosInfo.size.x * 2 * scaleWidth,
+        effectPosInfo.size.y * 2 * scaleHeight)
     var fakePosInfo = FakePosInfo(maskInfo.centerX * scaleWidth + offsetX,
         maskInfo.centerY * scaleHeight + offsetY,
         maskInfo.radiusX * 2 * scaleWidth,
         maskInfo.radiusY * 2 * scaleHeight,
-        maskInfo.rotation)
+        maskInfo.rotation, effectPosInfo.anchorOffset.x * scaleWidth, effectPosInfo.anchorOffset.y * scaleHeight)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -173,7 +193,9 @@ class FakeView @JvmOverloads constructor(
         (iFakeDraw!!.fakePosInfo!!.centerY - offsetY) / scaleHeight,
         iFakeDraw!!.fakePosInfo!!.width / scaleWidth,
         iFakeDraw!!.fakePosInfo!!.height / scaleHeight,
-        iFakeDraw!!.fakePosInfo!!.degrees)
+        iFakeDraw!!.fakePosInfo!!.degrees,
+        iFakeDraw!!.fakePosInfo!!.anchorOffsetX / scaleWidth,
+        iFakeDraw!!.fakePosInfo!!.anchorOffsetY / scaleHeight)
   }
 
   override fun updateChromaColor(color: Int) {
@@ -181,6 +203,20 @@ class FakeView @JvmOverloads constructor(
       (iFakeDraw as ChromaDraw).updateColor(color)
       invalidate()
     }
+  }
+
+  override fun setOldAnchor(oldAnchor: PointF) {
+    if (iFakeDraw is PosDraw) {
+      (iFakeDraw as PosDraw).oldAnchorPointF = PointF(oldAnchor.x * scaleWidth + offsetX, oldAnchor.y * scaleHeight + offsetY)
+    }
+  }
+
+  override fun getOldAnchor(): PointF? {
+    if (iFakeDraw is PosDraw) {
+      var oldAnchor = (iFakeDraw as PosDraw).oldAnchorPointF
+      return PointF((oldAnchor.x - offsetX) / scaleWidth, (oldAnchor.y - offsetY) / scaleHeight)
+    }
+    return null
   }
 
   override fun setStreamSize(size: VeMSize) {

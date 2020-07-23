@@ -5,16 +5,23 @@
   android:layout_height="wrap_content"
   android:orientation="vertical">
 
-  <androidx.appcompat.widget.AppCompatImageView
-    android:id="@+id/home_template_item_image"
+  <com.quvideo.application.widget.round.RCRelativeLayout
+    android:id="@+id/layoutCover"
     android:layout_width="60dp"
     android:layout_height="60dp"
-    android:padding="1dp"
-    android:scaleType="centerCrop"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"
+    app:round_corner="4dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/home_template_item_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+
+  </com.quvideo.application.widget.round.RCRelativeLayout>
+
 
   <androidx.appcompat.widget.AppCompatTextView
     android:id="@+id/tvContent"
@@ -25,8 +32,8 @@
     android:textColor="@color/white"
     android:textSize="8sp"
     android:visibility="gone"
-    app:layout_constraintBottom_toBottomOf="@id/home_template_item_image"
-    app:layout_constraintEnd_toEndOf="@id/home_template_item_image" />
+    app:layout_constraintBottom_toBottomOf="@id/layoutCover"
+    app:layout_constraintEnd_toEndOf="@id/layoutCover" />
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/imgFocus"
@@ -34,9 +41,9 @@
     android:layout_height="0dp"
     android:background="@drawable/edit_shape_clip_item_sel"
     android:visibility="gone"
-    app:layout_constraintBottom_toBottomOf="@id/home_template_item_image"
-    app:layout_constraintEnd_toEndOf="@id/home_template_item_image"
-    app:layout_constraintStart_toStartOf="@id/home_template_item_image"
-    app:layout_constraintTop_toTopOf="@id/home_template_item_image" />
+    app:layout_constraintBottom_toBottomOf="@id/layoutCover"
+    app:layout_constraintEnd_toEndOf="@id/layoutCover"
+    app:layout_constraintStart_toStartOf="@id/layoutCover"
+    app:layout_constraintTop_toTopOf="@id/layoutCover" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

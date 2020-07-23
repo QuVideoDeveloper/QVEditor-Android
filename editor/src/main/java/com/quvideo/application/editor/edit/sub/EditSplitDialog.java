@@ -48,6 +48,10 @@ public class EditSplitDialog extends BaseMenuView {
         .start(TimeFormatUtil.INSTANCE.formatTime(0))
         .end(TimeFormatUtil.INSTANCE.formatTime(clipData.getTrimRange().getTimeLength()))
         .progress(0)
+        .progressExchange(progress -> {
+          String base = TimeFormatUtil.INSTANCE.formatTime(progress);
+          return base + "." + progress % 1000;
+        })
         .seekRange(new CustomSeekbarPop.SeekRange(0, clipData.getTrimRange().getTimeLength())));
   }
 

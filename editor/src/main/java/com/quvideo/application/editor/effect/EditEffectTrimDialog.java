@@ -61,6 +61,10 @@ public class EditEffectTrimDialog extends BaseMenuView {
             (mWorkSpace.getStoryboardAPI().getDuration()) : baseEffect.destRange.getLimitValue())
         .minRange(1)
         .seekRange(new CustomSeekbarPop.SeekRange(0, mWorkSpace.getStoryboardAPI().getDuration()))
+        .progressExchange(progress -> {
+          String base = TimeFormatUtil.INSTANCE.formatTime(progress);
+          return base + "." + progress % 1000;
+        })
         .isDoubleMode(true).seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
           @Override public void onSeekStart(boolean isFirst, int progress) {
             isChanged = true;

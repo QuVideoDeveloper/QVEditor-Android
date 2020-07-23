@@ -45,7 +45,7 @@ class CamControlViewMgr {
   private View rootView;
   private AppCompatImageView btnDel;
   private AppCompatTextView tvRecorderTime;
-  private AppCompatTextView btnRecorderDone;
+  private AppCompatImageView btnRecorderDone;
   private AppCompatTextView btnRecorder;
 
   private AppCompatTextView btnFront;

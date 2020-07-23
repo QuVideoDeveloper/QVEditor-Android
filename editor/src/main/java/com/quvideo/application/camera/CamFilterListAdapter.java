@@ -65,7 +65,7 @@ class CamFilterListAdapter
   @Override public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
     boolean isItemSelected = listViewModel.curSelectItemPos.getValue() != null
         && position == listViewModel.curSelectItemPos.getValue();
-    holder.imgItem.setSelected(isItemSelected);
+    holder.imgFocus.setVisibility(isItemSelected ? View.VISIBLE : View.INVISIBLE);
 
     if (position == 0) {
       holder.imgItem.setBackgroundResource(R.drawable.cam_sel_no_filter_bg);
@@ -75,7 +75,7 @@ class CamFilterListAdapter
 
     final String filterPath = listViewModel.imgPathList.get(position);
     int thumbWidth = DPUtils.dpToPixel(holder.imgItem.getContext(), 60);
-    int thumbHeight = DPUtils.dpToPixel(holder.imgItem.getContext(), 60);
+    int thumbHeight = DPUtils.dpToPixel(holder.imgItem.getContext(), 68);
     EffectThumbParams effectThumbParams =
         new EffectThumbParams(filterPath, thumbWidth, thumbHeight);
     Glide.with(holder.imgItem).load(effectThumbParams).into(holder.imgItem);
@@ -106,11 +106,13 @@ class CamFilterListAdapter
   static class ItemViewHolder extends RecyclerView.ViewHolder {
 
     private AppCompatImageView imgItem;
+    private AppCompatImageView imgFocus;
 
     ItemViewHolder(@NonNull View itemView) {
       super(itemView);
 
       imgItem = itemView.findViewById(R.id.imgItem);
+      imgFocus = itemView.findViewById(R.id.imgFocus);
     }
   }
 

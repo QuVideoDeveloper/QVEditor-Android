@@ -39,6 +39,8 @@ public class AssetConstants {
 
   // 音乐
   public static ArrayList<String> mMusicTemplateList = new ArrayList<>();
+  // 水印
+  public static ArrayList<String> mWaterTemplateList = new ArrayList<>();
 
   static {
     // slide
@@ -87,12 +89,16 @@ public class AssetConstants {
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000483.xyt");
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000484.xyt");
     // subtitle
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000000.xyt");
+    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B3.xyt");
+    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B4.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028A.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028B.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000133.xyt");
+    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000280.xyt");
     // multisubtitle
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000010000A.zip");
+    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000010000B.zip");
+    mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x0900000000100009.zip");
     // 马赛克
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300001.xyt");
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300002.xyt");
@@ -102,6 +108,8 @@ public class AssetConstants {
     mMusicTemplateList.add("assets_android://quvideo/music/music_1.mp3");
     mMusicTemplateList.add("assets_android://quvideo/music/music_2.mp3");
     mMusicTemplateList.add("assets_android://quvideo/music/music_3.mp3");
+    //水印
+    mWaterTemplateList.add("assets_android://quvideo/watermark/water_mark_logo.png");
 
     mScanTemplateList.addAll(mFilterTemplateList);
     mScanTemplateList.addAll(mFxTemplateList);
@@ -133,19 +141,22 @@ public class AssetConstants {
 
   public static final AudioTemplate[] TEST_DUB_TID = new AudioTemplate[] {
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/dub_1.mp3",
-          "音效1", R.drawable.dub_1),
+          "Dub1", R.drawable.dub_1),
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/dub_2.mp3",
-          "音效2", R.drawable.dub_2)
+          "Dub2", R.drawable.dub_2)
   };
 
   public static final AudioTemplate[] TEST_MUSIC_TID = new AudioTemplate[] {
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_1.mp3",
-          "音乐1", R.drawable.music_1),
+          "Music1", R.drawable.music_1),
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_2.mp3",
-          "音乐2", R.drawable.music_2),
+          "Music2", R.drawable.music_2),
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_3.mp3",
-          "音乐3", R.drawable.music_3)
+          "Music3", R.drawable.music_3)
   };
+
+  public static final String WATERMARK_LOG_PATH = StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp())
+      + "quvideo/watermark/water_mark_logo.png";
 
   public static final SlideTemplate[] TEST_SLIDE_THEME_TID = new SlideTemplate[] {
       new SlideTemplate(0x0100000000400411L, "520-1", R.drawable.thumbnail_520, 1, 6),

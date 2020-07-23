@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.2.5"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.3.1"
 }
 ```
 
@@ -809,7 +809,8 @@ ClipData参数说明：
 | isMute | 是否静音 | boolean |
 | audioVolume | 音量，默认100 | int |
 | soundTone | 变声，-60~60，正常0。{@see QEDftSoundTone}类中有提供的特定音调 | float |
-| timeScale | 变速值，默认1.0f，设置变速时，也会对音调产生影响 | float |
+| timeScale | 变速值，默认1.0f | float |
+| isKeepTone | 是否变速不变调，默认true。false时，设置变速会对音调产生影响 | boolean |
 | mirror | 镜像{@see ClipData.Mirror} | Mirror |
 | bReversed | 是否倒放 | boolean |
 | isPicAnimOn | 是否开启图片动画，只允许对图片clip设置 | boolean |
@@ -972,20 +973,31 @@ FloatEffect参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | alpha | 透明度 0~100 | int |
-| anchor | 锚点,(0,0)为效果的左上角位置，（0.5，0.5）表示效果的中心，（1.0，1.0）表示效果的右下角。默认是(0.5,0.5) 。取值范围是0~1 | PointF |
+| mMirror | 镜像信息 {@see FloatEffect.Mirror} | Mirror |
 | mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
 
+FloatEffect.Mirror参数说明：
+| 名称  | 解释  |
+| :-: | :-: |
+| EFFECT_FLIP_NONE | 正常 |
+| EFFECT_FLIP_X | 沿X方向镜像 |
+| EFFECT_FLIP_Y | 沿Y方向镜像 |
+| EFFECT_FLIP_XY | 沿XY方向镜像 |
 
 EffectPosInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| centerPosX | 中心点-X，在streamSize的坐标系中 | float |
-| centerPosY | 中心点-Y，在streamSize的坐标系中 | float |
-| width | 宽，在streamSize的坐标系中 | float |
-| height | 高，在streamSize的坐标系中 | float |
-| degree | 旋转角度， 0~360 | float |
-| isHorFlip | 水平反转 | boolean |
-| isVerFlip | 垂直反转 | boolean |
+| center | 中心点，实际为锚点坐标，{@see Ve3DDataF} 只是默认在中心点,(0,0,0)为效果以streamsize的中心点，x/y左上角为0，右下角为1，z为屏幕上为0，向屏幕里为正，向屏幕外为负 | Ve3DDataF |
+| size | 尺寸,(0,0,0)为效果以streamsize的宽高深 | Ve3DDataF |
+| degree | 旋转角度,(0,0,0)为效果以x/y/z轴的旋转角度 。取值范围是 0~360 | Ve3DDataF |
+| anchorOffset | 锚点相对中心点的偏移，默认(0,0,0) | Ve3DDataF |
+
+Ve3DDataF参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| x | x轴方向信息 | float |
+| y | y轴方向信息 | float |
+| z | z轴方向信息 | float |
 
 
 AnimEffect参数说明：
@@ -1064,16 +1076,20 @@ BaseKeyFrame参数说明：
 | relativeTime | 相对于效果入点的时间 | int |
 | isCurvePath | 关键帧是否曲线路径 | boolean |
 | mKeyBezierCurve | 关键帧缓动贝塞尔曲线点{@see KeyBezierCurve} | KeyBezierCurve |
+| offsetOpcodeType | 基础偏移操作方式{KEYFRAME_COMMON_OFFSET_TYPE_PLUS相加, KEYFRAME_COMMON_OFFSET_TYPE_MUL相乘} | int |
 
 
 
 KeyFrameType参数说明：
 | 名称  | 解释 |
 | :-: | :-: |
-| POSITION | 位置关键帧 |
-| ROTATION | 旋转关键帧 |
-| SCALE | 缩放关键帧 |
-| ALPHA | 透明度关键帧 |
+| Position | 位置关键帧 |
+| AnchorOffset | 锚点位移关键帧 |
+| Scale | 缩放关键帧 |
+| Rotation | 旋转关键帧 |
+| Alpha | 透明度关键帧 |
+| Mask | 蒙版关键帧，暂不支持 |
+| Attribute | 属性关键帧，暂不支持 |
 
 
 KeyBezierCurve参数说明：
@@ -1088,21 +1104,25 @@ KeyBezierCurve参数说明：
 KeyPosInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| centerPosX | 中心点-X，在streamSize的坐标系中 | float |
-| centerPosY | 中心点-Y，在streamSize的坐标系中 | float |
+| center | 位置信息，在streamSize的坐标系中{@see Ve3DDataF} | Ve3DDataF |
+
+
+KeyAnchorOffset参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| anchorOffset | 锚点位置偏移信息，在streamSize的坐标系中{@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyScaleInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| widthScale | width缩放比例 | float |
-| heightScale | height缩放比例 | float |
+| scale | 缩放信息 {@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyRotationInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| rotation | 旋转角度， 0~360 | float |
+| rotation | 角度信息 {@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyAlphaInfo参数说明：
@@ -1642,8 +1662,17 @@ EffectAddItem参数说明：
 快速刷新用于快速刷新播放器，提高播放器刷新性能使用，不会保存到工程中，所以快速刷新操作结束后，需要再进行一次非快速刷新的修改，才能真实起作用。需要结合EffectOPLock操作使用，锁定播放器中的素材刷新。
 
 
+17）镜像修改
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// mirror表示镜像数据 {@see FloatEffect.Mirror}
+	EffectOPMirror effectOPMirror = new EffectOPMirror(groupId, effectIndex, mirror);
+	mWorkSpace.handleOperation(effectOPMirror);
+```
 
-17）替换音频
+
+18）替换音频
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1654,7 +1683,7 @@ EffectAddItem参数说明：
 ```
 
 
-18）替换效果素材文件
+19）替换效果素材文件
 ```
 	// groupId为effect的类型
 	// effectIndex为effect添加的位置，0为第一个
@@ -1671,7 +1700,7 @@ EffectReplaceItem参数说明：
 | mEffectPosInfo | null则根据原有的effectPosInfo进行简单的缩放处理 | EffectPosInfo | 非必须 |
 
 
-19）画中画混合模式设置
+20）画中画混合模式设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1681,7 +1710,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-20）画中画蒙版设置
+21）画中画蒙版设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1691,7 +1720,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-21）画中画抠色设置（绿幕）
+22）画中画抠色设置（绿幕）
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1701,7 +1730,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-22）画中画滤镜设置
+23）画中画滤镜设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1711,7 +1740,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-23）画中画参数调节设置
+24）画中画参数调节设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1721,7 +1750,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-24）画中画曲线调色设置
+25）画中画曲线调色设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1731,7 +1760,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-25）画中画添加子特效
+26）画中画添加子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1742,7 +1771,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-26）画中画修改子特效出入点时间区间
+27）画中画修改子特效出入点时间区间
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1753,23 +1782,13 @@ EffectReplaceItem参数说明：
 ```
 
 
-27）画中画删除子特效
+28）画中画删除子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
 	// subType表示子特效索引{@see EffectSubFx}
 	EffectOPSubFxDel effectOPSubFxDel = new EffectOPSubFxDel(groupId, effectIndex, subType);
 	mWorkSpace.handleOperation(effectOPSubFxDel);
-```
-
-
-28）锚点修改
-```
-	// groupId为effect的类型
-	// effectIndex为同类型中第几个效果
-	// anchor锚点位置数据
-	EffectOPAnchor effectOPAnchor = new EffectOPAnchor(groupId, effectIndex, anchor);
-	mWorkSpace.handleOperation(effectOPAnchor);
 ```
 
 29）显示静态图片
@@ -1935,21 +1954,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-
-38）关键帧设置
-```
-	// groupId为effect的类型
-	// effectIndex为同类型中第几个效果
-	// effectKeyFrameInfo表示关键帧数据，每次都需要设置完整列表 {@see EffectKeyFrameInfo}
-	EffectOPKeyFrame effectOPKeyFrame = new EffectOPKeyFrame(groupId, effectIndex, effectKeyFrameInfo);
-	mWorkSpace.handleOperation(effectOPKeyFrame);
-```
-
-
-
-
-
-39）获取画中画抠色图片
+38）获取画中画抠色图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1972,6 +1977,38 @@ chromaColor.getColorByPosition(float relateX, float relateY);
 ```
 chromaColor.recycle();
 ```
+
+39）关键帧设置
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// effectKeyFrameInfo表示关键帧数据，每次都需要设置完整列表 {@see EffectKeyFrameInfo}
+	EffectOPKeyFrame effectOPKeyFrame = new EffectOPKeyFrame(groupId, effectIndex, effectKeyFrameInfo);
+	mWorkSpace.handleOperation(effectOPKeyFrame);
+```
+
+
+40）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// baseKeyFrame表示单个关键帧数据 {@see BaseKeyFrame}
+	EffectOPKeyFrameInsert effectOPKeyFrameInsert = new EffectOPKeyFrameInsert(groupId, effectIndex, baseKeyFrame);
+	mWorkSpace.handleOperation(effectOPKeyFrameInsert);
+```
+
+
+41）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// keyFrameType表示关键帧类型 {@see BaseKeyFrame.KeyFrameType}
+	// offsetTime表示关键帧相对时间ts
+	EffectOPKeyFrameRemove effectOPKeyFrameRemove = new EffectOPKeyFrameRemove(groupId, effectIndex, keyFrameType, offsetTime);
+	mWorkSpace.handleOperation(effectOPKeyFrameRemove);
+```
+
+
 
 
 #### 7. 导出

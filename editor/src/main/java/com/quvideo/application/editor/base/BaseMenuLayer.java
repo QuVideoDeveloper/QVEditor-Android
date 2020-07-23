@@ -33,6 +33,9 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     ClipMagicSound, // clip变声
     ClipSpeed, // clip变速
     ClipSplit, // clip分割
+    ClipCrop, // clip裁剪
+    ClipPosInfo, // clip位置
+    ClipBG, // clip背景
     ClipTrans, // clip转场
     ClipTrim, // clip裁切
     ClipVolume, // clip音量

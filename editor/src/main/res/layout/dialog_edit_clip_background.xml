@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <View
+    android:id="@+id/viewBg"
+    android:layout_width="0dp"
+    android:layout_height="239dp"
+    android:background="#101112"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+     />
+
+  <include
+    android:id="@+id/layout_bottom"
+    layout="@layout/view_edit_dialog_bottom"
+    android:layout_width="0dp"
+    android:layout_height="46dp"
+    app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <com.quvideo.application.widget.seekbar.CustomSeekbarPop
+      android:id="@+id/seekbar"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_gravity="center"
+      android:layout_marginEnd="35dp"
+      android:layout_marginStart="35dp"
+      android:layout_marginBottom="30dp"
+      android:visibility="invisible"
+      app:layout_constraintBottom_toTopOf="@id/btnBlur"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+  
+  <LinearLayout
+    android:id="@+id/btnNone"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintHorizontal_chainStyle="spread"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/btnBlur"
+      android:layout_marginBottom="30dp"
+    android:background="@color/black" >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/cam_icon_no_filter_nor"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        android:text="@string/mn_edit_none"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnBlur"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+      android:layout_marginBottom="30dp"
+      android:background="@color/black"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toStartOf="@+id/btnCustom"
+    app:layout_constraintStart_toEndOf="@+id/btnNone"  >
+
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/editorx_bg_source_blur_img"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        android:text="@string/mn_edit_background_blur"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnCustom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+      android:layout_marginBottom="30dp"
+      android:orientation="vertical"
+      android:background="@color/black"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toStartOf="@+id/btnColor1"
+    app:layout_constraintStart_toEndOf="@+id/btnBlur"
+    >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/editorx_bg_source_lcoal_img"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        android:text="@string/mn_edit_background_custom"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnColor1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+      android:layout_marginBottom="30dp"
+      android:orientation="vertical"
+      android:background="@color/black"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toStartOf="@+id/btnColor2"
+    app:layout_constraintStart_toEndOf="@+id/btnCustom"
+    >
+
+    <View
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/color_fe3d42" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        android:text="@string/mn_edit_background_color"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+  </LinearLayout>
+  <LinearLayout
+    android:id="@+id/btnColor2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+      android:layout_marginBottom="30dp"
+      android:orientation="vertical"
+      android:background="@color/black"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toStartOf="@+id/btnGradual"
+    app:layout_constraintStart_toEndOf="@+id/btnColor1"
+    >
+
+
+    <View
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/color_3493f2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        android:text="@string/mn_edit_background_color"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnGradual"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+      android:layout_marginBottom="30dp"
+      android:orientation="vertical"
+      android:background="@color/black"
+    android:layout_marginEnd="20dp"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/btnFitIn"
+    >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/clip_background_gradient_color_item"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="2dp"
+        android:text="@string/mn_edit_background_gradual"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+  </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

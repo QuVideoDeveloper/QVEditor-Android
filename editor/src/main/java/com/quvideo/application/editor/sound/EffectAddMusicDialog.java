@@ -1,10 +1,13 @@
 package com.quvideo.application.editor.sound;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.AssetConstants;
+import com.quvideo.application.DPUtils;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
@@ -42,6 +45,17 @@ public class EffectAddMusicDialog extends BaseMenuView {
     RecyclerView clipRecyclerView = view.findViewById(R.id.clip_recyclerview);
     clipRecyclerView.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+    clipRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
+          @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        int position = parent.getChildAdapterPosition(view);
+        if (position == 0) {
+          outRect.left = DPUtils.dpToPixel(getContext(), 16);
+        } else {
+          outRect.left = DPUtils.dpToPixel(getContext(), 8);
+        }
+      }
+    });
 
     AudioTemplateAdapter adapter =
         new AudioTemplateAdapter(context, this);

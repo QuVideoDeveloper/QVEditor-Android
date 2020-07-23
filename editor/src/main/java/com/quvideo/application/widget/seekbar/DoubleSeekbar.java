@@ -16,9 +16,9 @@ public class DoubleSeekbar extends View {
 
   private float dp1px = DeviceSizeUtil.dpToPixel(1f);
   private float dp4px = dp1px * 4;
-  private float dp5px = dp1px * 5;
-  private float dp10px = dp1px * 10;
-  private float dp20px = dp1px * 20;
+  private float dp7px = dp1px * 7;
+  private float dp14px = dp1px * 14;
+  private float dp28px = dp1px * 28;
 
   private Paint backPaint;
   private Paint progressPaint;
@@ -99,6 +99,8 @@ public class DoubleSeekbar extends View {
     firstProgress = Math.min(Math.max(firstProgress, minProgress), maxProgress);
     secondProgress = Math.min(Math.max(secondProgress, minProgress), maxProgress);
     count = maxProgress - minProgress;
+    firstX = -1;
+    secondX = -1;
     invalidate();
   }
 
@@ -108,6 +110,8 @@ public class DoubleSeekbar extends View {
       if (isDoubleMode && firstProgress > secondProgress) {
         secondProgress = firstProgress;
       }
+      firstX = -1;
+      secondX = -1;
       invalidate();
     }
   }
@@ -122,6 +126,8 @@ public class DoubleSeekbar extends View {
       if (isDoubleMode && firstProgress > secondProgress) {
         firstProgress = secondProgress;
       }
+      firstX = -1;
+      secondX = -1;
       invalidate();
     }
   }
@@ -135,6 +141,8 @@ public class DoubleSeekbar extends View {
     if (firstProgress > secondProgress) {
       secondProgress = firstProgress;
     }
+    firstX = -1;
+    secondX = -1;
     invalidate();
   }
 
@@ -151,33 +159,33 @@ public class DoubleSeekbar extends View {
       return;
     }
     // start的圆
-    canvas.drawCircle(dp10px, centerY, dp1px, backPaint);
+    canvas.drawCircle(dp14px, centerY, dp1px, backPaint);
     // end的圆
-    canvas.drawCircle(getMeasuredWidth() - dp10px, centerY, dp1px, backPaint);
+    canvas.drawCircle(getMeasuredWidth() - dp14px, centerY, dp1px, backPaint);
     // back的线
-    canvas.drawLine(dp10px, centerY, getMeasuredWidth() - dp10px, centerY, backPaint);
+    canvas.drawLine(dp14px, centerY, getMeasuredWidth() - dp14px, centerY, backPaint);
     if (firstX < 0) {
-      float length = getMeasuredWidth() - dp20px;
-      firstX = length / count * (firstProgress - minProgress) + dp10px;
+      float length = getMeasuredWidth() - dp28px;
+      firstX = length / count * (firstProgress - minProgress) + dp14px;
     }
     if (isDoubleMode) {
       if (secondX < 0) {
-        float length = getMeasuredWidth() - dp20px;
-        secondX = length / count * (secondProgress - minProgress) + dp10px;
+        float length = getMeasuredWidth() - dp28px;
+        secondX = length / count * (secondProgress - minProgress) + dp14px;
       }
       // progress的线
       canvas.drawLine(firstX, centerY, secondX, centerY, progressPaint);
       // first的seekbar
-      canvas.drawCircle(firstX, getMeasuredHeight() / 2f, dp10px, seekbarPaint);
+      canvas.drawCircle(firstX, getMeasuredHeight() / 2f, dp14px, seekbarPaint);
       // second的seekbar
-      canvas.drawCircle(secondX, getMeasuredHeight() / 2f, dp10px, seekbarPaint);
+      canvas.drawCircle(secondX, getMeasuredHeight() / 2f, dp14px, seekbarPaint);
     } else {
       // start的进度圆
-      canvas.drawCircle(dp10px, getMeasuredHeight() / 2f, dp1px, progressPaint);
+      canvas.drawCircle(dp14px, getMeasuredHeight() / 2f, dp1px, progressPaint);
       // progress的线
-      canvas.drawLine(dp10px, centerY, firstX, centerY, progressPaint);
+      canvas.drawLine(dp14px, centerY, firstX, centerY, progressPaint);
       // first的seekbar
-      canvas.drawCircle(firstX, getMeasuredHeight() / 2f, dp10px, seekbarPaint);
+      canvas.drawCircle(firstX, getMeasuredHeight() / 2f, dp14px, seekbarPaint);
     }
   }
 
@@ -214,42 +222,39 @@ public class DoubleSeekbar extends View {
       isActionDown = true;
       isCanActionDrag = true;
       float touchX = event.getX(0);
-      float length = getMeasuredWidth() - dp20px;
+      float length = getMeasuredWidth() - dp28px;
       if (!isDoubleMode) {
         isDragFirst = true;
-        firstX = Math.min(Math.max(touchX, dp10px), length + dp10px);
-        firstProgress = (int) ((firstX - dp10px) / (length / (count ))) + minProgress;
+        firstX = Math.min(Math.max(touchX, dp14px), length + dp14px);
+        firstProgress = (int) ((firstX - dp14px) / (length / (count))) + minProgress;
       } else {
-        if (touchX > firstX - dp5px && touchX < firstX + dp5px) {
-          if (firstX == secondX && firstX == dp10px) {
+        if (Math.abs(touchX - firstX) <= Math.abs(touchX - secondX)) {
+          if (firstX == secondX && firstX == dp14px) {
             // 两个按钮在最左边重叠
             isDragFirst = false;
-            float mixSecond = length / count * (firstProgress - minProgress + minRange) + dp10px;
-            secondX = Math.max(mixSecond, Math.max(firstX, Math.min(Math.max(touchX, dp10px), length + dp10px)));
-            int progress = (int) ((secondX - dp10px) / (length / (count ))) + minProgress;
+            float mixSecond = length / count * (firstProgress - minProgress + minRange) + dp14px;
+            secondX = Math.max(mixSecond, Math.max(firstX, Math.min(Math.max(touchX, dp14px), length + dp14px)));
+            int progress = (int) ((secondX - dp14px) / (length / (count))) + minProgress;
             if (progress >= firstProgress) {
               secondProgress = progress;
             }
           } else {
             isDragFirst = true;
-            float maxFirst = length / count * (secondProgress - minProgress - minRange) + dp10px;
-            firstX = Math.min(maxFirst, Math.min(secondX, Math.min(Math.max(touchX, dp10px), length + dp10px)));
-            int progress = (int) ((firstX - dp10px) / (length / (count ))) + minProgress;
+            float maxFirst = length / count * (secondProgress - minProgress - minRange) + dp14px;
+            firstX = Math.min(maxFirst, Math.min(secondX, Math.min(Math.max(touchX, dp14px), length + dp14px)));
+            int progress = (int) ((firstX - dp14px) / (length / (count))) + minProgress;
             if (progress <= secondProgress) {
               firstProgress = progress;
             }
           }
-        } else if (touchX > secondX - dp5px && touchX < secondX + dp5px) {
+        } else {
           isDragFirst = false;
-          float mixSecond = length / count * (firstProgress - minProgress + minRange) + dp10px;
-          secondX = Math.max(mixSecond, Math.max(firstX, Math.min(Math.max(touchX, dp10px), length + dp10px)));
-          int progress = (int) ((secondX - dp10px) / (length / (count ))) + minProgress;
+          float mixSecond = length / count * (firstProgress - minProgress + minRange) + dp14px;
+          secondX = Math.max(mixSecond, Math.max(firstX, Math.min(Math.max(touchX, dp14px), length + dp14px)));
+          int progress = (int) ((secondX - dp14px) / (length / (count))) + minProgress;
           if (progress >= firstProgress) {
             secondProgress = progress;
           }
-        } else {
-          isCanActionDrag = false;
-          return;
         }
       }
       if (mOnSeekbarListener != null) {
@@ -281,22 +286,22 @@ public class DoubleSeekbar extends View {
     // 单点处理
     float touchX = event.getX(0);
     if (isActionDown) {
-      float length = getMeasuredWidth() - dp20px;
+      float length = getMeasuredWidth() - dp28px;
       if (isDragFirst) {
         if (isDoubleMode) {
-          float maxFirst = length / count * (secondProgress - minProgress - minRange) + dp10px;
-          firstX = Math.min(maxFirst, Math.min(secondX, Math.min(Math.max(touchX, dp10px), length + dp10px)));
+          float maxFirst = length / count * (secondProgress - minProgress - minRange) + dp14px;
+          firstX = Math.min(maxFirst, Math.min(secondX, Math.min(Math.max(touchX, dp14px), length + dp14px)));
         } else {
-          firstX = Math.min(Math.max(touchX, dp10px), length + dp10px);
+          firstX = Math.min(Math.max(touchX, dp14px), length + dp14px);
         }
-        int progress = (int) ((firstX - dp10px) / (length / (count ))) + minProgress;
+        int progress = (int) ((firstX - dp14px) / (length / (count))) + minProgress;
         if (!isDoubleMode || progress <= secondProgress) {
           firstProgress = progress;
         }
       } else {
-        float mixSecond = length / count * (firstProgress - minProgress + minRange) + dp10px;
-        secondX = Math.max(mixSecond, Math.max(firstX, Math.min(Math.max(touchX, dp10px), length + dp10px)));
-        int progress = (int) ((secondX - dp10px) / (length / (count ))) + minProgress;
+        float mixSecond = length / count * (firstProgress - minProgress + minRange) + dp14px;
+        secondX = Math.max(mixSecond, Math.max(firstX, Math.min(Math.max(touchX, dp14px), length + dp14px)));
+        int progress = (int) ((secondX - dp14px) / (length / (count))) + minProgress;
         if (progress >= firstProgress) {
           secondProgress = progress;
         }

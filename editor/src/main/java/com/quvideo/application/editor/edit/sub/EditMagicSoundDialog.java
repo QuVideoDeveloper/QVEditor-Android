@@ -2,21 +2,18 @@ package com.quvideo.application.editor.edit.sub;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
-import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPMagicSound;
 
 public class EditMagicSoundDialog extends BaseMenuView {
 
-  private EditSeekBarController seekBarController;
-  private TextView tvProgress;
+  private CustomSeekbarPop mCustomSeekbarPop;
 
   private int clipIndex = 0;
 
@@ -25,7 +22,6 @@ public class EditMagicSoundDialog extends BaseMenuView {
     super(context, workSpace);
     this.clipIndex = clipIndex;
 
-    seekBarController = new EditSeekBarController();
     showMenu(container, l);
   }
 
@@ -34,12 +30,11 @@ public class EditMagicSoundDialog extends BaseMenuView {
   }
 
   @Override protected int getCustomLayoutId() {
-    return R.layout.dialog_edit_speed;
+    return R.layout.dialog_edit_volume;
   }
 
   @Override protected void initCustomMenu(Context context, View view) {
-    seekBarController.bindView(view.findViewById(R.id.seekbar));
-    tvProgress = view.findViewById(R.id.tv_progress);
+    mCustomSeekbarPop = view.findViewById(R.id.seekbar);
 
     initData();
   }
@@ -48,25 +43,12 @@ public class EditMagicSoundDialog extends BaseMenuView {
   }
 
   private void initData() {
-    seekBarController.setTitleVisible(false);
-    seekBarController.setSeekBarStartText("-50");
-    seekBarController.setSeekBarEndText("50");
-    seekBarController.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        tvProgress.setText((progress - 50) + "");
-      }
-
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
-      }
-    });
-
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-    seekBarController.setSeekBarProgress((int) clipData.getSoundTone() + 50);
+    mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
+        .start("-60")
+        .end("60")
+        .progress((int) clipData.getSoundTone())
+        .seekRange(new CustomSeekbarPop.SeekRange(-60, 60)));
   }
 
   @Override public void onClick(View v) {
@@ -74,7 +56,7 @@ public class EditMagicSoundDialog extends BaseMenuView {
   }
 
   private void magicSoundClip() {
-    float value = seekBarController.getSeekBarProgress() - 50;
+    float value = mCustomSeekbarPop.getProgress();
     ClipOPMagicSound clipOPMagicSound = new ClipOPMagicSound(clipIndex, value);
     mWorkSpace.handleOperation(clipOPMagicSound);
 

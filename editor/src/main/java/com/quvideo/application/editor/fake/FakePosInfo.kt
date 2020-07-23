@@ -7,7 +7,9 @@ class FakePosInfo(
   var centerY: Float,
   var width: Float,
   var height: Float,
-  var degrees: Float
+  var degrees: Float,
+  var anchorOffsetX: Float,
+  var anchorOffsetY: Float
 ) {
 
   var fakePosType: FakePosType = Position

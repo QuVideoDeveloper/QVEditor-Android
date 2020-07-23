@@ -1,5 +1,6 @@
 package com.quvideo.application.editor.fake
 
+import android.graphics.PointF
 import android.graphics.Rect
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
@@ -17,6 +18,8 @@ interface IFakeViewApi {
   /** 设置对应的Effect */
   fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?)
 
+  fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?, startDegree: Float)
+
   fun setChromaTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?)
 
   /** 设置对应的Effect */
@@ -27,6 +30,10 @@ interface IFakeViewApi {
 
   /** 更新chroma时的画笔颜色 */
   fun updateChromaColor(color :Int)
+
+  fun setOldAnchor(oldAnchor :PointF)
+
+  fun getOldAnchor() : PointF?
 
   /**
    * 设置video stream size

@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Fri, 10 Jul 2020 10:54:50 +0800
+ Exported at: Mon, 20 Jul 2020 09:56:14 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -16,6 +16,7 @@
     <string name="mn_app_contact_us">联系我们</string>
     <string name="mn_app_done">完成</string>
     <string name="mn_app_home_title">开始制作</string>
+    <string name="mn_app_import">导入</string>
     <string name="mn_app_mode_camera">视频录制</string>
     <string name="mn_app_mode_editor">视频剪辑</string>
     <string name="mn_app_mode_template">卡点视频</string>
@@ -36,22 +37,38 @@
     <string name="mn_edit_adjust_highlight">高光</string>
     <string name="mn_edit_adjust_hue">色调</string>
     <string name="mn_edit_adjust_luminance">亮度</string>
+    <string name="mn_edit_adjust_noise">噪点</string>
     <string name="mn_edit_adjust_saturation">饱和度</string>
     <string name="mn_edit_adjust_shadow">阴影</string>
     <string name="mn_edit_adjust_sharpness">锐度</string>
     <string name="mn_edit_adjust_vignette">暗角</string>
     <string name="mn_edit_alpha_change">不透明度</string>
     <string name="mn_edit_back_home">回首页</string>
+    <string name="mn_edit_background_blur">模糊</string>
+    <string name="mn_edit_background_color">纯色</string>
+    <string name="mn_edit_background_custom">自定义</string>
+    <string name="mn_edit_background_gradual">渐变</string>
     <string name="mn_edit_bgm_edit">修改</string>
     <string name="mn_edit_change_style"></string>
     <string name="mn_edit_change_zoom">缩放</string>
     <string name="mn_edit_chroma_accuracy">精度</string>
     <string name="mn_edit_clip_transform_fit_in">适合</string>
     <string name="mn_edit_clip_transform_fit_out">填充</string>
+    <string name="mn_edit_common_cancel">取消</string>
+    <string name="mn_edit_common_yes">是的</string>
+    <string name="mn_edit_dubbing_music_downmountain">下山</string>
     <string name="mn_edit_duplicate_title">复制</string>
     <string name="mn_edit_effect_position">位置</string>
     <string name="mn_edit_exit_confirm_content">退出？</string>
+    <string name="mn_edit_export_bitrate">比特率</string>
+    <string name="mn_edit_export_failed">导出失败</string>
+    <string name="mn_edit_export_format">格式</string>
+    <string name="mn_edit_export_fps">Fps</string>
+    <string name="mn_edit_export_hardware">硬件</string>
     <string name="mn_edit_export_resolution">选择分辨率</string>
+    <string name="mn_edit_export_soft_hard">软硬件</string>
+    <string name="mn_edit_export_software">软件</string>
+    <string name="mn_edit_exporting">导出中...</string>
     <string name="mn_edit_mask_invert">反选</string>
     <string name="mn_edit_mask_linear">线性</string>
     <string name="mn_edit_mask_mirror">镜像</string>
@@ -59,9 +76,11 @@
     <string name="mn_edit_mask_rectangle">矩形</string>
     <string name="mn_edit_mosaic_degree">程度</string>
     <string name="mn_edit_none">无</string>
+    <string name="mn_edit_quit_confirm_title">是否确认退出编辑？退出后将不保存编辑。</string>
     <string name="mn_edit_reset">重置</string>
     <string name="mn_edit_reset_text">重置</string>
     <string name="mn_edit_split_progress_title">分割点</string>
+    <string name="mn_edit_split_splitpoint">分割点</string>
     <string name="mn_edit_subtitle_input">编辑</string>
     <string name="mn_edit_tips_cannot_operate">操作失败</string>
     <string name="mn_edit_tips_error_params">参数错误</string>
@@ -75,6 +94,11 @@
     <string name="mn_edit_tips_no_support">不支持的操作</string>
     <string name="mn_edit_tips_template_theme_error">卡点视频主题错误</string>
     <string name="mn_edit_title_adjust">参数调节</string>
+    <string name="mn_edit_title_axle_anchor">锚点</string>
+    <string name="mn_edit_title_axle_x">X轴</string>
+    <string name="mn_edit_title_axle_y">Y轴</string>
+    <string name="mn_edit_title_axle_z">Z轴</string>
+    <string name="mn_edit_title_background">背景</string>
     <string name="mn_edit_title_bgm">背景音乐</string>
     <string name="mn_edit_title_change_voice">变声</string>
     <string name="mn_edit_title_chroma">抠像</string>

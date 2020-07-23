@@ -19,6 +19,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.quvideo.application.AssetConstants;
+import com.quvideo.application.DPUtils;
 import com.quvideo.application.EditorConst;
 import com.quvideo.application.camera.CameraActivity;
 import com.quvideo.application.camera.recorder.RecorderClipInfo;
@@ -43,12 +45,14 @@ import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.clip.ClipAddItem;
 import com.quvideo.mobile.engine.model.clip.FilterInfo;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
+import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
 import com.quvideo.mobile.engine.model.export.ExportParams;
 import com.quvideo.mobile.engine.player.EditorPlayerView;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.QEStoryBoardResult;
 import com.quvideo.mobile.engine.project.QEWorkSpaceListener;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
+import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPRatio;
@@ -84,6 +88,8 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   volatile boolean reverse = false;
 
+  private boolean isAddWaterMarkAfterInit = false;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -112,7 +118,6 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
           }
           ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
           mWorkSpace.handleOperation(clipOPAdd);
-          addWaterMarkWithRes();
         } else if (albumChoose != null && albumChoose.size() > 0) {
           // 它来自相册
           mWorkSpace = qeWorkSpace;
@@ -125,7 +130,6 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
           }
           ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
           mWorkSpace.handleOperation(clipOPAdd);
-          addWaterMarkWithRes();
         } else {
           ToastUtils.show(EditorActivity.this, "No Video or Pic selected", Toast.LENGTH_LONG);
           EditorActivity.this.finish();
@@ -155,14 +159,13 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         }
         ExportChooseDialog dialog = new ExportChooseDialog(EditorActivity.this);
         dialog.setOnDialogItemListener(new ExportChooseDialog.OnDialogItemListener() {
-          @Override public void onItemClick(int expType) {
+
+          @Override public void onConfirmExport(ExportParams exportParams) {
             Bitmap bitmap = mWorkSpace.getProjectThumbnail();
-            String thumbnail = "/sdcard/ExportTest/test_thumbnail.jpg";
+            String thumbnail = FileUtils.getFileParentPath(exportParams.outputPath)
+                + FileUtils.getFileName(exportParams.outputPath) + "_thumbnail.jpg";
             FileUtils.saveBitmap(thumbnail, bitmap, 100);
             ExportDialog exportDialog = new ExportDialog();
-            ExportParams exportParams = new ExportParams();
-            exportParams.outputPath = "/sdcard/ExportTest/test.mp4";
-            exportParams.expType = expType;
             exportDialog.showExporting(EditorActivity.this, thumbnail, exportParams, mWorkSpace);
           }
         });
@@ -257,7 +260,18 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   private void addWaterMarkWithRes() {
     EffectAddItem effectAddItem = new EffectAddItem();
-    effectAddItem.mEffectPath = "assets_android://quvideo/watermark/water_mark_logo.png";
+    effectAddItem.mEffectPath = AssetConstants.WATERMARK_LOG_PATH;
+    effectAddItem.mEffectPosInfo = new EffectPosInfo();
+    VeMSize steamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
+    VeMSize watermarkSize = MediaFileUtils.getImageResolution(AssetConstants.WATERMARK_LOG_PATH);
+    float width = watermarkSize.width;
+    float height = watermarkSize.height;
+    effectAddItem.mEffectPosInfo.size.x = width;
+    effectAddItem.mEffectPosInfo.size.y = height;
+    effectAddItem.mEffectPosInfo.center.x =
+        steamSize.width - width / 2f - DPUtils.dpToPixel(getApplicationContext(), 8);
+    effectAddItem.mEffectPosInfo.center.y =
+        steamSize.height - height / 2f - DPUtils.dpToPixel(getApplicationContext(), 4);
     EffectOPAdd effectOPAdd =
         new EffectOPAdd(QEGroupConst.GROUP_ID_WATERMARK, 0, effectAddItem);
     mWorkSpace.handleOperation(effectOPAdd);
@@ -273,11 +287,11 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   private void handleBack() {
     new MaterialDialog.Builder(this)
         .negativeText(R.string.mn_app_cancel)
-        .positiveText(R.string.mn_app_confirm)
+        .positiveText(R.string.mn_edit_common_yes)
         .negativeColor(ContextCompat.getColor(this, R.color.color_585858))
         .positiveColor(ContextCompat.getColor(this, R.color.color_585858))
         .canceledOnTouchOutside(false)
-        .content(R.string.mn_edit_exit_confirm_content)
+        .content(R.string.mn_edit_quit_confirm_title)
         .onPositive(new MaterialDialog.SingleButtonCallback() {
           @Override
           public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -290,8 +304,11 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   private BaseObserver mProjectObserver = new BaseObserver() {
     @Override public void onChange(BaseOperate operate) {
-      if (operate instanceof ClipOPRatio) {
-
+      if (operate instanceof ClipOPAdd) {
+        if (!isAddWaterMarkAfterInit) {
+          addWaterMarkWithRes();
+          isAddWaterMarkAfterInit = true;
+        }
       }
     }
   };
