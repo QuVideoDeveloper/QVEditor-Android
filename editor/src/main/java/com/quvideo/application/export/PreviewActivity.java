@@ -89,15 +89,22 @@ public class PreviewActivity extends AppCompatActivity {
     ivPlay = findViewById(R.id.iv_play);
     tvVideoPath.setText(videoPath);
 
-    VideoInfo videoInfo = MediaFileUtils.getVideoInfo(videoPath);
-    resetViewsParams(videoInfo);
-    if (TextUtils.isEmpty(coverPath)) {
-      ivCover.setVisibility(View.GONE);
-    } else {
+    if (MediaFileUtils.isImageFileType(videoPath) || videoPath.endsWith(".webp")) {
       ivCover.setVisibility(View.VISIBLE);
-      Glide.with(ivCover).load(coverPath).into(ivCover);
+      Glide.with(ivCover).load(videoPath).into(ivCover);
+      ivPlay.setVisibility(View.GONE);
+      textureView.setVisibility(View.INVISIBLE);
+    } else {
+      VideoInfo videoInfo = MediaFileUtils.getVideoInfo(videoPath);
+      resetViewsParams(videoInfo);
+      if (TextUtils.isEmpty(coverPath)) {
+        ivCover.setVisibility(View.GONE);
+      } else {
+        ivCover.setVisibility(View.VISIBLE);
+        Glide.with(ivCover).load(coverPath).into(ivCover);
+      }
+      loadVideo(videoPath);
     }
-    loadVideo(videoPath);
   }
 
   private void initListener() {

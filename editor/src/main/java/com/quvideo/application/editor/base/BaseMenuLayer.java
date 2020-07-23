@@ -48,6 +48,7 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     EffectVolume, // effect音量
     EffectMask, // effect蒙版
     EffectChroma, // effect抠色
+    EffectAxle, // effect选择轴
     Audio, // 音频
     AudioRecord, // 音频录音
     AudioAdd, // 音频添加

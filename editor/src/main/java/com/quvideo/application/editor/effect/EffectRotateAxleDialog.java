@@ -47,7 +47,7 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
   }
 
   @Override public MenuType getMenuType() {
-    return MenuType.EffectChroma;
+    return MenuType.EffectAxle;
   }
 
   @Override protected int getCustomLayoutId() {
