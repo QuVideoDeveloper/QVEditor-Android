@@ -406,7 +406,7 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
                     }
                     EffectOPKeyFrameInsert effectOPKeyFrameInsert = new EffectOPKeyFrameInsert(groupId, effectIndex, keyFrame);
                     mWorkSpace.handleOperation(effectOPKeyFrameInsert);
-                  } catch (CloneNotSupportedException e) {
+                  } catch (Exception e) {
                     e.printStackTrace();
                   }
                 } else {
