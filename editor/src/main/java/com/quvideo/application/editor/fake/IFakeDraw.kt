@@ -79,6 +79,11 @@ abstract class IFakeDraw {
     return false
   }
 
+  /** 是否支持单指拖拽 */
+  open fun supportDrag(): Boolean {
+    return true
+  }
+
   /** 是否支持多指缩放，不是所有的都需要支持 */
   open fun supportMultiScale(): Boolean {
     return false
@@ -151,7 +156,7 @@ abstract class IFakeDraw {
 
   /** 处理单指移动 */
   private fun handleDrag(event: MotionEvent) {
-    if (!isCanActionDrag) {
+    if (!isCanActionDrag || !supportDrag()) {
       return
     }
     // 单点处理

@@ -19,6 +19,7 @@ public class EffectBarItem {
   public static final int ACTION_DEL = 11;
   public static final int ACTION_CUT = 12;
   public static final int ACTION_ROTATE_AXLE = 13;
+  public static final int ACTION_KEYFRAME = 14;
 
   private int action;
   private int resId;

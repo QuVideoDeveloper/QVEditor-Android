@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.3.1"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.3.2"
 }
 ```
 
@@ -1988,7 +1988,18 @@ chromaColor.recycle();
 ```
 
 
-40）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+40）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// keyFrameType表示关键帧类型 {@see BaseKeyFrame.KeyFrameType}
+	// keyFrames表示该类关键帧列表数据，需要设置完整列表 {@see BaseKeyFrame}
+	EffectOPKeyFrameUpdate effectOPKeyFrameUpdate = new EffectOPKeyFrameUpdate(groupId, effectIndex, keyFrameType, keyFrames);
+	mWorkSpace.handleOperation(effectOPKeyFrameUpdate);
+```
+
+
+41）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1998,7 +2009,7 @@ chromaColor.recycle();
 ```
 
 
-41）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+42）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果

@@ -20,6 +20,7 @@ import com.quvideo.application.editor.base.BaseEffectMenuView;
 import com.quvideo.application.editor.base.IEffectEditClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.chroma.EffectChromaDialog;
+import com.quvideo.application.editor.effect.keyframe.EffectKeyFrameDialog;
 import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
 import com.quvideo.application.editor.fake.FakePosInfo;
 import com.quvideo.application.editor.fake.FakePosUtils;
@@ -294,6 +295,10 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_ROTATE_AXLE:
           new EffectRotateAxleDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
           break;
+        case EffectBarItem.ACTION_KEYFRAME:
+          mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+          new EffectKeyFrameDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
+          break;
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
           mWorkSpace.handleOperation(effectOPDel);
@@ -563,13 +568,19 @@ public class EditEffectDialog extends BaseEffectMenuView {
               getContext().getString(R.string.mn_edit_mosaic_degree), isOpEnabled));
     }
 
-    if (EditorApp.Companion.getInstance().getEditorConfig().isEffectMaskValid()
-        && (groupId == QEGroupConst.GROUP_ID_STICKER
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
-        || groupId == QEGroupConst.GROUP_ID_COLLAGES)) {
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_ROTATE_AXLE, R.drawable.edit_icon_scale_nor,
               getContext().getString(R.string.mn_edit_title_rotate), isOpEnabled));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_KEYFRAME, R.drawable.editor_tool_keyframeanimator_icon,
+              getContext().getString(R.string.mn_edit_keyframe_animator_title), isOpEnabled));
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
         getContext().getString(R.string.mn_edit_title_delete), isOpEnabled));

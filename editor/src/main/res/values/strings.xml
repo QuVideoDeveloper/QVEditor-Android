@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Mon, 20 Jul 2020 09:56:14 +0800
+ Exported at: Thu, 23 Jul 2020 12:06:39 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -69,6 +69,7 @@
     <string name="mn_edit_export_soft_hard">Soft-Hardware</string>
     <string name="mn_edit_export_software">Software</string>
     <string name="mn_edit_exporting">Exporting...</string>
+    <string name="mn_edit_keyframe_animator_title">Animator</string>
     <string name="mn_edit_mask_invert">Invert</string>
     <string name="mn_edit_mask_linear">Linear</string>
     <string name="mn_edit_mask_mirror">Mirror</string>
