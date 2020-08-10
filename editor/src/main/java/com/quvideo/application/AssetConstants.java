@@ -243,7 +243,9 @@ public class AssetConstants {
       case FxPlugin:
         return xytInfo.ttidHexStr.contains("0x04006");
       case Filter:
-        return xytInfo.ttidHexStr.contains("0x04") && !xytInfo.ttidHexStr.contains("0x04000000005");
+        return xytInfo.ttidHexStr.contains("0x04")
+            && !xytInfo.ttidHexStr.contains("0x04000000005")
+            && !xytInfo.ttidHexStr.contains("0x04006");
       case FxFilter:
         return xytInfo.ttidHexStr.contains("0x04000000005");
       case Sticker:
