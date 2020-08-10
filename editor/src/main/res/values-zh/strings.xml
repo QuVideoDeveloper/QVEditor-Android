@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Thu, 23 Jul 2020 12:06:39 +0800
+ Exported at: Fri, 07 Aug 2020 11:07:08 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -31,6 +31,7 @@
     <string name="mn_cam_func_flash">补光</string>
     <string name="mn_cam_func_zoom">焦距</string>
     <string name="mn_cam_permission_request">该功能需要相机及录音权限</string>
+    <string name="mn_edit_action">动作</string>
     <string name="mn_edit_adjust_colortemp">色温</string>
     <string name="mn_edit_adjust_contrast">对比度</string>
     <string name="mn_edit_adjust_fade">褪色</string>
@@ -43,21 +44,30 @@
     <string name="mn_edit_adjust_sharpness">锐度</string>
     <string name="mn_edit_adjust_vignette">暗角</string>
     <string name="mn_edit_alpha_change">不透明度</string>
+    <string name="mn_edit_angel">宝宝日记</string>
     <string name="mn_edit_back_home">回首页</string>
     <string name="mn_edit_background_blur">模糊</string>
     <string name="mn_edit_background_color">纯色</string>
     <string name="mn_edit_background_custom">自定义</string>
     <string name="mn_edit_background_gradual">渐变</string>
     <string name="mn_edit_bgm_edit">修改</string>
-    <string name="mn_edit_change_style"></string>
+    <string name="mn_edit_border">边框</string>
+    <string name="mn_edit_bubble">气泡</string>
+    <string name="mn_edit_butterfly">玩法</string>
+    <string name="mn_edit_camcorder">时光掠影</string>
+    <string name="mn_edit_change_style">修改样式</string>
     <string name="mn_edit_change_zoom">缩放</string>
+    <string name="mn_edit_check_more">查看全部</string>
     <string name="mn_edit_chroma_accuracy">精度</string>
+    <string name="mn_edit_cinema">复古胶片</string>
     <string name="mn_edit_clip_transform_fit_in">适合</string>
     <string name="mn_edit_clip_transform_fit_out">填充</string>
     <string name="mn_edit_common_cancel">取消</string>
     <string name="mn_edit_common_yes">是的</string>
+    <string name="mn_edit_create_video">创建视频</string>
     <string name="mn_edit_dubbing_music_downmountain">下山</string>
     <string name="mn_edit_duplicate_title">复制</string>
+    <string name="mn_edit_edit_video">创建视频</string>
     <string name="mn_edit_effect_position">位置</string>
     <string name="mn_edit_exit_confirm_content">退出？</string>
     <string name="mn_edit_export_bitrate">比特率</string>
@@ -69,20 +79,47 @@
     <string name="mn_edit_export_soft_hard">软硬件</string>
     <string name="mn_edit_export_software">软件</string>
     <string name="mn_edit_exporting">导出中...</string>
+    <string name="mn_edit_firework">烟花</string>
+    <string name="mn_edit_font">字体</string>
+    <string name="mn_edit_foodie">美食</string>
+    <string name="mn_edit_kaleidoscope">万花筒</string>
     <string name="mn_edit_keyframe_animator_title">关键帧动画</string>
+    <string name="mn_edit_kids">亲子</string>
+    <string name="mn_edit_leak">漏光</string>
+    <string name="mn_edit_love">爱情</string>
     <string name="mn_edit_mask_invert">反选</string>
     <string name="mn_edit_mask_linear">线性</string>
     <string name="mn_edit_mask_mirror">镜像</string>
     <string name="mn_edit_mask_radial">径向</string>
     <string name="mn_edit_mask_rectangle">矩形</string>
+    <string name="mn_edit_mirror">哈哈镜</string>
     <string name="mn_edit_mosaic_degree">程度</string>
+    <string name="mn_edit_music_fade_in_turn_off">缓入关闭</string>
+    <string name="mn_edit_music_fade_in_turn_on">缓入开启</string>
+    <string name="mn_edit_music_fade_out_turn_off">缓出关闭</string>
+    <string name="mn_edit_music_fade_out_turn_on">缓出开启</string>
+    <string name="mn_edit_music_repeat_turn_off">循环关闭</string>
+    <string name="mn_edit_music_repeat_turn_on">循环开启</string>
     <string name="mn_edit_none">无</string>
+    <string name="mn_edit_party">派对</string>
+    <string name="mn_edit_plastic">光影</string>
     <string name="mn_edit_quit_confirm_title">是否确认退出编辑？退出后将不保存编辑。</string>
     <string name="mn_edit_reset">重置</string>
     <string name="mn_edit_reset_text">重置</string>
+    <string name="mn_edit_roman">浪漫</string>
+    <string name="mn_edit_sns">朋友圈</string>
+    <string name="mn_edit_special">生日祝福</string>
+    <string name="mn_edit_split">分屏</string>
     <string name="mn_edit_split_progress_title">分割点</string>
     <string name="mn_edit_split_splitpoint">分割点</string>
+    <string name="mn_edit_subtitle_align">对齐</string>
+    <string name="mn_edit_subtitle_anim_state_off">动画关闭</string>
+    <string name="mn_edit_subtitle_anim_state_on">动画开启</string>
+    <string name="mn_edit_subtitle_font">字体</string>
     <string name="mn_edit_subtitle_input">编辑</string>
+    <string name="mn_edit_subtitle_shadow">阴影</string>
+    <string name="mn_edit_subtitle_stroke">描边</string>
+    <string name="mn_edit_template_center">素材中心</string>
     <string name="mn_edit_tips_cannot_operate">操作失败</string>
     <string name="mn_edit_tips_error_params">参数错误</string>
     <string name="mn_edit_tips_error_template">素材出错</string>
@@ -101,6 +138,7 @@
     <string name="mn_edit_title_axle_z">Z轴</string>
     <string name="mn_edit_title_background">背景</string>
     <string name="mn_edit_title_bgm">背景音乐</string>
+    <string name="mn_edit_title_bgm_repeat">循环</string>
     <string name="mn_edit_title_change_voice">变声</string>
     <string name="mn_edit_title_chroma">抠像</string>
     <string name="mn_edit_title_collages">画中画</string>
@@ -133,7 +171,9 @@
     <string name="mn_edit_title_trim">修剪</string>
     <string name="mn_edit_title_volume">音量</string>
     <string name="mn_edit_title_watermark">水印</string>
+    <string name="mn_edit_tools_plugin_title">效果插件</string>
     <string name="mn_edit_total_time">总时间</string>
+    <string name="mn_edit_vlog">拍照 VLog</string>
     <string name="mn_edit_zoom_in">放大</string>
     <string name="mn_edit_zoom_out">缩小</string>
     <string name="mn_gallery_camera_album_title">拍摄相册</string>
@@ -189,4 +229,6 @@
     <string name="mn_gallery_video_total_duration_shorter_than_tip_text">视频最短不能小于1秒</string>
     <string name="mn_gallery_video_unsupport">不支持的图片格式</string>
     <string name="mn_gallery_wait_tip">请等待…</string>
+    <string name="mn_template_bottom">到底部了</string>
+    <string name="mn_template_touse">去使用</string>
 </resources>

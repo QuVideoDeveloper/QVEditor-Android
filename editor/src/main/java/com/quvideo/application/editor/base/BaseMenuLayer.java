@@ -40,8 +40,14 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     ClipTrim, // clip裁切
     ClipVolume, // clip音量
     EffectEdit, // effect编辑
+    EffectPlugin, // effect编辑效果插件
+    EffectPluginAttri, // effect编辑效果插件属性
     EffectAdd, // effect添加
+    EffectAddPlugin, // effect添加效果插件
     EffectSubtitleInput, // effect字幕修改
+    EffectSubtitleShadow, // effect字幕阴影
+    EffectSubtitleStroke, // effect字幕描边
+    EffectSubtitleAlign, // effect字幕对齐
     EffectAlpha, // effect透明度
     EffectTone, // effect变声
     EffectTrim, // effect裁切
@@ -49,10 +55,10 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     EffectMask, // effect蒙版
     EffectChroma, // effect抠色
     EffectAxle, // effect选择轴
+    EffectSubtitle, // effect字幕
     EffectKeyFrame, // effect关键帧
     Audio, // 音频
     AudioRecord, // 音频录音
     AudioAdd, // 音频添加
   }
-
 }

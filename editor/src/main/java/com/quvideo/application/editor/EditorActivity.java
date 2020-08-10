@@ -190,6 +190,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     mMenuLayout.setOnMenuListener(new MenuContainer.OnMenuListener() {
       @Override public void onMenuChange(BaseMenuLayer.MenuType menuType) {
         if (menuType == BaseMenuLayer.MenuType.EffectAdd
+            || menuType == BaseMenuLayer.MenuType.EffectSubtitleStroke
+            || menuType == BaseMenuLayer.MenuType.EffectSubtitleShadow
+            || menuType == BaseMenuLayer.MenuType.EffectSubtitleAlign
             || menuType == BaseMenuLayer.MenuType.EffectSubtitleInput) {
           rlTitle.setVisibility(View.INVISIBLE);
         } else {

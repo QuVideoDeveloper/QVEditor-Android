@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#101112"
+    android:orientation="vertical"
+    >
+
+  <View
+      android:id="@+id/viewBg"
+      android:layout_width="0dp"
+      android:layout_height="239dp"
+      android:background="#101112"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+
+  <include
+      layout="@layout/view_edit_dialog_bottom"
+      android:id="@+id/layout_bottom"
+      android:layout_width="0dp"
+      android:layout_height="46dp"
+      app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+
+  <com.quvideo.application.editor.effect.keyframe.KeyFrameTimeline
+      android:id="@+id/v_keyframe_timeline"
+      android:layout_width="0dp"
+      android:layout_height="20dp"
+      android:layout_gravity="center"
+      android:layout_marginStart="35dp"
+      android:layout_marginBottom="200dp"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/btn_curve"
+      app:layout_constraintStart_toStartOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btn_curve"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_marginStart="15dp"
+      android:layout_marginEnd="15dp"
+      app:layout_constraintTop_toTopOf="@id/v_keyframe_timeline"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:background="@drawable/edit_item_bg_normal"
+      app:layout_constraintStart_toEndOf="@id/v_keyframe_timeline"
+      app:srcCompat="@drawable/editor_btn_key_frame_curve"
+      />
+
+
+  <com.quvideo.application.widget.seekbar.CustomSeekbarPop
+      android:id="@+id/seekbar"
+      android:layout_width="match_parent"
+      android:layout_height="36dp"
+      android:layout_gravity="center"
+      android:layout_marginEnd="35dp"
+      android:layout_marginStart="35dp"
+      android:layout_marginBottom="15dp"
+      app:layout_constraintBottom_toTopOf="@id/btn_keyframe_add"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"/>
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btn_keyframe_add"
+      android:layout_width="64dp"
+      android:layout_height="65dp"
+      android:src="@drawable/editorx_icon_keyframe_add"
+      android:gravity="center"
+      android:padding="15dip"
+      android:layout_margin="10dp"
+      android:background="@drawable/edit_item_bg_normal"
+      app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+      app:layout_constraintEnd_toStartOf="@+id/btn_keyframe_del"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toStartOf="parent"  />
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btn_keyframe_del"
+      android:layout_width="64dp"
+      android:layout_height="65dp"
+      android:layout_margin="10dp"
+      android:src="@drawable/editorx_icon_keyframe_delete"
+      android:gravity="center"
+      android:padding="15dip"
+      android:background="@drawable/edit_item_bg_normal"
+      app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toEndOf="@+id/btn_keyframe_add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

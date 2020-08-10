@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.3.2"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.3.3"
 }
 ```
 
@@ -170,6 +170,12 @@ QEInitData参数说明：
 | corruptImgPath | clip错误时显示图片地址 | string | 非必须 |
 | isUseStuffClip | 是否末尾补黑帧,默认false（详解【高级玩法-自由黑帧模式】一章说明） | boolean | 非必须 |
 | iTextPrepareListener | 默认文本宏替换数据 | ITextPrepareListener | 非必须 |
+
+
+注意：
+简单的xyt文件和license文件支持放在assets目录中直接使用，但是路径名有规范，必须以"assets_android://"开头，如：
+"assets_android://qvlicense/license.txt" 和 "assets_android://quvideo/trans/0x030000000000012D.xyt"。
+
 
 ### 四、素材管理开发接入
 #### 1. 素材安装
@@ -232,33 +238,38 @@ XytInfo参数说明：
    * Long转成16进制ttid字符串
    * 如：1225031875203433521-->"0x1100300000080431"
    */
-  String hexStr = XytManager.ttidLongToHex(ttidLong);
+  String hexStr = QEXytUtil.ttidLongToHex(ttidLong);
 
   /**
    * 16进制ttid转成Long
    * 如：""0x1100300000080431"-->1225031875203433521
    */
-   long ttid = XytManager.ttidHexStrToLong(ttidHexStr);
+   long ttid = QEXytUtil.ttidHexStrToLong(ttidHexStr);
 
   /**
    * 是否mv主题
    */
-  boolean isMvTheme = XytManager.isMVTheme(ttidLong);
+  boolean isMvTheme = QEXytUtil.isMVTheme(ttidLong);
 
   /**
    * 获取主题上配置的 获取封面的最佳时间点
    */
-  int timePos = XytManager.getThemeCoverPos(themePath);
+  int timePos = QEXytUtil.getThemeCoverPos(themePath);
 
   /**
    * 获取转场配置时长
    */
-  int duration = XytManager.getTranDuration(transPath);
+  int duration = QEXytUtil.getTranDuration(transPath);
 
   /**
    * 获取转场时长是否可编辑
    */
-  boolean isEditable = XytManager.getTranEditable(transPath);
+  boolean isEditable = QEXytUtil.getTranEditable(transPath);
+
+  /**
+   * 获取效果插件素材的所有属性信息
+   */
+   List<SubPluginAttriItem> attriItems = QEXytUtil.getIEPropertyInfo(templateId);
 
 ```
 

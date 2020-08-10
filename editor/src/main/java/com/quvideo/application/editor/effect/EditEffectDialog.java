@@ -22,6 +22,9 @@ import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.chroma.EffectChromaDialog;
 import com.quvideo.application.editor.effect.keyframe.EffectKeyFrameDialog;
 import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
+import com.quvideo.application.editor.effect.plugin.EffectPluginDialog;
+import com.quvideo.application.editor.effect.subtitle.EditEffectInputDialog;
+import com.quvideo.application.editor.effect.subtitle.EffectSubtitleDialog;
 import com.quvideo.application.editor.fake.FakePosInfo;
 import com.quvideo.application.editor.fake.FakePosUtils;
 import com.quvideo.application.editor.fake.IFakeViewApi;
@@ -44,13 +47,17 @@ import com.quvideo.mobile.engine.model.AudioEffect;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.FloatEffect;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
+import com.quvideo.mobile.engine.model.effect.AudioFade;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
+import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioFade;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioRepeat;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioReplace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPCopy;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
@@ -59,6 +66,7 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPMirror;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPPosInfo;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPStaticPic;
+import com.quvideo.mobile.engine.work.operate.theme.ThemeOPBgmReset;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +85,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
   private EffectOperateAdapter mEffectOperateAdapter;
 
   private int currentTime = 0;
+  private int startTime = 0;
+  private int maxTime = 0;
 
   public EditEffectDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       int groupId, IFakeViewApi fakeViewApi) {
@@ -97,7 +107,10 @@ public class EditEffectDialog extends BaseEffectMenuView {
       if (operate instanceof EffectOPAdd
           || operate instanceof EffectOPDel
           || operate instanceof EffectOPCopy
-          || operate instanceof EffectOPAudioReplace) {
+          || operate instanceof EffectOPAudioReplace
+          || operate instanceof EffectOPAudioRepeat
+          || operate instanceof EffectOPAudioFade
+          || operate instanceof ThemeOPBgmReset) {
         // 刷新数据
         if (mWorkSpace.getPlayerAPI() != null
             && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
@@ -113,7 +126,12 @@ public class EditEffectDialog extends BaseEffectMenuView {
                 && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
               mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
             }
-
+            startTime = baseEffect.destRange.getPosition();
+            if (baseEffect.destRange.getTimeLength() > 0) {
+              maxTime = baseEffect.destRange.getLimitValue();
+            } else {
+              maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+            }
             updateFakeView(selectIndex, baseEffect);
           }
         } else {
@@ -138,6 +156,38 @@ public class EditEffectDialog extends BaseEffectMenuView {
     }
   };
 
+  private QEPlayerListener mPlayerListener = new QEPlayerListener() {
+    @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
+      currentTime = progress;
+      if (playerStatus == PlayerStatus.STATUS_PAUSE
+          || playerStatus == PlayerStatus.STATUS_PLAYING
+          || playerStatus == PlayerStatus.STATUS_STOP
+          || playerStatus == PlayerStatus.STATUS_SEEKING) {
+        updateFakeFocus(progress);
+      }
+    }
+
+    @Override public void onPlayerRefresh() {
+      if (mWorkSpace != null
+          && mWorkSpace.getPlayerAPI() != null
+          && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+        currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+        updateFakeFocus(currentTime);
+      }
+    }
+
+    @Override public void onSizeChanged(Rect resultRect) {
+    }
+  };
+
+  private void updateFakeFocus(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      if (mFakeApi != null) {
+        mFakeApi.setTarget(null, null);
+      }
+    }
+  }
+
   @Override protected int getCustomLayoutId() {
     return R.layout.dialog_edit_effect;
   }
@@ -148,7 +198,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
       // 只是为了拦击点击事件
     });
     mEffectAdapter =
-        new EditEffectAdapter(mWorkSpace, getActivity(), groupId, mOnEffectlickListener);
+        new EditEffectAdapter(mWorkSpace, getActivity(), groupId, mOnEffectClickListener);
     // effect
     mRecyclerView = view.findViewById(R.id.clip_recyclerview);
     mRecyclerView.setLayoutManager(
@@ -169,10 +219,16 @@ public class EditEffectDialog extends BaseEffectMenuView {
       BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);
       if (baseEffect != null) {
         mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
-
+        startTime = baseEffect.destRange.getPosition();
+        if (baseEffect.destRange.getTimeLength() > 0) {
+          maxTime = baseEffect.destRange.getLimitValue();
+        } else {
+          maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+        }
         updateFakeView(selectIndex, baseEffect);
       }
     }
+    mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
     // 操作view
     RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
     editRecyclerView.setLayoutManager(
@@ -184,6 +240,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
   @Override protected void releaseAll() {
     if (mWorkSpace != null) {
       mWorkSpace.removeObserver(mBaseObserver);
+      mWorkSpace.getPlayerAPI().unregisterListener(mPlayerListener);
     }
   }
 
@@ -221,9 +278,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
           EffectOPCopy effectOPCopy = new EffectOPCopy(groupId, index);
           mWorkSpace.handleOperation(effectOPCopy);
           break;
-        case EffectBarItem.ACTION_INPUT:
+        case EffectBarItem.ACTION_SUBTITLE_EDIT:
           if (baseEffect instanceof SubtitleEffect) {
-            new EditEffectInputDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+            new EffectSubtitleDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           } else {
             ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
                 getContext().getString(R.string.mn_edit_tips_no_support),
@@ -285,12 +342,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
           new EffectMaskDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
           break;
         case EffectBarItem.ACTION_CHROMA:
-          new EffectChromaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index,
-              mFakeApi);
+          new EffectChromaDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
           break;
         case EffectBarItem.ACTION_MOSAIC_DEGREE:
-          new EditEffectMosaicDegreeDialog(getContext(), mMenuContainer, mWorkSpace, groupId,
-              index);
+          new EditEffectMosaicDegreeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+          break;
+        case EffectBarItem.ACTION_FX_PLUGIN:
+          new EffectPluginDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           break;
         case EffectBarItem.ACTION_ROTATE_AXLE:
           new EffectRotateAxleDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
@@ -298,6 +356,36 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_KEYFRAME:
           mWorkSpace.getPlayerAPI().getPlayerControl().pause();
           new EffectKeyFrameDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
+          break;
+        case EffectBarItem.ACTION_AUDIO_FADE_IN:
+          boolean isFadeOn = ((AudioEffect) baseEffect).getAudioInfo().getAudioFadeIn().duration > 0;
+          EffectOPAudioFade effectOPAudioFadeIn = new EffectOPAudioFade(groupId, index,
+              new AudioFade(AudioFade.Type.FadeIn, isFadeOn ? 0 : 2000));
+          mWorkSpace.handleOperation(effectOPAudioFadeIn);
+          ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+              isFadeOn ? R.string.mn_edit_music_fade_in_turn_off : R.string.mn_edit_music_fade_in_turn_on,
+              Toast.LENGTH_SHORT);
+          break;
+        case EffectBarItem.ACTION_AUDIO_FADE_OUT:
+          boolean isFadeOut = ((AudioEffect) baseEffect).getAudioInfo().getAudioFadeOut().duration > 0;
+          EffectOPAudioFade effectOPAudioFadeOut = new EffectOPAudioFade(groupId, index,
+              new AudioFade(AudioFade.Type.FadeOut, isFadeOut ? 0 : 2000));
+          mWorkSpace.handleOperation(effectOPAudioFadeOut);
+          ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+              isFadeOut ? R.string.mn_edit_music_fade_out_turn_off : R.string.mn_edit_music_fade_out_turn_on,
+              Toast.LENGTH_SHORT);
+          break;
+        case EffectBarItem.ACTION_BGM_REPEAT:
+          boolean isRepeat = ((AudioEffect) baseEffect).getAudioInfo().isRepeat;
+          EffectOPAudioRepeat effectOPAudioRepeat = new EffectOPAudioRepeat(groupId, index, !isRepeat);
+          mWorkSpace.handleOperation(effectOPAudioRepeat);
+          ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
+              isRepeat ? R.string.mn_edit_music_repeat_turn_off : R.string.mn_edit_music_repeat_turn_on,
+              Toast.LENGTH_SHORT);
+          break;
+        case EffectBarItem.ACTION_BGM_RESET_TO_THEME:
+          ThemeOPBgmReset themeOPBgmReset = new ThemeOPBgmReset();
+          mWorkSpace.handleOperation(themeOPBgmReset);
           break;
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
@@ -312,8 +400,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
     }
   };
 
-  private EditEffectAdapter.OnEffectlickListener mOnEffectlickListener =
-      new EditEffectAdapter.OnEffectlickListener() {
+  private EditEffectAdapter.OnEffectClickListener mOnEffectClickListener =
+      new EditEffectAdapter.OnEffectClickListener() {
         @Override public void onClick(int index, BaseEffect item) {
           if (item == null || index < 0) {
             // TODO 添加
@@ -335,8 +423,15 @@ public class EditEffectDialog extends BaseEffectMenuView {
           } else {
             BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
             if (baseEffect != null) {
+              mWorkSpace.getPlayerAPI().getPlayerControl().pause();
               mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
               currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+              startTime = baseEffect.destRange.getPosition();
+              if (baseEffect.destRange.getTimeLength() > 0) {
+                maxTime = baseEffect.destRange.getLimitValue();
+              } else {
+                maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+              }
               updateFakeView(index, baseEffect);
             }
           }
@@ -409,7 +504,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
               } else if (groupId == QEGroupConst.GROUP_ID_SUBTITLE
                   && effect instanceof SubtitleEffect) {
                 // 点击同一个字幕弹起编辑
-                new EditEffectInputDialog(getContext(), mMenuContainer, mWorkSpace, groupId, i);
+                new EditEffectInputDialog(getContext(), mMenuContainer, mWorkSpace, groupId, i, 0);
               }
               return;
             }
@@ -419,6 +514,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
     } else {
       mFakeApi.setTarget(null, null);
     }
+    updateFakeFocus(currentTime);
   }
 
   private boolean hasPermissionsGranted(Activity activity) {
@@ -517,7 +613,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
           getContext().getString(R.string.mn_edit_duplicate_title), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
-      list.add(new EffectBarItem(EffectBarItem.ACTION_INPUT, R.drawable.edit_icon_key_nor,
+      list.add(new EffectBarItem(EffectBarItem.ACTION_SUBTITLE_EDIT, R.drawable.edit_icon_key_nor,
           getContext().getString(R.string.mn_edit_subtitle_input), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
@@ -568,6 +664,12 @@ public class EditEffectDialog extends BaseEffectMenuView {
               getContext().getString(R.string.mn_edit_mosaic_degree), isOpEnabled));
     }
 
+    if (groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_FX_PLUGIN, R.drawable.editor_icon_collage_tool_framework,
+              getContext().getString(R.string.mn_edit_tools_plugin_title), isOpEnabled));
+    }
+
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
         || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
@@ -581,6 +683,46 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_KEYFRAME, R.drawable.editor_tool_keyframeanimator_icon,
               getContext().getString(R.string.mn_edit_keyframe_animator_title), isOpEnabled));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
+        || groupId == QEGroupConst.GROUP_ID_DUBBING) {
+      int index = mEffectAdapter.getSelectIndex();
+      if (index >= 0) {
+        BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
+        if (baseEffect != null) {
+          boolean isFadeIn = ((AudioEffect) baseEffect).getAudioInfo().getAudioFadeIn().duration > 0;
+          boolean isFadeOut = ((AudioEffect) baseEffect).getAudioInfo().getAudioFadeOut().duration > 0;
+          list.add(
+              new EffectBarItem(EffectBarItem.ACTION_AUDIO_FADE_IN,
+                  isFadeIn ? R.drawable.editor_icon_music_inside_slc : R.drawable.editor_icon_music_inside_n,
+                  getContext().getString(
+                      isFadeIn ? R.string.mn_edit_music_fade_in_turn_on : R.string.mn_edit_music_fade_in_turn_off),
+                  isOpEnabled));
+          list.add(
+              new EffectBarItem(EffectBarItem.ACTION_AUDIO_FADE_OUT,
+                  isFadeOut ? R.drawable.editor_icon_music_outside_slc : R.drawable.editor_icon_music_outside_n,
+                  getContext().getString(
+                      isFadeOut ? R.string.mn_edit_music_fade_out_turn_on : R.string.mn_edit_music_fade_out_turn_off),
+                  isOpEnabled));
+        }
+      } else {
+        list.add(
+            new EffectBarItem(EffectBarItem.ACTION_AUDIO_FADE_IN, R.drawable.editor_icon_music_inside_n,
+                getContext().getString(R.string.mn_edit_music_fade_in_turn_off), isOpEnabled));
+        list.add(
+            new EffectBarItem(EffectBarItem.ACTION_AUDIO_FADE_OUT, R.drawable.editor_icon_music_outside_n,
+                getContext().getString(R.string.mn_edit_music_fade_out_turn_off), isOpEnabled));
+      }
+    }
+    if (groupId == QEGroupConst.GROUP_ID_BGMUSIC) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_BGM_REPEAT, R.drawable.editor_tool_effect_sound_icon,
+              getContext().getString(R.string.mn_edit_title_bgm_repeat), isOpEnabled));
+      if (mWorkSpace.getStoryboardAPI().getThemeId() != 0) {
+        list.add(
+            new EffectBarItem(EffectBarItem.ACTION_BGM_RESET_TO_THEME, R.drawable.editor_icon_collage_tool_chroma_reset,
+                getContext().getString(R.string.mn_edit_reset_text), isOpEnabled));
+      }
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
         getContext().getString(R.string.mn_edit_title_delete), isOpEnabled));

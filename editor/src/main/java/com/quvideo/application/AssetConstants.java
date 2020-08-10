@@ -36,6 +36,11 @@ public class AssetConstants {
   public static ArrayList<String> mMultiSubtitleTemplateList = new ArrayList<>();
   // 马赛克
   public static ArrayList<String> mMosaicTemplateList = new ArrayList<>();
+  // 效果插件
+  public static ArrayList<String> mPluginTemplateList = new ArrayList<>();
+
+  // 字体
+  public static ArrayList<String> mFontTemplateList = new ArrayList<>();
 
   // 音乐
   public static ArrayList<String> mMusicTemplateList = new ArrayList<>();
@@ -102,6 +107,16 @@ public class AssetConstants {
     // 马赛克
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300001.xyt");
     mMosaicTemplateList.add("assets_android://quvideo/mosaic/0x0500000000300002.xyt");
+    //效果插件
+    mPluginTemplateList.add("assets_android://quvideo/plugin/0x0400600000000496.zip");
+    mPluginTemplateList.add("assets_android://quvideo/plugin/0x0400600000000507.zip");
+    mPluginTemplateList.add("assets_android://quvideo/plugin/0x0400600000000508.zip");
+
+    // 字体
+    mFontTemplateList.add("assets_android://quvideo/font/2019122513524848.ttf");
+    mFontTemplateList.add("assets_android://quvideo/font/2019122514034848.ttf");
+    mFontTemplateList.add("assets_android://quvideo/font/2019122514043737.ttf");
+
     // 音乐
     mMusicTemplateList.add("assets_android://quvideo/music/dub_1.mp3");
     mMusicTemplateList.add("assets_android://quvideo/music/dub_2.mp3");
@@ -119,6 +134,7 @@ public class AssetConstants {
     mScanTemplateList.addAll(mStickerTemplateList);
     mScanTemplateList.addAll(mMosaicTemplateList);
 
+    mScanZipTemplateList.addAll(mPluginTemplateList);
     mScanZipTemplateList.addAll(mSlideTemplateList);
     mScanZipTemplateList.addAll(mThemeTemplateList);
     mScanZipTemplateList.addAll(mMultiSubtitleTemplateList);
@@ -153,6 +169,12 @@ public class AssetConstants {
           "Music2", R.drawable.music_2),
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_3.mp3",
           "Music3", R.drawable.music_3)
+  };
+
+  public static final String[] TEST_FONT_TID = new String[] {
+     StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122513524848.ttf",
+     StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122514034848.ttf",
+     StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122514043737.ttf",
   };
 
   public static final String WATERMARK_LOG_PATH = StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp())
@@ -218,6 +240,8 @@ public class AssetConstants {
         return xytInfo.ttidHexStr.contains("0x01000000000");
       case Slide:
         return xytInfo.ttidHexStr.contains("0x01000000004");
+      case FxPlugin:
+        return xytInfo.ttidHexStr.contains("0x04006");
       case Filter:
         return xytInfo.ttidHexStr.contains("0x04") && !xytInfo.ttidHexStr.contains("0x04000000005");
       case FxFilter:
@@ -242,6 +266,7 @@ public class AssetConstants {
     Sticker,
     Subtitle,
     Fx,
+    FxPlugin,
     Slide
   }
 }

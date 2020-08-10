@@ -32,8 +32,9 @@
     android:textColor="@color/white"
     android:textSize="8sp"
     android:visibility="gone"
+    app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintBottom_toBottomOf="@id/layoutCover"
-    app:layout_constraintEnd_toEndOf="@id/layoutCover" />
+    app:layout_constraintEnd_toEndOf="parent" />
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/imgFocus"

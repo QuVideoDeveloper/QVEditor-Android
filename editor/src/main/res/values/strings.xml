@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Thu, 23 Jul 2020 12:06:39 +0800
+ Exported at: Fri, 07 Aug 2020 11:07:08 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">No more</string>
@@ -31,6 +31,7 @@
     <string name="mn_cam_func_flash">Flash</string>
     <string name="mn_cam_func_zoom">Zoom</string>
     <string name="mn_cam_permission_request">This feature needs permission for camera and audio recording.</string>
+    <string name="mn_edit_action">Action</string>
     <string name="mn_edit_adjust_colortemp">ColorTemp</string>
     <string name="mn_edit_adjust_contrast">Contrast</string>
     <string name="mn_edit_adjust_fade">Fade</string>
@@ -43,21 +44,30 @@
     <string name="mn_edit_adjust_sharpness">Sharpness</string>
     <string name="mn_edit_adjust_vignette">Vignette</string>
     <string name="mn_edit_alpha_change">Alpha</string>
+    <string name="mn_edit_angel">Little Angel</string>
     <string name="mn_edit_back_home">Home</string>
     <string name="mn_edit_background_blur">Blur</string>
     <string name="mn_edit_background_color">Color</string>
     <string name="mn_edit_background_custom">Custom</string>
     <string name="mn_edit_background_gradual">Gradual</string>
     <string name="mn_edit_bgm_edit">Edit</string>
+    <string name="mn_edit_border">Border</string>
+    <string name="mn_edit_bubble">Bubble</string>
+    <string name="mn_edit_butterfly">Butterfly</string>
+    <string name="mn_edit_camcorder">CAMCORDER</string>
     <string name="mn_edit_change_style">Change Style</string>
     <string name="mn_edit_change_zoom">Zoom</string>
+    <string name="mn_edit_check_more">more</string>
     <string name="mn_edit_chroma_accuracy">Accurate</string>
+    <string name="mn_edit_cinema">Cinema</string>
     <string name="mn_edit_clip_transform_fit_in">fit</string>
     <string name="mn_edit_clip_transform_fit_out">fill</string>
     <string name="mn_edit_common_cancel">No</string>
     <string name="mn_edit_common_yes">Yes</string>
+    <string name="mn_edit_create_video">create video</string>
     <string name="mn_edit_dubbing_music_downmountain">down mountain</string>
     <string name="mn_edit_duplicate_title">Duplicate</string>
+    <string name="mn_edit_edit_video">Edit video</string>
     <string name="mn_edit_effect_position">Position</string>
     <string name="mn_edit_exit_confirm_content">exit？</string>
     <string name="mn_edit_export_bitrate">Bitrate</string>
@@ -69,20 +79,47 @@
     <string name="mn_edit_export_soft_hard">Soft-Hardware</string>
     <string name="mn_edit_export_software">Software</string>
     <string name="mn_edit_exporting">Exporting...</string>
+    <string name="mn_edit_firework">Fireworks</string>
+    <string name="mn_edit_font">Font</string>
+    <string name="mn_edit_foodie">Foodie</string>
+    <string name="mn_edit_kaleidoscope">Kaleidoscope</string>
     <string name="mn_edit_keyframe_animator_title">Animator</string>
+    <string name="mn_edit_kids">Kids</string>
+    <string name="mn_edit_leak">Leak</string>
+    <string name="mn_edit_love">Love</string>
     <string name="mn_edit_mask_invert">Invert</string>
     <string name="mn_edit_mask_linear">Linear</string>
     <string name="mn_edit_mask_mirror">Mirror</string>
     <string name="mn_edit_mask_radial">Radial</string>
     <string name="mn_edit_mask_rectangle">Rectangle</string>
+    <string name="mn_edit_mirror">Magic Mirror</string>
     <string name="mn_edit_mosaic_degree">Degree</string>
+    <string name="mn_edit_music_fade_in_turn_off">Fade-in off</string>
+    <string name="mn_edit_music_fade_in_turn_on">Fade-in on</string>
+    <string name="mn_edit_music_fade_out_turn_off">Fade-out off</string>
+    <string name="mn_edit_music_fade_out_turn_on">Fade-out on</string>
+    <string name="mn_edit_music_repeat_turn_off">Repeat off</string>
+    <string name="mn_edit_music_repeat_turn_on">Repeat on</string>
     <string name="mn_edit_none">None</string>
+    <string name="mn_edit_party">Party</string>
+    <string name="mn_edit_plastic">Plastic</string>
     <string name="mn_edit_quit_confirm_title">Are you sure to quit editing? The edit will not be saved after exiting.</string>
     <string name="mn_edit_reset">Reset</string>
     <string name="mn_edit_reset_text">reset</string>
+    <string name="mn_edit_roman">Roman</string>
+    <string name="mn_edit_sns">SNS</string>
+    <string name="mn_edit_special">Special Day</string>
+    <string name="mn_edit_split">Split</string>
     <string name="mn_edit_split_progress_title">Split</string>
     <string name="mn_edit_split_splitpoint">split point</string>
+    <string name="mn_edit_subtitle_align">Align</string>
+    <string name="mn_edit_subtitle_anim_state_off">Anim off</string>
+    <string name="mn_edit_subtitle_anim_state_on">Anim on</string>
+    <string name="mn_edit_subtitle_font">Font</string>
     <string name="mn_edit_subtitle_input">Input</string>
+    <string name="mn_edit_subtitle_shadow">Shadow</string>
+    <string name="mn_edit_subtitle_stroke">Border</string>
+    <string name="mn_edit_template_center">Effects</string>
     <string name="mn_edit_tips_cannot_operate">Operation failed</string>
     <string name="mn_edit_tips_error_params">Error parameter</string>
     <string name="mn_edit_tips_error_template">Error template</string>
@@ -101,6 +138,7 @@
     <string name="mn_edit_title_axle_z">Z Axle</string>
     <string name="mn_edit_title_background">Background</string>
     <string name="mn_edit_title_bgm">Music</string>
+    <string name="mn_edit_title_bgm_repeat">Repeat</string>
     <string name="mn_edit_title_change_voice">Voice</string>
     <string name="mn_edit_title_chroma">Chroma</string>
     <string name="mn_edit_title_collages">Collages</string>
@@ -133,7 +171,9 @@
     <string name="mn_edit_title_trim">Trim</string>
     <string name="mn_edit_title_volume">Volume</string>
     <string name="mn_edit_title_watermark">Watermark</string>
+    <string name="mn_edit_tools_plugin_title">FX Plugin</string>
     <string name="mn_edit_total_time">total time</string>
+    <string name="mn_edit_vlog">VLog</string>
     <string name="mn_edit_zoom_in">Zoom in</string>
     <string name="mn_edit_zoom_out">Zoom out</string>
     <string name="mn_gallery_camera_album_title">Camera Album</string>
@@ -189,4 +229,6 @@
     <string name="mn_gallery_video_total_duration_shorter_than_tip_text">Can\'t choose videos shorter than 1 second</string>
     <string name="mn_gallery_video_unsupport">Unsupported image format</string>
     <string name="mn_gallery_wait_tip">Please wait...</string>
+    <string name="mn_template_bottom">To the bottom</string>
+    <string name="mn_template_touse">To use</string>
 </resources>

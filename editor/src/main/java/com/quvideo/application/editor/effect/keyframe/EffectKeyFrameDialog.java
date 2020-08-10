@@ -111,10 +111,20 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
 
     mKeyFrameTimeline.setMaxOffsetTime(maxTime - startTime, new KeyFrameTimeline.OnKeyFrameListener() {
       @Override public void onKeyFrameClick(int focusTs) {
+        mWorkSpace.getPlayerAPI().getPlayerControl().pause();
         mWorkSpace.getPlayerAPI().getPlayerControl().seek(startTime + focusTs);
         curPlayerTime = startTime + focusTs;
         mKeyFrameTimeline.setCurOffsetTime(focusTs);
         updateBtnEnable(focusTs);
+        updatePosAndAlpha(curPlayerTime);
+      }
+
+      @Override public void onOtherClick(int offsetTime) {
+        mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+        mWorkSpace.getPlayerAPI().getPlayerControl().seek(startTime + offsetTime);
+        curPlayerTime = startTime + offsetTime;
+        mKeyFrameTimeline.setCurOffsetTime(offsetTime);
+        updateBtnEnable(-1);
         updatePosAndAlpha(curPlayerTime);
       }
     });
@@ -294,7 +304,11 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
       btnKeyRotate.setBackgroundResource(R.drawable.edit_item_bg_normal);
       btnKeyScale.setBackgroundResource(R.drawable.edit_item_bg_normal);
       btnKeyAlpha.setBackgroundResource(R.drawable.edit_item_bg_selected);
-      mCustomSeekbarPop.setVisibility(VISIBLE);
+      if (curPlayerTime < startTime || curPlayerTime > maxTime) {
+        mCustomSeekbarPop.setVisibility(INVISIBLE);
+      } else {
+        mCustomSeekbarPop.setVisibility(VISIBLE);
+      }
       mKeyFrameTimeline.setKeyFrameData(ContextCompat.getColor(EditorApp.Companion.getInstance().getApp(), R.color.color_ff45454d),
           ((AnimEffect) baseEffect).mEffectKeyFrameInfo.alphaList);
     }
@@ -397,8 +411,8 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
                     if (keyFrame.mKeyBezierCurve == null) {
                       KeyBezierCurve keyBezierCurve = new KeyBezierCurve();
                       keyBezierCurve.start = new QPoint(0, 0);
-                      keyBezierCurve.c0 = new QPoint(8600, 0);
-                      keyBezierCurve.c1 = new QPoint(1300, 10000);
+                      keyBezierCurve.c0 = new QPoint(0, 5000);
+                      keyBezierCurve.c1 = new QPoint(10000, 5000);
                       keyBezierCurve.stop = new QPoint(10000, 10000);
                       keyFrame.mKeyBezierCurve = keyBezierCurve;
                     } else {
@@ -413,8 +427,8 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
                   if (baseKeyFrame.mKeyBezierCurve == null) {
                     KeyBezierCurve keyBezierCurve = new KeyBezierCurve();
                     keyBezierCurve.start = new QPoint(0, 0);
-                    keyBezierCurve.c0 = new QPoint(8600, 0);
-                    keyBezierCurve.c1 = new QPoint(1300, 10000);
+                    keyBezierCurve.c0 = new QPoint(0, 5000);
+                    keyBezierCurve.c1 = new QPoint(10000, 5000);
                     keyBezierCurve.stop = new QPoint(10000, 10000);
                     baseKeyFrame.mKeyBezierCurve = keyBezierCurve;
                   } else {

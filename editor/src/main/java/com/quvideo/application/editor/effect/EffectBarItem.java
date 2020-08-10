@@ -7,7 +7,7 @@ public class EffectBarItem {
 
   public static final int ACTION_EDIT = 0;
   public static final int ACTION_TRIM = 1;
-  public static final int ACTION_INPUT = 2;
+  public static final int ACTION_SUBTITLE_EDIT = 2;
   public static final int ACTION_VOLUME = 3;
   public static final int ACTION_ALPHA = 4;
   public static final int ACTION_MAGIC = 5;
@@ -19,7 +19,12 @@ public class EffectBarItem {
   public static final int ACTION_DEL = 11;
   public static final int ACTION_CUT = 12;
   public static final int ACTION_ROTATE_AXLE = 13;
-  public static final int ACTION_KEYFRAME = 14;
+  public static final int ACTION_FX_PLUGIN = 14;
+  public static final int ACTION_KEYFRAME = 15;
+  public static final int ACTION_AUDIO_FADE_IN = 16;
+  public static final int ACTION_AUDIO_FADE_OUT = 17;
+  public static final int ACTION_BGM_REPEAT = 18;
+  public static final int ACTION_BGM_RESET_TO_THEME = 19;
 
   private int action;
   private int resId;

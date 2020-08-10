@@ -165,6 +165,7 @@ public class KeyFrameTimeline extends View {
     float touchX = event.getX(0);
     BaseKeyFrame baseKeyFrame = null;
     int focusTs = -1;
+    int clickOffsetTime = 0;
     if (mKeyFrameList != null) {
       float length = getMeasuredWidth();
       int progress = (int) (touchX / (length / maxOffsetTime));
@@ -177,10 +178,23 @@ public class KeyFrameTimeline extends View {
           abs = offset;
         }
       }
+      if (focusTs >= 0) {
+        int focusTimePos = focusTs * getMeasuredWidth() / maxOffsetTime;
+        if (Math.abs(focusTimePos - touchX) > dp20px) {
+          clickOffsetTime = progress;
+          focusTs = -1;
+        }
+      } else {
+        clickOffsetTime = progress;
+      }
     }
     if (focusTs >= 0) {
       if (mOnKeyFrameListener != null) {
         mOnKeyFrameListener.onKeyFrameClick(focusTs);
+      }
+    } else {
+      if (mOnKeyFrameListener != null) {
+        mOnKeyFrameListener.onOtherClick(clickOffsetTime);
       }
     }
   }
@@ -192,5 +206,8 @@ public class KeyFrameTimeline extends View {
 
     /** 点击了某个关键帧 */
     void onKeyFrameClick(int focusTs);
+
+    /** 点击了非关键帧时间 */
+    void onOtherClick(int offsetTime);
   }
 }

@@ -24,7 +24,6 @@ public class EffectOperateAdapter extends RecyclerView.Adapter<EffectOperateAdap
     mIEffectEditClickListener = listener;
   }
 
-
   public void updateList(List<EffectBarItem> list) {
     this.mlist = list;
     notifyDataSetChanged();
@@ -41,7 +40,8 @@ public class EffectOperateAdapter extends RecyclerView.Adapter<EffectOperateAdap
   public void onBindViewHolder(@NonNull Holder holder, final int position) {
     holder.mTextView.setText(mlist.get(position).getTitle());
     holder.mImageView.setImageResource(mlist.get(position).getResId());
-    if (mlist.get(position).isEnabled()) {
+    final EffectBarItem item = mlist.get(position);
+    if (item.isEnabled()) {
       holder.mImageView.setAlpha(1f);
       holder.mTextView.setAlpha(1f);
     } else {
@@ -51,7 +51,9 @@ public class EffectOperateAdapter extends RecyclerView.Adapter<EffectOperateAdap
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mIEffectEditClickListener.onClick(v, mlist.get(position));
+        if (item.isEnabled()) {
+          mIEffectEditClickListener.onClick(v, item);
+        }
       }
     });
   }

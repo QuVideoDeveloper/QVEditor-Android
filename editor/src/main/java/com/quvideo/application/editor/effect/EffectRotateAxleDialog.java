@@ -2,6 +2,7 @@ package com.quvideo.application.editor.effect;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.FloatEffect;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
+import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPPosInfo;
@@ -37,6 +39,10 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
   private int curAxle = 0;
 
   private PosDraw mPosDraw = new PosDraw();
+
+  private int currentTime = 0;
+  private int startTime = 0;
+  private int maxTime = 0;
 
   public EffectRotateAxleDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       int groupId, int effectIndex, IFakeViewApi fakeViewApi) {
@@ -73,6 +79,7 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
         EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
         mPosDraw.setNormalFake(1, effectPosInfo.degree.z);
         mFakeApi.setTarget(mPosDraw, effectPosInfo);
+        focusStartTime(currentTime);
       }
     });
     btnXAxle.setOnClickListener(new OnClickListener() {
@@ -86,6 +93,7 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
         EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
         mPosDraw.setNormalFake(2, effectPosInfo.degree.z);
         mFakeApi.setTarget(mPosDraw, effectPosInfo, effectPosInfo.degree.x);
+        focusStartTime(currentTime);
       }
     });
     btnYAxle.setOnClickListener(new OnClickListener() {
@@ -99,6 +107,7 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
         EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
         mPosDraw.setNormalFake(2, effectPosInfo.degree.z);
         mFakeApi.setTarget(mPosDraw, effectPosInfo, effectPosInfo.degree.y);
+        focusStartTime(currentTime);
       }
     });
     btnAnchor.setOnClickListener(new OnClickListener() {
@@ -120,14 +129,60 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
         PointF oldCenter = new PointF(effectPosInfo.center.x, effectPosInfo.center.y);
         mFakeApi.setOldAnchor(oldCenter);
         mFakeApi.setTarget(mPosDraw, effectPosInfo);
+        focusStartTime(currentTime);
       }
     });
     initFakeView();
   }
 
+  private QEPlayerListener mPlayerListener = new QEPlayerListener() {
+    @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
+      currentTime = progress;
+      if (playerStatus == PlayerStatus.STATUS_PAUSE
+          || playerStatus == PlayerStatus.STATUS_PLAYING
+          || playerStatus == PlayerStatus.STATUS_STOP
+          || playerStatus == PlayerStatus.STATUS_SEEKING) {
+        updateFakeFocus(progress);
+      }
+    }
+
+    @Override public void onPlayerRefresh() {
+      if (mWorkSpace != null
+          && mWorkSpace.getPlayerAPI() != null
+          && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+        currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+        updateFakeFocus(currentTime);
+      }
+    }
+
+    @Override public void onSizeChanged(Rect resultRect) {
+    }
+  };
+
+  private void updateFakeFocus(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      mFakeApi.setTarget(null, null);
+    }
+  }
+
+  private void focusStartTime(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      mWorkSpace.getPlayerAPI().getPlayerControl().seek(startTime);
+    }
+  }
+
   private void initFakeView() {
     BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
     mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
+    startTime = baseEffect.destRange.getPosition();
+    if (baseEffect.destRange.getTimeLength() > 0) {
+      maxTime = baseEffect.destRange.getLimitValue();
+    } else {
+      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+    }
+    currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+    mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
     EffectPosInfo effectPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
     mPosDraw.setNormalFake(1, 0);
     mFakeApi.setTarget(mPosDraw, effectPosInfo);
@@ -169,9 +224,13 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
       @Override public void checkEffectTouchHit(@NotNull PointF pointF) {
       }
     });
+    updateFakeFocus(currentTime);
   }
 
   @Override protected void releaseAll() {
+    if (mWorkSpace != null) {
+      mWorkSpace.getPlayerAPI().unregisterListener(mPlayerListener);
+    }
   }
 
   @Override public void onClick(View v) {

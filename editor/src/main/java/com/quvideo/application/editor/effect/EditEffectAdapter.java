@@ -32,7 +32,7 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
 
   private List<BaseEffect> mDataList = new ArrayList<>();
 
-  private OnEffectlickListener mOnEffectlickListener;
+  private OnEffectClickListener mOnEffectClickListener;
 
   private int thumbWidth = DPUtils.dpToPixel(EditorApp.Companion.getInstance().getApp(), 60);
   private int thumbHeight = DPUtils.dpToPixel(EditorApp.Companion.getInstance().getApp(), 60);
@@ -46,9 +46,9 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
   private IQEWorkSpace mWorkSpace;
 
   public EditEffectAdapter(IQEWorkSpace workSpace, LifecycleOwner activity, int groupId,
-      OnEffectlickListener effectlickListener) {
+      OnEffectClickListener effectlickListener) {
     this.mWorkSpace = workSpace;
-    this.mOnEffectlickListener = effectlickListener;
+    this.mOnEffectClickListener = effectlickListener;
     this.groupId = groupId;
     addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
   }
@@ -56,7 +56,9 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
   public void updateList(List<BaseEffect> dataList) {
     this.mDataList = dataList;
     addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
-    selectIndex = dataList.size() > 0 ? 0 : -1;
+    if (selectIndex >= dataList.size() || selectIndex < 0) {
+      selectIndex = dataList.size() > 0 ? 0 : -1;
+    }
     notifyDataSetChanged();
   }
 
@@ -75,8 +77,8 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
       holder.mImageView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          if (mOnEffectlickListener != null) {
-            mOnEffectlickListener.onClick(-1, null);
+          if (mOnEffectClickListener != null) {
+            mOnEffectClickListener.onClick(-1, null);
           }
         }
       });
@@ -144,9 +146,9 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (mOnEffectlickListener != null) {
+        if (mOnEffectClickListener != null) {
           changeSelect(position);
-          mOnEffectlickListener.onClick(selectIndex, item);
+          mOnEffectClickListener.onClick(selectIndex, item);
         }
       }
     });
@@ -188,7 +190,7 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
     }
   }
 
-  public interface OnEffectlickListener {
+  public interface OnEffectClickListener {
     void onClick(int index, BaseEffect item);
   }
 }

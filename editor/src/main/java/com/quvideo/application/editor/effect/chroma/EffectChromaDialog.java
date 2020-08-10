@@ -2,6 +2,7 @@ package com.quvideo.application.editor.effect.chroma;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.view.View;
 import android.widget.TextView;
 import com.quvideo.application.editor.R;
@@ -16,7 +17,9 @@ import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.entity.ChromaColor;
 import com.quvideo.mobile.engine.model.AnimEffect;
+import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.effect.EffectChromaInfo;
+import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.work.BaseOperate;
@@ -33,6 +36,10 @@ public class EffectChromaDialog extends BaseEffectMenuView {
   private TextView btnReset;
   private boolean isPicking = false;
   private ChromaColor mChromaColor = null;
+
+  private int currentTime = 0;
+  private int startTime = 0;
+  private int maxTime = 0;
 
   public EffectChromaDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       int groupId, int effectIndex, IFakeViewApi fakeViewApi) {
@@ -63,6 +70,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
         .seekRange(new CustomSeekbarPop.SeekRange(0, 5000))
         .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
           @Override public void onSeekStart(boolean isFirst, int progress) {
+            focusStartTime(currentTime);
           }
 
           @Override public void onSeekOver(boolean isFirst, int progress) {
@@ -87,6 +95,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
         mFakeApi.setTarget(null, null, null);
         mCustomSeekbarPop.setVisibility(View.INVISIBLE);
         isPicking = false;
+        focusStartTime(currentTime);
       }
     });
 
@@ -103,6 +112,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
             mCustomSeekbarPop.setVisibility(View.INVISIBLE);
           }
         }
+        focusStartTime(currentTime);
       }
     });
     AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
@@ -110,6 +120,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
       mCustomSeekbarPop.setProgress(baseEffect.mEffectChromaInfo.accuracy);
     }
     initFakeView();
+    updateFakeFocus(currentTime);
   }
 
   private BaseObserver mBaseObserver = new BaseObserver() {
@@ -122,9 +133,55 @@ public class EffectChromaDialog extends BaseEffectMenuView {
     }
   };
 
+  private QEPlayerListener mPlayerListener = new QEPlayerListener() {
+    @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
+      currentTime = progress;
+      if (playerStatus == PlayerStatus.STATUS_PAUSE
+          || playerStatus == PlayerStatus.STATUS_PLAYING
+          || playerStatus == PlayerStatus.STATUS_STOP
+          || playerStatus == PlayerStatus.STATUS_SEEKING) {
+        updateFakeFocus(progress);
+      }
+    }
+
+    @Override public void onPlayerRefresh() {
+      if (mWorkSpace != null
+          && mWorkSpace.getPlayerAPI() != null
+          && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+        currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+        updateFakeFocus(currentTime);
+      }
+    }
+
+    @Override public void onSizeChanged(Rect resultRect) {
+    }
+  };
+
+  private void updateFakeFocus(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      mFakeApi.setTarget(null, null);
+    }
+  }
+
+  private void focusStartTime(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      mWorkSpace.getPlayerAPI().getPlayerControl().seek(startTime);
+    }
+  }
+
   private void initFakeView() {
     mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
     mFakeApi.setTarget(null, null, null);
+    BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+    startTime = baseEffect.destRange.getPosition();
+    if (baseEffect.destRange.getTimeLength() > 0) {
+      maxTime = baseEffect.destRange.getLimitValue();
+    } else {
+      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+    }
+    currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+    mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
     mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
@@ -170,6 +227,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
   @Override protected void releaseAll() {
     if (mWorkSpace != null) {
       mWorkSpace.removeObserver(mBaseObserver);
+      mWorkSpace.getPlayerAPI().unregisterListener(mPlayerListener);
     }
   }
 

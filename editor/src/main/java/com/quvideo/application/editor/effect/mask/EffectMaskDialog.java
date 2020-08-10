@@ -2,6 +2,7 @@ package com.quvideo.application.editor.effect.mask;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.engine.model.AnimEffect;
 import com.quvideo.mobile.engine.model.effect.EffectMaskInfo;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
+import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMaskInfo;
 import java.util.ArrayList;
@@ -31,6 +33,10 @@ public class EffectMaskDialog extends BaseEffectMenuView {
   private int groupId = 0;
   private int effectIndex = 0;
   private CustomSeekbarPop mCustomSeekbarPop;
+
+  private int currentTime = 0;
+  private int startTime = 0;
+  private int maxTime = 0;
 
   public EffectMaskDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       int groupId, int effectIndex, IFakeViewApi fakeViewApi) {
@@ -61,6 +67,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
         .seekRange(new CustomSeekbarPop.SeekRange(0, 10000))
         .seekOverListener(new DoubleSeekbar.OnSeekbarListener() {
           @Override public void onSeekStart(boolean isFirst, int progress) {
+            focusStartTime(currentTime);
           }
 
           @Override public void onSeekOver(boolean isFirst, int progress) {
@@ -101,9 +108,54 @@ public class EffectMaskDialog extends BaseEffectMenuView {
     adapter.setOnItemClickListener(this::changeMaskType);
   }
 
+  private QEPlayerListener mPlayerListener = new QEPlayerListener() {
+    @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
+      currentTime = progress;
+      if (playerStatus == PlayerStatus.STATUS_PAUSE
+          || playerStatus == PlayerStatus.STATUS_PLAYING
+          || playerStatus == PlayerStatus.STATUS_STOP
+          || playerStatus == PlayerStatus.STATUS_SEEKING) {
+        updateFakeFocus(progress);
+      }
+    }
+
+    @Override public void onPlayerRefresh() {
+      if (mWorkSpace != null
+          && mWorkSpace.getPlayerAPI() != null
+          && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
+        currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+        updateFakeFocus(currentTime);
+      }
+    }
+
+    @Override public void onSizeChanged(Rect resultRect) {
+    }
+  };
+
+  private void updateFakeFocus(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      mFakeApi.setTarget(null, null);
+    }
+  }
+
+  private void focusStartTime(int curTime) {
+    if (curTime < startTime || curTime > maxTime) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      mWorkSpace.getPlayerAPI().getPlayerControl().seek(startTime);
+    }
+  }
+
   private void initFakeView() {
     AnimEffect animEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
     mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
+    startTime = animEffect.destRange.getPosition();
+    if (animEffect.destRange.getTimeLength() > 0) {
+      maxTime = animEffect.destRange.getLimitValue();
+    } else {
+      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+    }
+    currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
+    mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
     EffectPosInfo effectPosInfo = animEffect.mEffectPosInfo;
     if (animEffect.mEffectMaskInfo != null) {
       changeFakeView(animEffect.mEffectMaskInfo.maskType, effectPosInfo, animEffect.mEffectMaskInfo);
@@ -137,6 +189,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
       @Override public void checkEffectTouchHit(@NotNull PointF pointF) {
       }
     });
+    updateFakeFocus(currentTime);
   }
 
   private void changeFakeView(EffectMaskInfo.MaskType maskType, EffectPosInfo effectPosInfo, EffectMaskInfo effectMaskInfo) {
@@ -160,9 +213,13 @@ public class EffectMaskDialog extends BaseEffectMenuView {
       mFakeApi.setTarget(null, null);
       mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     }
+    focusStartTime(currentTime);
   }
 
   @Override protected void releaseAll() {
+    if (mWorkSpace != null) {
+      mWorkSpace.getPlayerAPI().unregisterListener(mPlayerListener);
+    }
   }
 
   private void changeMaskType(EffectMaskAdapter.MaskItem maskItem) {

@@ -6,7 +6,7 @@ public abstract class SimpleTemplate {
 
   private long templateId;
   private String title;
-  private int thumbnailResId;
+  public int thumbnailResId;
 
   public SimpleTemplate(long templateId, String title, int thumbnailResId) {
     this.templateId = templateId;

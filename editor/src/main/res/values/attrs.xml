@@ -43,4 +43,27 @@
     <attr name="stroke_width" format="dimension"/>
     <attr name="clip_background" format="boolean"/>
   </declare-styleable>
+
+  <declare-styleable name="ColorSeekBar">
+    <attr name="csb_bg_height" format="dimension|reference" />
+    <attr name="csb_color_type">
+      <enum name="text" value="1" />
+      <enum name="bg_brown" value="2" />
+      <enum name="bg_red" value="3" />
+      <enum name="bg_violet" value="4" />
+      <enum name="bg_blue" value="5" />
+      <enum name="bg_green" value="6" />
+      <enum name="bg_yellow" value="7" />
+    </attr>
+    <attr name="csb_thumb_height" format="dimension|reference" />
+    <attr name="csb_thumb_width" format="dimension|reference" />
+    <attr name="csb_thumb_border_width" format="dimension|reference" />
+    <attr name="csb_thumb_border_color" format="color|reference" />
+    <attr name="csb_top_circle_diam" format="dimension|reference" />
+    <attr name="csb_top_text_bg_space" format="dimension|reference" />
+    <attr name="csb_bg_left_padding" format="dimension|reference" />
+    <attr name="csb_bg_right_padding" format="dimension|reference" />
+    <attr name="csb_default_color" format="color|reference" />
+  </declare-styleable>
+
 </resources>

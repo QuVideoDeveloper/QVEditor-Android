@@ -49,6 +49,14 @@ class EditorApp private constructor() {
       for (assetPath in AssetConstants.mMusicTemplateList) {
         copyAssetFile(assetPath)
       }
+      // 拷贝字体font到sdcard
+      for (assetPath in AssetConstants.mFontTemplateList) {
+        copyAssetFile(assetPath)
+      }
+      // 拷贝水印文件到sdcard
+      for (assetPath in AssetConstants.mWaterTemplateList) {
+        copyAssetFile(assetPath)
+      }
       // 拷贝zip素材到sd卡进行解压并安装
       for (assetPath in AssetConstants.mScanZipTemplateList) {
         val zipPath: String? = copyAssetFile(assetPath)

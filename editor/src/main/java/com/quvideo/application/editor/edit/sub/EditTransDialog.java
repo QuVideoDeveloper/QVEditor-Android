@@ -19,6 +19,7 @@ import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
+import com.quvideo.mobile.engine.QEXytUtil;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.CrossInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -156,10 +157,10 @@ public class EditTransDialog extends BaseMenuView {
   }
 
   private static boolean isTransDurationEditable(String transPath) {
-    return XytManager.getTranEditable(transPath);
+    return QEXytUtil.getTranEditable(transPath);
   }
 
   private static int getTranDftDuration(String transPath) {
-    return XytManager.getTranDuration(transPath);
+    return QEXytUtil.getTranDuration(transPath);
   }
 }
