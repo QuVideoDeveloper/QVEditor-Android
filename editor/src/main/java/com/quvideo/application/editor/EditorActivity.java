@@ -1,9 +1,15 @@
 package com.quvideo.application.editor;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +30,8 @@ import com.quvideo.application.DPUtils;
 import com.quvideo.application.EditorConst;
 import com.quvideo.application.camera.CameraActivity;
 import com.quvideo.application.camera.recorder.RecorderClipInfo;
+import com.quvideo.application.db.DraftInfoDao;
+import com.quvideo.application.draft.DraftModel;
 import com.quvideo.application.editor.base.BaseMenuLayer;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
@@ -58,6 +66,7 @@ import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPRatio;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import xiaoying.utils.LogUtils;
@@ -66,6 +75,8 @@ import xiaoying.utils.LogUtils;
  * Created by santa on 2020-04-29.
  */
 public class EditorActivity extends AppCompatActivity implements ItemOnClickListener {
+
+  public static final int INTENT_REQUEST_QRCODE = 101;
 
   private RecyclerView mRecyclerView;
   private List<EditOperate> mEditOperates;
@@ -95,55 +106,83 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_edit);
     initView();
-    // 临时demo
-    QEEngineClient.createNewProject(new QEWorkSpaceListener() {
-      @Override public void onSuccess(IQEWorkSpace qeWorkSpace) {
-        List<RecorderClipInfo> recorderClipInfos = getRecordClipList();
-        ArrayList<String> albumChoose =
-            getIntent().getStringArrayListExtra(EditorConst.INTENT_EXT_KEY_ALBUM);
-        if (recorderClipInfos != null && recorderClipInfos.size() > 0) {
-          // 它来自Camera
+    String draftUrl = getIntent().getStringExtra(EditorConst.INTENT_EXT_KEY_DRAFT);
+    if (!TextUtils.isEmpty(draftUrl)) {
+      QEEngineClient.loadProject(draftUrl, new QEWorkSpaceListener() {
+        @Override public void onSuccess(IQEWorkSpace qeWorkSpace) {
+          // 它来自草稿
+          isAddWaterMarkAfterInit = true;
           mWorkSpace = qeWorkSpace;
           mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
-          List<ClipAddItem> list = new ArrayList<>();
-          for (RecorderClipInfo clipInfo : recorderClipInfos) {
-            int length = clipInfo.getRecorderPos()[1] - clipInfo.getRecorderPos()[0];
-            ClipAddItem item = new ClipAddItem();
-            item.clipFilePath = clipInfo.getFilePath();
-            item.trimRange = new VeRange(clipInfo.getRecorderPos()[0], length);
-            if (clipInfo.getEffectItem() != null) {
-              item.filterInfo = new FilterInfo(clipInfo.getEffectItem().getEffectFilePath());
-            }
-            list.add(item);
+          mWorkSpace.addObserver(mProjectObserver);
+          if (mPlayerControllerView != null) {
+            mPlayerControllerView.setPlayerAPI(mWorkSpace.getPlayerAPI());
           }
-          ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
-          mWorkSpace.handleOperation(clipOPAdd);
-        } else if (albumChoose != null && albumChoose.size() > 0) {
-          // 它来自相册
-          mWorkSpace = qeWorkSpace;
-          mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
-          List<ClipAddItem> list = new ArrayList<>();
-          for (String path : albumChoose) {
-            ClipAddItem item = new ClipAddItem();
-            item.clipFilePath = path;
-            list.add(item);
-          }
-          ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
-          mWorkSpace.handleOperation(clipOPAdd);
-        } else {
-          ToastUtils.show(EditorActivity.this, "No Video or Pic selected", Toast.LENGTH_LONG);
-          EditorActivity.this.finish();
-          return;
         }
-        mWorkSpace.addObserver(mProjectObserver);
-        if (mPlayerControllerView != null) {
-          mPlayerControllerView.setPlayerAPI(mWorkSpace.getPlayerAPI());
-        }
-      }
 
-      @Override public void onError(QEStoryBoardResult error) {
-      }
-    });
+        @Override public void onError(QEStoryBoardResult error) {
+          ToastUtils.show(EditorActivity.this, "Load Project fail", Toast.LENGTH_LONG);
+          EditorActivity.this.finish();
+        }
+      });
+    } else {
+      // 临时demo
+      QEEngineClient.createNewProject(new QEWorkSpaceListener() {
+        @Override public void onSuccess(IQEWorkSpace qeWorkSpace) {
+          List<RecorderClipInfo> recorderClipInfos = getRecordClipList();
+          ArrayList<String> albumChoose =
+              getIntent().getStringArrayListExtra(EditorConst.INTENT_EXT_KEY_ALBUM);
+          if (recorderClipInfos != null && recorderClipInfos.size() > 0) {
+            // 它来自Camera
+            mWorkSpace = qeWorkSpace;
+            mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
+            List<ClipAddItem> list = new ArrayList<>();
+            for (RecorderClipInfo clipInfo : recorderClipInfos) {
+              int length = clipInfo.getRecorderPos()[1] - clipInfo.getRecorderPos()[0];
+              ClipAddItem item = new ClipAddItem();
+              item.clipFilePath = clipInfo.getFilePath();
+              item.trimRange = new VeRange(clipInfo.getRecorderPos()[0], length);
+              if (clipInfo.getEffectItem() != null) {
+                item.filterInfo = new FilterInfo(clipInfo.getEffectItem().getEffectFilePath());
+              }
+              list.add(item);
+            }
+            ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
+            mWorkSpace.handleOperation(clipOPAdd);
+          } else if (albumChoose != null && albumChoose.size() > 0) {
+            // 它来自相册
+            mWorkSpace = qeWorkSpace;
+            mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
+            List<ClipAddItem> list = new ArrayList<>();
+            for (String path : albumChoose) {
+              ClipAddItem item = new ClipAddItem();
+              item.clipFilePath = path;
+              list.add(item);
+            }
+            ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
+            mWorkSpace.handleOperation(clipOPAdd);
+          } else {
+            ToastUtils.show(EditorActivity.this, "No Video or Pic selected", Toast.LENGTH_LONG);
+            EditorActivity.this.finish();
+            return;
+          }
+          DraftInfoDao draftInfoDao = new DraftInfoDao();
+          DraftModel draftModel = new DraftModel();
+          draftModel.createTime = System.currentTimeMillis();
+          draftModel.projectUrl = qeWorkSpace.getProjectUrl();
+          draftInfoDao.addItem(draftModel);
+          mWorkSpace.addObserver(mProjectObserver);
+          if (mPlayerControllerView != null) {
+            mPlayerControllerView.setPlayerAPI(mWorkSpace.getPlayerAPI());
+          }
+        }
+
+        @Override public void onError(QEStoryBoardResult error) {
+          ToastUtils.show(EditorActivity.this, "Create Project fail", Toast.LENGTH_LONG);
+          EditorActivity.this.finish();
+        }
+      });
+    }
     btnBack.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         handleBack();
@@ -164,7 +203,21 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
             Bitmap bitmap = mWorkSpace.getProjectThumbnail();
             String thumbnail = FileUtils.getFileParentPath(exportParams.outputPath)
                 + FileUtils.getFileName(exportParams.outputPath) + "_thumbnail.jpg";
-            FileUtils.saveBitmap(thumbnail, bitmap, 100);
+            if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
+              FileUtils.saveBitmap(thumbnail, bitmap, 100);
+            } else {
+              ContentValues contentValues = new ContentValues();
+              contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+              contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
+              contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
+              contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+              Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+              thumbnail = path.toString();
+              FileUtils.saveBitmap(thumbnail, bitmap, 100);
+            }
+            if (bitmap != null) {
+              bitmap.recycle();
+            }
             ExportDialog exportDialog = new ExportDialog();
             exportDialog.showExporting(EditorActivity.this, thumbnail, exportParams, mWorkSpace);
           }
@@ -384,6 +437,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     if (requestCode == PreviewActivity.REQUEST_CODE_PREVIEW && resultCode == Activity.RESULT_OK) {
       finish();
+      return;
+    }
+    if (mMenuLayout != null && mMenuLayout.onActivityResult(requestCode, resultCode, data)) {
       return;
     }
     super.onActivityResult(requestCode, resultCode, data);

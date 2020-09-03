@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Surface;
@@ -24,6 +25,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import com.bumptech.glide.Glide;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.utils.DeviceSizeUtil;
+import com.quvideo.application.utils.FilePathUtils;
 import com.quvideo.mobile.engine.entity.VideoInfo;
 import com.quvideo.mobile.engine.utils.MediaFileUtils;
 
@@ -87,9 +89,13 @@ public class PreviewActivity extends AppCompatActivity {
     ivCover = findViewById(R.id.iv_cover);
     textureView = findViewById(R.id.export_textureview);
     ivPlay = findViewById(R.id.iv_play);
-    tvVideoPath.setText(videoPath);
+    if (FilePathUtils.isContentUri(videoPath)) {
+      tvVideoPath.setText(FilePathUtils.transUriPath2FilePath(videoPath));
+    } else {
+      tvVideoPath.setText(videoPath);
+    }
 
-    if (MediaFileUtils.isImageFileType(videoPath) || videoPath.endsWith(".webp")) {
+    if (MediaFileUtils.isImageFileType(videoPath) || isWebp(videoPath)) {
       ivCover.setVisibility(View.VISIBLE);
       Glide.with(ivCover).load(videoPath).into(ivCover);
       ivPlay.setVisibility(View.GONE);
@@ -105,6 +111,13 @@ public class PreviewActivity extends AppCompatActivity {
       }
       loadVideo(videoPath);
     }
+  }
+
+  private boolean isWebp(String path) {
+    if (FilePathUtils.isContentUri(path)) {
+      path = FilePathUtils.transUriPath2FilePath(path);
+    }
+    return path.endsWith(".webp");
   }
 
   private void initListener() {
@@ -253,7 +266,11 @@ public class PreviewActivity extends AppCompatActivity {
   private void loadVideo(String path) {
     try {
       mMediaPlayer = new MediaPlayer();
-      mMediaPlayer.setDataSource(path);
+      if (FilePathUtils.isContentUri(path)) {
+        mMediaPlayer.setDataSource(this, Uri.parse(path));
+      } else {
+        mMediaPlayer.setDataSource(path);
+      }
       mMediaPlayer.setSurface(mSurface);
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       mMediaPlayer.setOnPreparedListener(mp -> {

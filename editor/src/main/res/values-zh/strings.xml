@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Fri, 07 Aug 2020 11:07:08 +0800
+ Exported at: Thu, 20 Aug 2020 14:30:10 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="mn_app_brvah_load_end">没有更多数据</string>
@@ -103,6 +103,7 @@
     <string name="mn_edit_none">无</string>
     <string name="mn_edit_party">派对</string>
     <string name="mn_edit_plastic">光影</string>
+    <string name="mn_edit_qrcode_scan">二维码</string>
     <string name="mn_edit_quit_confirm_title">是否确认退出编辑？退出后将不保存编辑。</string>
     <string name="mn_edit_reset">重置</string>
     <string name="mn_edit_reset_text">重置</string>
@@ -112,6 +113,8 @@
     <string name="mn_edit_split">分屏</string>
     <string name="mn_edit_split_progress_title">分割点</string>
     <string name="mn_edit_split_splitpoint">分割点</string>
+    <string name="mn_edit_subeffect_off">关闭</string>
+    <string name="mn_edit_subeffect_on">打开</string>
     <string name="mn_edit_subtitle_align">对齐</string>
     <string name="mn_edit_subtitle_anim_state_off">动画关闭</string>
     <string name="mn_edit_subtitle_anim_state_on">动画开启</string>
@@ -130,8 +133,10 @@
     <string name="mn_edit_tips_no_allow_trim">请设置合理范围</string>
     <string name="mn_edit_tips_no_define">未定义</string>
     <string name="mn_edit_tips_no_support">不支持的操作</string>
+    <string name="mn_edit_tips_template_qrcode_error">请选择正确的素材!</string>
     <string name="mn_edit_tips_template_theme_error">卡点视频主题错误</string>
     <string name="mn_edit_title_adjust">参数调节</string>
+    <string name="mn_edit_title_adjust_curve">曲线调色</string>
     <string name="mn_edit_title_axle_anchor">锚点</string>
     <string name="mn_edit_title_axle_x">X轴</string>
     <string name="mn_edit_title_axle_y">Y轴</string>
@@ -141,8 +146,10 @@
     <string name="mn_edit_title_bgm_repeat">循环</string>
     <string name="mn_edit_title_change_voice">变声</string>
     <string name="mn_edit_title_chroma">抠像</string>
+    <string name="mn_edit_title_collage_overlay">混合模式</string>
     <string name="mn_edit_title_collages">画中画</string>
     <string name="mn_edit_title_crop">裁剪</string>
+    <string name="mn_edit_title_curve_speed">曲线变速</string>
     <string name="mn_edit_title_delete">删除</string>
     <string name="mn_edit_title_dub_record">录音</string>
     <string name="mn_edit_title_dubbing">音效</string>
@@ -229,6 +236,7 @@
     <string name="mn_gallery_video_total_duration_shorter_than_tip_text">视频最短不能小于1秒</string>
     <string name="mn_gallery_video_unsupport">不支持的图片格式</string>
     <string name="mn_gallery_wait_tip">请等待…</string>
+    <string name="mn_main_title_draft">草稿</string>
     <string name="mn_template_bottom">到底部了</string>
     <string name="mn_template_touse">去使用</string>
 </resources>

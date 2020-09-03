@@ -25,6 +25,13 @@ public class EffectBarItem {
   public static final int ACTION_AUDIO_FADE_OUT = 17;
   public static final int ACTION_BGM_REPEAT = 18;
   public static final int ACTION_BGM_RESET_TO_THEME = 19;
+  public static final int ACTION_QRCODE = 20;
+  public static final int ACTION_COLLAGE_FILTER= 21;
+  public static final int ACTION_COLLAGE_FX= 22;
+  public static final int ACTION_COLLAGE_OVERLAY= 23;
+  public static final int ACTION_COLLAGE_ADJUST= 24;
+  public static final int ACTION_COLLAGE_CURVE_ADJUST= 25;
+  public static final int ACTION_COLLAGE_SUBEFFECT_DISABLE = 27;
 
   private int action;
   private int resId;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.mobile.engine.model.ClipData;
@@ -18,11 +17,11 @@ public class EditMagicSoundDialog extends BaseMenuView {
   private int clipIndex = 0;
 
   public EditMagicSoundDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int clipIndex) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
 
-    showMenu(container, l);
+    showMenu(container, null);
   }
 
   @Override public MenuType getMenuType() {

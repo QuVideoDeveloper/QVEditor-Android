@@ -73,6 +73,7 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
   public void onBindViewHolder(@NonNull TemplateHolder holder, final int position) {
     if (addOffset > 0 && position == 0) {
       holder.mImageView.setSelected(false);
+      holder.mImgFocus.setVisibility(View.GONE);
       holder.mImageView.setImageResource(R.drawable.edit_add_icon);
       holder.mImageView.setOnClickListener(new View.OnClickListener() {
         @Override

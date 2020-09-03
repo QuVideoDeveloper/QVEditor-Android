@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
 /**
- * @author Elijah <a href="https://github.com/liuzhonghu">Contact me.</a>
  * @since 10/21/2019
  * 自定义圆角属性的RelativeLayout
  */

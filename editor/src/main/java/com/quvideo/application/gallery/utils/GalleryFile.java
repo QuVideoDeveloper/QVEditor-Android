@@ -1,6 +1,5 @@
 package com.quvideo.application.gallery.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -22,13 +21,9 @@ import static com.quvideo.application.gallery.model.GalleryDef.LIMIT_VGA;
 
 public class GalleryFile {
 
-  private static String mMediaPath = "";
-  private static String mNetMediaPath = "";
   private static String exportImagePath = null;
 
   private static final String GIF_SUFFIX = ".gif";
-  private static final String SDCARD_PHOTO_MEDIA_PATH_END = "gallery/photo/";
-  private static final String SDCARD_NET_MEDIA_PATH_END = "gallery/netmedia/";
 
   private static final String APP_DEFAULT_PNG_EXT = ".png";
   private static final String APP_DEFAULT_PHOTO_EXT = ".jpg";
@@ -59,42 +54,6 @@ public class GalleryFile {
       }
     }
     return null;
-  }
-
-  public static String getPhotoSavePath(Context context) {
-    if (TextUtils.isEmpty(mMediaPath)) {
-      String appMediaDir = getAppMediaDir(context);
-      mMediaPath = appMediaDir + SDCARD_PHOTO_MEDIA_PATH_END;
-      FileUtils.createNoMediaFileInPath(mMediaPath);
-    }
-    if (TextUtils.isEmpty(mMediaPath)) {
-      throw new RuntimeException("path is null, can't run anymore");
-    }
-    return mMediaPath;
-  }
-
-  public static String getNetSavePath(Context context) {
-    if (TextUtils.isEmpty(mNetMediaPath)) {
-      String appMediaDir = getAppMediaDir(context);
-      mNetMediaPath = appMediaDir + SDCARD_NET_MEDIA_PATH_END;
-      FileUtils.createNoMediaFileInPath(mNetMediaPath);
-    }
-    if (TextUtils.isEmpty(mNetMediaPath)) {
-      throw new RuntimeException("path is null, can't run anymore");
-    }
-    return mNetMediaPath;
-  }
-
-  private static String getAppMediaDir(Context context) {
-    String appMediaDir = "";
-    File outerFile = context.getExternalFilesDir(null);
-    if (outerFile != null) {
-      appMediaDir = outerFile.getAbsolutePath();
-      if (!appMediaDir.endsWith(File.separator)) {
-        appMediaDir += File.separator;
-      }
-    }
-    return appMediaDir;
   }
 
   public static boolean isGifFile(String path) {

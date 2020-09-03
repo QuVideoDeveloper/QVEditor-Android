@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import com.quvideo.application.editor.R;
 
-class CamPermissionMgr {
+public class CamPermissionMgr {
 
   private static final int REQUEST_VIDEO_PERMISSIONS = 1;
   private static final String FRAGMENT_DIALOG = "permission_dialog";
@@ -23,7 +23,7 @@ class CamPermissionMgr {
       Manifest.permission.RECORD_AUDIO,
   };
 
-  static boolean hasPermissionsGranted(Activity activity) {
+  public static boolean hasPermissionsGranted(Activity activity) {
     for (String permission : VIDEO_PERMISSIONS) {
       if (ActivityCompat.checkSelfPermission(activity, permission)
           != PackageManager.PERMISSION_GRANTED) {
@@ -36,7 +36,7 @@ class CamPermissionMgr {
   /**
    * Requests permissions needed for recording video.
    */
-  static void requestVideoPermissions(AppCompatActivity activity) {
+  public static void requestVideoPermissions(AppCompatActivity activity) {
     if (ActivityCompat.shouldShowRequestPermissionRationale(activity, VIDEO_PERMISSIONS[0])
         && ActivityCompat.shouldShowRequestPermissionRationale(activity, VIDEO_PERMISSIONS[1])) {
       new ConfirmationDialog().show(activity.getSupportFragmentManager(), FRAGMENT_DIALOG);
@@ -45,7 +45,7 @@ class CamPermissionMgr {
     }
   }
 
-  static boolean checkCamPermissionValid(AppCompatActivity activity, int requestCode,
+  public static boolean checkCamPermissionValid(AppCompatActivity activity, int requestCode,
       @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     if (requestCode == REQUEST_VIDEO_PERMISSIONS) {

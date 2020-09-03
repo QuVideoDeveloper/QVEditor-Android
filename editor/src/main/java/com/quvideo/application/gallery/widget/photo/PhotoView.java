@@ -1067,7 +1067,6 @@ public class PhotoView extends AppCompatImageView {
    * DoubleTapZoom calls a series of runnables which apply
    * an animated zoom in/out graphic to the image.
    *
-   * @author Ortiz
    */
   private class DoubleTapZoom implements Runnable {
 

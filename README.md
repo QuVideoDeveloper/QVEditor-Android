@@ -145,13 +145,8 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.3.3"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.3.5"
 }
-```
-
-4）由于android文件系统权限在targetSdkVersion = 29之后有分区和沙盒概念，sdk对此暂无兼容。所以如果targetSdkVersion设置的是29以上，请在app的AndroidManifest.xml文件的application中，新增以下设置
-```
-    android:requestLegacyExternalStorage="true"
 ```
 
 #### 3. 剪辑SDK初始化
@@ -164,10 +159,10 @@ QEEngineClient.init(context, builder.build());
 QEInitData参数说明：
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
-| licensePath | license文件路径地址 | String | 必须 |
-| projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除 | number | 非必须 |
-| hwCodecCapPath | 设备软硬件配置文件 | string | 非必须 |
-| corruptImgPath | clip错误时显示图片地址 | string | 非必须 |
+| licensePath | license文件路径地址,可以是assets目录。（注意：android 10以上只支持放在私有目录中,请保证使用完整绝对路径） | String | 必须 |
+| projectDir | 剪辑工程文件存放路径，默认存放剪辑工程的地址，删除APP或清除用户数据时会被清除（注意：android 10以上只支持放在私有目录中,请保证使用完整绝对路径的目录） | number | 非必须 |
+| hwCodecCapPath | 设备软硬件配置文件（注意：android 10以上只支持放在私有目录中,请保证使用完整绝对路径） | string | 非必须 |
+| corruptImgPath | clip错误时显示图片地址（注意：android 10以上只支持放在私有目录中,请保证使用完整绝对路径） | string | 非必须 |
 | isUseStuffClip | 是否末尾补黑帧,默认false（详解【高级玩法-自由黑帧模式】一章说明） | boolean | 非必须 |
 | iTextPrepareListener | 默认文本宏替换数据 | ITextPrepareListener | 非必须 |
 
@@ -181,8 +176,10 @@ QEInitData参数说明：
 #### 1. 素材安装
 同一个素材，只需要安装一次即可，后续直接通过素材id即可查询素材信息。
 
-注意，assets目录下的素材安装，每次需要完整列表重新安装，会进行增删处理。对于asset目录下的素材，升级时如有需要，可以完整重新安装一次，用于素材变更。
-```
+注意:
+1.assets目录下的素材安装，每次需要完整列表重新安装，会进行增删处理。对于asset目录下的素材，升级时如有需要，可以完整重新安装一次，用于素材变更。
+2.android 10 以上只支持放在私有目录中，所有素材请保证使用完整绝对路径
+``
 /** 安装单个素材文件,zip包或者xyt文件 */
 XytManager.install(xytZipPath, xytInstallListener);
 
@@ -270,6 +267,15 @@ XytInfo参数说明：
    * 获取效果插件素材的所有属性信息
    */
    List<SubPluginAttriItem> attriItems = QEXytUtil.getIEPropertyInfo(templateId);
+  /**
+   * 获取转场时长是否可编辑
+   */
+  boolean isEditable = QEXytUtil.getTranEditable(transPath);
+
+  /**
+   * 特效素材是否支持添加给画中画
+   */
+   boolean isSupport = isSupportSubFx(String subFxPath);
 
 ```
 
@@ -325,7 +331,7 @@ public interface ICameraEventCallback {
 
   /**
    * 人脸检测结果
-   * 暂时不可用
+   * 因未集成人脸库，不可用
    * @param isDetected 是否检测到人脸
    */
   void onFaceDetectResult(boolean isDetected);
@@ -709,6 +715,33 @@ public interface PlayerAPI {
 }
 ```
 
+6) 关于IQEWorkSpace的其他方法
+
+```
+
+  /**
+   * 通过偏移时间点拿到关键帧后的位置信息
+   *
+   * @param offsetTime 从effect开始的偏移时间
+   */
+  public EffectPosInfo getEffectPosInfoByTime(int groupId, int effectIndex, int offsetTime);
+
+  /**
+   * 通过当前时间拿到关键帧level透明度（指的是overlay subEffect）
+   *
+   * @param offsetTime 当前相对时间点
+   */
+  public int getAlphaInfoByTime(int groupId, int effectIndex, int offsetTime);
+
+  /**
+   * 通过当前时间拿到属性关键帧的value值
+   *
+   * @param offsetTime 当前相对时间点
+   */
+  public float getAttriInfoByTime(int groupId, int effectIndex, int subType, String attrName, int offsetTime);
+
+```
+
 #### 3. 获取剪辑工程信息
 ##### 获取工程相关信息
 ```
@@ -826,7 +859,7 @@ ClipData参数说明：
 | bReversed | 是否倒放 | boolean |
 | isPicAnimOn | 是否开启图片动画，只允许对图片clip设置 | boolean |
 | crossInfo | 转场，null表示无。当前片段和下一个片段的转场数据{@see CrossInfo} | CrossInfo |
-| filterInfo | 滤镜信息，null表示无{@see FilterInfo} | FilterInfo |
+| filterInfos | 滤镜信息列表 | FilterInfo列表 |
 | fxFilterInfo | 特效滤镜信息，null表示无{@see FxFilterInfo} | FxFilterInfo |
 | mParamAdjust | 参数调节信息{@see ParamAdjust} | ParamAdjust |
 | mClipPosInfo | 片段位置信息{@see ClipPosInfo} | ClipPosInfo |
@@ -1116,24 +1149,28 @@ KeyPosInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | center | 位置信息，在streamSize的坐标系中{@see Ve3DDataF} | Ve3DDataF |
+| baseOffset | 位置偏移，相对center再做一个偏移{@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyAnchorOffset参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | anchorOffset | 锚点位置偏移信息，在streamSize的坐标系中{@see Ve3DDataF} | Ve3DDataF |
+| baseOffset | 锚点偏移，相对anchorOffset再做一个偏移{@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyScaleInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | scale | 缩放信息 {@see Ve3DDataF} | Ve3DDataF |
+| baseOffset | 缩放倍数偏移，相对scale再做一个乘积偏移{@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyRotationInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | rotation | 角度信息 {@see Ve3DDataF} | Ve3DDataF |
+| baseOffset | 角度偏移，相对rotation再做一个角度偏移{@see Ve3DDataF} | Ve3DDataF |
 
 
 KeyAlphaInfo参数说明：
@@ -1344,7 +1381,7 @@ ClipAddItem参数说明：
 10）分割
 ```
 	// clipIndex表示第几个片段，从0开始
-	// splitTime分割时间，在加入片段的相对时间，如从片段的第5s分割，则splitTime=5
+	// splitTime分割时间，在加入片段的相对时间(是相对trimRange,不是相对原视频)，如从片段的第5s分割，则splitTime=5000
 	ClipOPSplit clipOPSplit = new ClipOPSplit(clipIndex, splitTime);
 	mWorkSpace.handleOperation(clipOPSplit);
 ```
@@ -1388,7 +1425,7 @@ ClipAddItem参数说明：
 15）视频裁剪
 ```
 	// clipIndex表示第几个片段，从0开始
-	// trimRange裁剪区域， length=-1表示到结尾
+	// trimRange裁剪区域（trimRange需要设置为源视频的区域 * clip的timeScale，比如从原视频的5~20s，则trimRange为new VeRange(5*timescale, 15*timescale)）
 	ClipOPTrimRange clipOPTrimRange = new ClipOPTrimRange(clipIndex, trimRange);
 	mWorkSpace.handleOperation(clipOPTrimRange);
 ```
@@ -1474,15 +1511,32 @@ ClipBgData构造器
 ```
 
 
-22）滤镜
+22）新增滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
-	// filterInfo滤镜信息 {@see FilterInfo}，null表示不使用滤镜
-	ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
-	mWorkSpace.handleOperation(clipOPFilter);
+	// filterInfo滤镜信息
+	ClipOPFilterAdd clipOPFilterAdd = new ClipOPFilterAdd(clipIndex, filterInfo);
+	mWorkSpace.handleOperation(clipOPFilterAdd);
 ```
 
-23）特效滤镜
+23）修改滤镜
+```
+	// clipIndex表示第几个片段，从0开始
+	// filterIndex表示删除第几个滤镜
+	// filterInfo滤镜信息
+	ClipOPFilterUpdate clipOPFilterUpdate = new ClipOPFilterUpdate(clipIndex, filterIndex, filterInfo);
+	mWorkSpace.handleOperation(clipOPFilterUpdate);
+```
+
+24）删除滤镜
+```
+	// clipIndex表示第几个片段，从0开始
+	// filterIndex表示删除第几个滤镜
+	ClipOPFilterDel clipOPFilterDel = new ClipOPFilterDel(clipIndex, filterIndex);
+	mWorkSpace.handleOperation(clipOPFilterDel);
+```
+
+25）特效滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// fxFilterInfo特效滤镜信息 {@see FxFilterInfo}，null表示不使用特效滤镜
@@ -1490,7 +1544,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFxFilter);
 ```
 
-24）转场
+26）转场
 ```
 	// clipIndex表示第几个片段，从0开始
 	// crossInfo转场信息 {@see CrossInfo}，null表示不使用转场
@@ -1792,8 +1846,18 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubFxDestRange);
 ```
 
+28）画中画修改子特效是否关闭
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// subType表示子特效索引{@see EffectSubFx}
+	// disable表示特效效果是否关闭
+	EffectOPSubFxDisable effectOPSubFxDisable = new EffectOPSubFxDisable(groupId, effectIndex, subType, disable);
+	mWorkSpace.handleOperation(effectOPSubFxDisable);
+```
 
-28）画中画删除子特效
+
+29）画中画删除子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1802,7 +1866,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubFxDel);
 ```
 
-29）显示静态图片
+30）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1813,7 +1877,7 @@ EffectReplaceItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-30）马赛克模糊程度
+31）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1823,7 +1887,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-31）字幕动画开关
+32）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1832,7 +1896,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-32）字幕文本
+33）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1851,7 +1915,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-33）字幕字体
+34）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1871,7 +1935,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-34）字幕文本颜色
+35）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1890,7 +1954,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-35）字幕文本对齐方式
+36）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1926,7 +1990,7 @@ EffectReplaceItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-36）字幕文本阴影
+37）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1945,7 +2009,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-37）字幕文本描边
+38）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1965,7 +2029,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-38）获取画中画抠色图片
+39）获取画中画抠色图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1989,7 +2053,7 @@ chromaColor.getColorByPosition(float relateX, float relateY);
 chromaColor.recycle();
 ```
 
-39）关键帧设置
+40）关键帧设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1999,7 +2063,7 @@ chromaColor.recycle();
 ```
 
 
-40）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
+41）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2010,7 +2074,7 @@ chromaColor.recycle();
 ```
 
 
-41）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+42）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2020,7 +2084,7 @@ chromaColor.recycle();
 ```
 
 
-42）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+43）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2031,6 +2095,28 @@ chromaColor.recycle();
 ```
 
 
+44）修改关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// keyFrameType表示关键帧类型 {@see BaseKeyFrame.KeyFrameType}
+	// offsetValue表示关键帧值的偏移量 {@see Ve3DDataF}
+	EffectOPKeyFrameUpdateOffset effectOPKeyFrameUpdateOffset = new EffectOPKeyFrameUpdateOffset(groupId, effectIndex, keyFrameType, offsetValue);
+	mWorkSpace.handleOperation(effectOPKeyFrameUpdateOffset);
+```
+
+
+45）修改全部关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// posOffsetValue表示位置关键帧值的偏移量，null表示不修改 {@see Ve3DDataF}
+	// rotateOffsetValue表示角度关键帧值的偏移量，null表示不修改 {@see Ve3DDataF}
+	// scaleOffsetValue表示缩放关键帧值的偏移量，null表示不修改 {@see Ve3DDataF}
+	// anchorOffsetValue表示锚点关键帧值的偏移量，null表示不修改 {@see Ve3DDataF}
+	EffectOPKeyFrameUpdateOffsetAll effectOPKeyFrameUpdateOffsetAll = new EffectOPKeyFrameUpdateOffsetAll(groupId, effectIndex, posOffsetValue, rotateOffsetValue, scaleOffsetValue, anchorOffsetValue);
+	mWorkSpace.handleOperation(effectOPKeyFrameUpdateOffsetAll);
+```
 
 
 #### 7. 导出
@@ -2045,7 +2131,7 @@ chromaColor.recycle();
 ExportParams参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| outputPath | 导出文件路径，需要带后缀，提取音频则只支持m4a | String |
+| outputPath | 导出文件路径，需要带后缀，提取音频则只支持m4a（android 10以上请使用有完整读写权限的私有目录绝对路径或content的uri路径） | String |
 | expType | 导出分辨率类型 | int |
 | isGif | 是否导出Gif图片 | boolean |
 | isSoftwareCodec | 是否软件编解码,默认使用硬件 | boolean |

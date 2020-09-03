@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.TextView;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.application.widget.seekbar.DoubleSeekbar;
@@ -23,11 +22,11 @@ public class EditSpeedDialog extends BaseMenuView {
   private int clipIndex = 0;
 
   public EditSpeedDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int clipIndex) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
 
-    showMenu(container, l);
+    showMenu(container, null);
   }
 
   @Override public MenuType getMenuType() {

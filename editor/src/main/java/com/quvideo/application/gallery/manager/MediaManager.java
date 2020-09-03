@@ -23,7 +23,6 @@ import com.quvideo.application.gallery.model.ExtMediaItem;
 import com.quvideo.application.gallery.model.MediaGroupItem;
 import com.quvideo.application.gallery.utils.MediaFileSupported;
 import com.quvideo.application.gallery.utils.MediaFolderNameMapUtils;
-import com.quvideo.application.utils.FileUtils;
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -231,7 +230,7 @@ public class MediaManager {
     return cursor;
   }
 
-  private static ExtMediaItem getMediaItem(Cursor cursor, MediaType mediaType) {
+  private static ExtMediaItem getMediaItem(Cursor cursor, Uri baseUri, MediaType mediaType) {
     if (cursor == null) {
       return null;
     }
@@ -239,7 +238,7 @@ public class MediaManager {
     item.mediaType = mediaType;
     item.mediaId = cursor.getInt(0);
     item.title = item.displayTitle = cursor.getString(1);
-    item.path = cursor.getString(2);
+    item.path = Uri.withAppendedPath(baseUri, "" + item.mediaId).toString();
     item.date = cursor.getLong(3);
     if (String.valueOf(item.date).length() <= 10) {
       //to mill seconds
@@ -500,7 +499,7 @@ public class MediaManager {
 
     if (cursor != null) {
       while (cursor.moveToNext()) {
-        item = getMediaItem(cursor, getMediaType(uri));
+        item = getMediaItem(cursor, uri, getMediaType(uri));
 
         //because qq music add bad jpg file into media store, so we skip these files. cfchen@20130629
         if (!isValidItem(item, mBrowseType)) {
@@ -538,22 +537,6 @@ public class MediaManager {
       return 0;
     }
     return item.mediaItemList == null ? 0 : item.mediaItemList.size();
-  }
-
-  /**
-   * <p>
-   * the return List should not be memory recycle.
-   * </p>
-   */
-  public ArrayList<ExtMediaItem> getAllMediaItems() {
-    ArrayList<ExtMediaItem> medias = new ArrayList<>();
-    for (int i = 0; i < mMediaGroupKeys.length; i++) {
-      MediaGroupItem groupItem = getGroupItem(i);
-      if (groupItem != null) {
-        medias.addAll(groupItem.mediaItemList);
-      }
-    }
-    return medias;
   }
 
   private void makeGroupSortOrder() {
@@ -598,190 +581,6 @@ public class MediaManager {
     return mMediaGroupMap.get(mMediaGroupKeys[nGroupIdx]);
   }
 
-  public synchronized MediaGroupItem getGroupItem(ExtMediaItem subItem) {
-    if (mMediaGroupMap == null || subItem == null) {
-      return null;
-    }
-    return mMediaGroupMap.get(subItem.lGroupKey);
-  }
-
-  public synchronized ExtMediaItem getMediaItem(int nGroupIdx, int nSubIdx) {
-    if (mMediaGroupMap == null
-        || nGroupIdx < 0
-        || nGroupIdx >= mMediaGroupMap.size()
-        || nSubIdx < 0) {
-      return null;
-    }
-    MediaGroupItem groupItem = getGroupItem(nGroupIdx);
-    if (groupItem == null || groupItem.mediaItemList == null) {
-      return null;
-    }
-
-    if (nSubIdx >= groupItem.mediaItemList.size()) {
-      return null;
-    }
-    return groupItem.mediaItemList.get(nSubIdx);
-  }
-
-  public synchronized int getItemTotalCount() {
-    if (mMediaGroupMap == null) {
-      return 0;
-    }
-
-    Entry<Long, MediaGroupItem> entry;
-    MediaGroupItem groupItem;
-    int nTotalSize = 0;
-    for (Entry<Long, MediaGroupItem> longMediaGroupItemEntry : mMediaGroupMap.entrySet()) {
-      entry = longMediaGroupItemEntry;
-      groupItem = entry.getValue();
-      if (groupItem.mediaItemList == null || groupItem.mediaItemList.isEmpty()) {
-        continue;
-      }
-      nTotalSize += groupItem.mediaItemList.size();
-    }
-    return nTotalSize;
-  }
-
-  public synchronized int getPosition(int nGroupIdx, int nSubIdx) {
-    if (mMediaGroupMap == null || nGroupIdx >= mMediaGroupMap.size()) {
-      return -1;
-    }
-    MediaGroupItem item = getGroupItem(nGroupIdx);
-    if (item != null && (item.mediaItemList == null || nSubIdx >= item.mediaItemList.size())) {
-      return -1;
-    }
-
-    int nPosition = 0;
-    for (int i = 0; i < nGroupIdx; i++) {
-      item = getGroupItem(i);
-      if (item != null) {
-        nPosition += item.mediaItemList.size();
-      }
-    }
-    nPosition += nSubIdx;
-    return nPosition;
-  }
-
-  public synchronized int getGroupItemIndex(int nPositionOfTotal) {
-    if (mMediaGroupMap == null) {
-      return -1;
-    }
-
-    int nGroupIdx = -1;
-    Entry<Long, MediaGroupItem> entry;
-    MediaGroupItem groupItem;
-    int nCurPos = 0;
-    int nListSize = 0;
-    for (Entry<Long, MediaGroupItem> longMediaGroupItemEntry : mMediaGroupMap.entrySet()) {
-      nGroupIdx++;
-      entry = longMediaGroupItemEntry;
-      groupItem = entry.getValue();
-      if (groupItem.mediaItemList == null || groupItem.mediaItemList.isEmpty()) {
-        continue;
-      }
-      nListSize = groupItem.mediaItemList.size();
-      if (nCurPos <= nPositionOfTotal && nCurPos + nListSize > nPositionOfTotal) {
-        //find it
-        break;
-      }
-      nCurPos += nListSize;
-    }
-    return nGroupIdx;
-  }
-
-  public synchronized int getSubItemIndex(int nPositionOfTotal) {
-    if (mMediaGroupMap == null) {
-      return -1;
-    }
-
-    Entry<Long, MediaGroupItem> entry;
-    MediaGroupItem groupItem;
-    int nCurPos = 0;
-    int nListSize = 0;
-    for (Entry<Long, MediaGroupItem> longMediaGroupItemEntry : mMediaGroupMap.entrySet()) {
-      entry = longMediaGroupItemEntry;
-      groupItem = entry.getValue();
-      if (groupItem.mediaItemList == null || groupItem.mediaItemList.isEmpty()) {
-        continue;
-      }
-      nListSize = groupItem.mediaItemList.size();
-      if (nCurPos <= nPositionOfTotal && nCurPos + nListSize > nPositionOfTotal) {
-        //find it
-        return nPositionOfTotal - nCurPos;
-      }
-      nCurPos += nListSize;
-    }
-    return -1;
-  }
-
-  public synchronized ExtMediaItem getMediaItem(int nPositionOfTotal) {
-    if (mMediaGroupMap == null || nPositionOfTotal < 0) {
-      return null;
-    }
-
-    Entry<Long, MediaGroupItem> entry;
-    MediaGroupItem groupItem;
-    int nCurPos = 0;
-    int nListSize = 0;
-    for (Entry<Long, MediaGroupItem> longMediaGroupItemEntry : mMediaGroupMap.entrySet()) {
-      entry = longMediaGroupItemEntry;
-      groupItem = entry.getValue();
-      if (groupItem.mediaItemList == null || groupItem.mediaItemList.isEmpty()) {
-        continue;
-      }
-      nListSize = groupItem.mediaItemList.size();
-      if (nCurPos <= nPositionOfTotal && nCurPos + nListSize > nPositionOfTotal) {
-        //find it
-        return groupItem.mediaItemList.get(nPositionOfTotal - nCurPos);
-      }
-      nCurPos += nListSize;
-    }
-
-    return null;
-  }
-
-  public synchronized void setGroupFlag(int nGroupIdx, long lFlag) {
-    MediaGroupItem groupItem = getGroupItem(nGroupIdx);
-    if (groupItem == null) {
-      return;
-    }
-    groupItem.lFlag = lFlag;
-  }
-
-  public void dump() {
-    if (mMediaGroupMap == null || mMediaGroupMap.isEmpty()) {
-      return;
-    }
-    Entry<Long, MediaGroupItem> entry;
-
-    MediaGroupItem groupItem;
-    for (Entry<Long, MediaGroupItem> longMediaGroupItemEntry : mMediaGroupMap.entrySet()) {
-      entry = longMediaGroupItemEntry;
-      groupItem = entry.getValue();
-    }
-  }
-
-  public synchronized ArrayList<Integer> removeEmptyGroups() {
-    if (mMediaGroupMap == null || mMediaGroupMap.isEmpty()) {
-      return null;
-    }
-
-    ArrayList<Integer> listGroupIdx = new ArrayList<>();
-    Set<Long> set = mMediaGroupMap.keySet();
-    Long[] keys = set.toArray(new Long[set.size()]);
-    MediaGroupItem item;
-    int nGroupIdx = 0;
-    for (Long key : keys) {
-      item = mMediaGroupMap.get(key);
-      if (item == null || item.mediaItemList == null || item.mediaItemList.isEmpty()) {
-        mMediaGroupMap.remove(key);
-        listGroupIdx.add(nGroupIdx);
-      }
-      nGroupIdx++;
-    }
-    return listGroupIdx;
-  }
-
   private ArrayList<ExtMediaItem> queryRecentMediaFile(Context context, BROWSE_TYPE browseType) {
     Uri uri = getRecentUriByType(browseType);
     if (browseType == null || uri == null) {
@@ -798,7 +597,7 @@ public class MediaManager {
         cursor = cr.query(uri, projections, where, null, sortOrder);
         while (cursor != null && cursor.moveToNext()) {
           try {
-            ExtMediaItem item = getMediaItem(cursor,
+            ExtMediaItem item = getMediaItem(cursor, uri,
                 browseType == BROWSE_TYPE.VIDEO ? MediaType.MEDIA_TYPE_VIDEO
                     : MediaType.MEDIA_TYPE_IMAGE);
             if (isValidItem(item, browseType)) {
@@ -829,10 +628,8 @@ public class MediaManager {
   }
 
   private boolean isValidItem(ExtMediaItem item, BROWSE_TYPE browseType) {
-    boolean isInValid =
-        (item == null) || TextUtils.isEmpty(item.path) || isGifInvalid(item.path)
-            || (browseType != BROWSE_TYPE.AUDIO && item.path.contains("/qqmusic/"))
-            || !FileUtils.isFileExisted(item.path);
+    boolean isInValid = (item == null) || TextUtils.isEmpty(item.path) || isGifInvalid(item.path)
+        || (browseType != BROWSE_TYPE.AUDIO && item.path.contains("/qqmusic/"));
 
     return !isInValid;
   }

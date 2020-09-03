@@ -20,8 +20,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.quvideo.application.DPUtils;
+import com.quvideo.application.editor.EditorActivity;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.glidedecoder.EffectThumbParams;
+import com.quvideo.application.superedit.ZXingManager;
 import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
@@ -38,6 +40,9 @@ public class SildeTemplateAdapter
   private DialogFragment mDialogFragment;
 
   private OnItemSelectListener mOnItemClickListener;
+
+  private boolean isNeedScan = ZXingManager.isHadSuperZXing();
+  private int addOffset = isNeedScan ? 1 : 0;
 
   public interface OnItemSelectListener {
     void onItemSelected(SimpleTemplate template);
@@ -67,7 +72,15 @@ public class SildeTemplateAdapter
 
   @Override
   public void onBindViewHolder(@NonNull TemplateHolder holder, final int position) {
-    final SimpleTemplate item = mTemplates.get(position);
+    if (isNeedScan && position == 0) {
+      holder.mTextView.setText(R.string.mn_edit_qrcode_scan);
+      holder.mImageView.setImageResource(R.drawable.editor_tool_qrcode_scan);
+      holder.mImageView.setOnClickListener(v -> {
+        ZXingManager.go2CaptureActivity(mActivity, EditorActivity.INTENT_REQUEST_QRCODE);
+      });
+      return;
+    }
+    final SimpleTemplate item = mTemplates.get(position - addOffset);
     if (!TextUtils.isEmpty(item.getTitle())) {
       holder.mTextView.setText(item.getTitle());
     } else {
@@ -119,7 +132,7 @@ public class SildeTemplateAdapter
 
   @Override
   public int getItemCount() {
-    return mTemplates.size();
+    return mTemplates.size() + addOffset;
   }
 
   class TemplateHolder extends RecyclerView.ViewHolder {

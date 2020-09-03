@@ -152,7 +152,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
     if (animEffect.destRange.getTimeLength() > 0) {
       maxTime = animEffect.destRange.getLimitValue();
     } else {
-      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+      maxTime = mWorkSpace.getStoryboardAPI().getDuration();
     }
     currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
     mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);

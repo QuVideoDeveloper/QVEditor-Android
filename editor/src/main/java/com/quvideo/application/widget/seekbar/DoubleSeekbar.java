@@ -27,7 +27,7 @@ public class DoubleSeekbar extends View {
   private int minProgress;
   private int maxProgress = 100;
   private int minRange = 0;
-  private int count = maxProgress - minProgress;
+  private long count = maxProgress - minProgress;
 
   /** 第一格进度 */
   private int firstProgress;
@@ -90,7 +90,7 @@ public class DoubleSeekbar extends View {
   }
 
   public void setProgressRange(int start, int end, int minRange) {
-    if (start > end || end - start < minRange) {
+    if (start > end || ((long) end - start) < minRange) {
       return;
     }
     this.minProgress = start;

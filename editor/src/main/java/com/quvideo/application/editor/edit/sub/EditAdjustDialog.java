@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.control.EditSeekBarController;
 import com.quvideo.mobile.engine.model.ClipData;
@@ -36,10 +35,10 @@ public class EditAdjustDialog extends BaseMenuView {
   private int clipIndex = 0;
 
   public EditAdjustDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
-      int clipIndex, ItemOnClickListener l) {
+      int clipIndex) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
-    showMenu(container, l);
+    showMenu(container, null);
   }
 
   @Override public MenuType getMenuType() {

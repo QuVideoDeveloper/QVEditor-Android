@@ -6,7 +6,6 @@ import android.widget.Toast;
 import com.quvideo.application.TimeFormatUtil;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
@@ -26,10 +25,10 @@ public class EditTrimDialog extends BaseMenuView {
   private boolean isChanged = false;
 
   public EditTrimDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int clipIndex) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
-    showMenu(container, l);
+    showMenu(container, null);
   }
 
   @Override public MenuType getMenuType() {
@@ -50,14 +49,15 @@ public class EditTrimDialog extends BaseMenuView {
 
   private void initData() {
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-    int start = (int) (clipData.getSrcRange().getPosition() * clipData.getTimeScale())
-        + (clipData.getSrcRange().getPosition() == 0 ? 0 : 1);
-    int end = (int) (clipData.getSrcRange().getLimitValue() * clipData.getTimeScale());
+    int start = clipData.getSrcRange().getPosition() + (clipData.getSrcRange().getPosition() == 0 ? 0 : 1);
+    int end = clipData.getSrcRange().getLimitValue();
+    VeRange srcTrimRange = new VeRange((int) (clipData.getTrimRange().getPosition() / clipData.getTimeScale()),
+        (int) (clipData.getTrimRange().getTimeLength() / clipData.getTimeScale()));
     mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
         .start(TimeFormatUtil.INSTANCE.formatTime(start))
         .end(TimeFormatUtil.INSTANCE.formatTime(end))
-        .progress(clipData.getTrimRange().getPosition())
-        .secondProgress(clipData.getTrimRange().getLimitValue())
+        .progress(srcTrimRange.getPosition())
+        .secondProgress(srcTrimRange.getLimitValue())
         .minRange(1)
         .seekRange(new CustomSeekbarPop.SeekRange(start, end))
         .progressExchange(progress -> {
@@ -91,8 +91,10 @@ public class EditTrimDialog extends BaseMenuView {
         return;
       }
       LogUtils.d("ClipOP", "progressStart = " + progressStart + " , progressEnd = " + progressEnd);
-      ClipOPTrimRange clipOPTrimRange =
-          new ClipOPTrimRange(clipIndex, new VeRange(progressStart, progressEnd - progressStart));
+      ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
+      VeRange trimRange = new VeRange((int) (progressStart * clipData.getTimeScale()),
+          (int) ((progressEnd - progressStart) * clipData.getTimeScale()));
+      ClipOPTrimRange clipOPTrimRange = new ClipOPTrimRange(clipIndex, trimRange);
       mWorkSpace.handleOperation(clipOPTrimRange);
     }
     dismissMenu();

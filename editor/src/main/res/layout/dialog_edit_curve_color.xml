@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+  <View
+      android:id="@+id/root_bg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:background="@color/transparent"
+      />
+
+  <View
+      android:id="@+id/viewBg"
+      android:layout_width="0dp"
+      android:layout_height="239dp"
+      android:background="#101112"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+
+
+  <include
+      layout="@layout/view_edit_dialog_bottom"
+      android:id="@+id/layout_bottom"
+      android:layout_width="0dp"
+      android:layout_height="46dp"
+      app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="193dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/layout_bottom"
+      >
+
+    <RadioGroup
+        android:id="@+id/rg_color"
+        android:layout_width="80dp"
+        android:layout_height="180dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/curveLineView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+      <RadioButton
+          android:id="@+id/rb_color_rgb"
+          android:layout_width="80dp"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:textColor="@color/color_333333"
+          android:textSize="16sp"
+          android:text="RGB"
+          android:gravity="center"
+          android:checked="true"
+          android:button="@null"
+          android:background="@drawable/export_dialog_item_bg_selector"/>
+
+      <RadioButton
+          android:id="@+id/rb_color_r"
+          android:layout_width="80dp"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:textColor="@color/color_333333"
+          android:textSize="16sp"
+          android:text="R"
+          android:gravity="center"
+          android:checked="false"
+          android:button="@null"
+          android:background="@drawable/export_dialog_item_bg_selector"/>
+
+      <RadioButton
+          android:id="@+id/rb_color_g"
+          android:layout_width="80dp"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:textColor="@color/color_333333"
+          android:textSize="16sp"
+          android:text="G"
+          android:gravity="center"
+          android:checked="false"
+          android:button="@null"
+          android:background="@drawable/export_dialog_item_bg_selector"/>
+      <RadioButton
+          android:id="@+id/rb_color_b"
+          android:layout_width="80dp"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:textColor="@color/color_333333"
+          android:textSize="16sp"
+          android:text="B"
+          android:gravity="center"
+          android:checked="false"
+          android:button="@null"
+          android:background="@drawable/export_dialog_item_bg_selector"/>
+
+    </RadioGroup>
+
+    <com.quvideo.application.widget.curve.SpecialCurveLineView
+        android:id="@+id/curveLineView"
+        android:layout_width="250dp"
+        android:layout_height="180dp"
+
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rg_color"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

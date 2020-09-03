@@ -138,8 +138,10 @@ public class PlayerControllerView extends LinearLayout {
           || playerStatus == PlayerStatus.STATUS_PAUSE) {
         ibPlay.setImageResource(R.drawable.editorx_player_play);
         isPlaying = false;
-        tvCurTime.setText(DateUtils.getFormatDuration(progress));
-        sbProgress.setProgress(progress);
+        if (playerStatus != PlayerStatus.STATUS_STOP || progress != 0) {
+          tvCurTime.setText(DateUtils.getFormatDuration(progress));
+          sbProgress.setProgress(progress);
+        }
       } else if (playerStatus == PlayerStatus.STATUS_PLAYING) {
         if (!isPlaying) {
           isPlaying = true;

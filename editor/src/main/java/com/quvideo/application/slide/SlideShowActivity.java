@@ -1,7 +1,12 @@
 package com.quvideo.application.slide;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,6 +44,7 @@ import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPMove;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPReplace;
+import java.io.File;
 import java.util.ArrayList;
 
 public class SlideShowActivity extends AppCompatActivity {
@@ -100,7 +106,21 @@ public class SlideShowActivity extends AppCompatActivity {
             Bitmap bitmap = mSlideWorkSpace.getProjectThumbnail();
             String thumbnail = FileUtils.getFileParentPath(exportParams.outputPath)
                 + FileUtils.getFileName(exportParams.outputPath) + "_thumbnail.jpg";
-            FileUtils.saveBitmap(thumbnail, bitmap, 100);
+            if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
+              FileUtils.saveBitmap(thumbnail, bitmap, 100);
+            } else {
+              ContentValues contentValues = new ContentValues();
+              contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+              contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
+              contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
+              contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+              Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+              thumbnail = path.toString();
+              FileUtils.saveBitmap(thumbnail, bitmap, 100);
+            }
+            if (bitmap != null) {
+              bitmap.recycle();
+            }
             ExportDialog exportDialog = new ExportDialog();
             exportDialog.showExporting(SlideShowActivity.this, thumbnail, exportParams,
                 mSlideWorkSpace);

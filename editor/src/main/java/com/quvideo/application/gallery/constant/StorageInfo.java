@@ -15,17 +15,6 @@ public class StorageInfo {
   private static final String APP_CACHE_PATH_RELATIE = "Android/data/";
   private static Context mContext = null;
 
-  public static void setApplicationContext(Context ctx) {
-    if (ctx != null) {
-      mContext = ctx.getApplicationContext();
-    }
-  }
-
-  public synchronized static ArrayList<String> getStorageList() {
-    init();
-    return mStorageList;
-  }
-
   public static synchronized void clear() {
     if (mStorageList != null) {
       mStorageList.clear();

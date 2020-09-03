@@ -20,7 +20,9 @@ import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.sub.EditAdjustDialog;
 import com.quvideo.application.editor.edit.sub.EditClipBGDialog;
 import com.quvideo.application.editor.edit.sub.EditClipCropDialog;
+import com.quvideo.application.editor.edit.sub.EditClipKeyFrameDialog;
 import com.quvideo.application.editor.edit.sub.EditClipPosInfoDialog;
+import com.quvideo.application.editor.edit.sub.EditCurveAdjustDialog;
 import com.quvideo.application.editor.edit.sub.EditFilterDialog;
 import com.quvideo.application.editor.edit.sub.EditFxFilterDialog;
 import com.quvideo.application.editor.edit.sub.EditMagicSoundDialog;
@@ -35,6 +37,7 @@ import com.quvideo.application.gallery.GallerySettings;
 import com.quvideo.application.gallery.model.GalleryDef;
 import com.quvideo.application.gallery.model.MediaModel;
 import com.quvideo.application.gallery.provider.IGalleryProvider;
+import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.application.widget.sort.CusSortRecycler;
 import com.quvideo.application.widget.sort.ItemDragHelperCallback;
@@ -143,8 +146,14 @@ public class EditEditDialog extends BaseMenuView {
           context.getString(R.string.mn_edit_title_change_voice)));
       add(new EditOperate(R.drawable.edit_icon_speed_nor,
           context.getString(R.string.mn_edit_title_speed)));
+      if (SuperEditManager.isHadSuperEdit()) {
+        add(new EditOperate(R.drawable.editor_tool_speed_icon_nor,
+            context.getString(R.string.mn_edit_title_curve_speed)));
+      }
       add(new EditOperate(R.drawable.edit_icon_adjust_nor,
           context.getString(R.string.mn_edit_title_adjust)));
+      add(new EditOperate(R.drawable.editor_tool_adjust_curve,
+          context.getString(R.string.mn_edit_title_adjust_curve)));
       add(new EditOperate(R.drawable.editor_tool_background_icon,
           context.getString(R.string.mn_edit_title_background)));
       add(new EditOperate(R.drawable.edit_icon_reserve_nor,
@@ -153,6 +162,8 @@ public class EditEditDialog extends BaseMenuView {
         add(new EditOperate(R.drawable.edit_icon_crop_n,
             context.getString(R.string.mn_edit_title_crop)));
       }
+      add(new EditOperate(R.drawable.editor_tool_keyframeanimator_icon,
+          getContext().getString(R.string.mn_edit_keyframe_animator_title)));
     }};
     RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
     editRecyclerView.setLayoutManager(
@@ -240,10 +251,10 @@ public class EditEditDialog extends BaseMenuView {
     int selIndex = clipAdapter.getSelClipIndex();
     if (operate.getResId() == R.drawable.edit_icon_trim_n) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditTrimDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditTrimDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_split_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditSplitDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditSplitDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_duplicate) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       doClipDuplicate(selIndex);
@@ -258,19 +269,26 @@ public class EditEditDialog extends BaseMenuView {
       doClipReserve(selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_changevoice_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditMagicSoundDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditMagicSoundDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_muteoff_n) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditVolumeDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditVolumeDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_speed_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditSpeedDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditSpeedDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
+      if (SuperEditManager.isHadSuperEdit()) {
+        ToastUtils.show(getContext(), "曲线变速后，再设置定制变速可能有问题哦！",
+            Toast.LENGTH_LONG);
+      }
+    } else if (operate.getResId() == R.drawable.editor_tool_speed_icon_nor) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      SuperEditManager.gotoEditCurveSpeedDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_filter_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_effect_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditFxFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditFxFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_change_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       if (selIndex >= clipAdapter.getItemCount() - 2) {
@@ -278,10 +296,13 @@ public class EditEditDialog extends BaseMenuView {
             Toast.LENGTH_LONG);
         return;
       }
-      new EditTransDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditTransDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_adjust_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      new EditAdjustDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, null);
+      new EditAdjustDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
+    } else if (operate.getResId() == R.drawable.editor_tool_adjust_curve) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      new EditCurveAdjustDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.editor_tool_background_icon) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditClipBGDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
@@ -289,6 +310,9 @@ public class EditEditDialog extends BaseMenuView {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditClipCropDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, mCropImageView,
           mFakeApi);
+    } else if (operate.getResId() == R.drawable.editor_tool_keyframeanimator_icon) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      new EditClipKeyFrameDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, mFakeApi);
     }
   }
 

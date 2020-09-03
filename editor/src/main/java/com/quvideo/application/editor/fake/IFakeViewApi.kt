@@ -42,5 +42,5 @@ interface IFakeViewApi {
   fun setStreamSize(size: VeMSize)
 
   /** 设置回调 */
-  fun setFakeViewListener(listener: IFakeViewListener)
+  fun setFakeViewListener(listener: IFakeViewListener?)
 }

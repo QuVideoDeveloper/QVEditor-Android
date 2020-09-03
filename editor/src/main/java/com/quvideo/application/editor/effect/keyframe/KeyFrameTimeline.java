@@ -163,7 +163,6 @@ public class KeyFrameTimeline extends View {
   private void handleUp(MotionEvent event) {
     // 单点处理
     float touchX = event.getX(0);
-    BaseKeyFrame baseKeyFrame = null;
     int focusTs = -1;
     int clickOffsetTime = 0;
     if (mKeyFrameList != null) {

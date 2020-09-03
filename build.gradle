@@ -9,11 +9,19 @@ ext {
 
     okhttp3Version = '3.11.0'
     retrofit2Version = '2.4.0'
-    xytManagerVersion = "0.3.8"
 
+    materialDialogsVersion = "0.9.6.0"
+    androidXCompatVersion = "1.1.0"
+    androidXKtxVersion = "1.2.0"
+    androidXConstraintVersion = "1.1.3"
+
+    glideVersion = "4.11.0"
+    glideWebpVersion = "2.0.4.11.0"
+
+    downloadVersion = "1.0.2"
 
     //---------输出组件版本号
-    vivaSDKVersion = '1.3.4'
+    vivaSDKVersion = '1.3.5'
 
     //该文件设计打包脚本处理，参数格式正常情况不做特别修改
     android = [

@@ -6,9 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.quvideo.application.camera.CameraActivity;
+import com.quvideo.application.draft.DraftActivity;
 import com.quvideo.application.editor.EditorActivity;
 import com.quvideo.application.gallery.GalleryClient;
 import com.quvideo.application.gallery.GallerySettings;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
   private AlertDialog alertDialog;
   private AlertDialog mDialog;
 
+  private SlideTemplateDialog dialog;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -47,9 +51,21 @@ public class MainActivity extends AppCompatActivity {
     for (SimpleTemplate item : AssetConstants.TEST_SLIDE_THEME_TID) {
       slideTemplates.add(item);
     }
-    SlideTemplateDialog dialog = new SlideTemplateDialog();
+    dialog = new SlideTemplateDialog();
     dialog.setTemplates(slideTemplates);
     dialog.show(getSupportFragmentManager(), "simpleTemplate");
+  }
+
+  public void gotoDraft(View view) {
+    Intent intent = new Intent(this, DraftActivity.class);
+    startActivity(intent);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    if (dialog != null) {
+      dialog.onActivityResult(requestCode, resultCode, data);
+    }
   }
 
   public void gotoEdit(View view) {

@@ -2,6 +2,7 @@ package com.quvideo.application.utils;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import com.quvideo.application.EditorApp;
 import java.io.BufferedInputStream;
@@ -39,8 +40,29 @@ public class FileUtils {
       if (TextUtils.isEmpty(strAssetsFile)) return false;
       return isAssetsFileExisted(EditorApp.Companion.getInstance().getApp().getAssets(), strAssetsFile);
     } else {
-      File file = new File(strFullFileName);
-      return (file.isFile() && file.exists());
+      if (FilePathUtils.isContentUri(strFullFileName)) {
+        if (strFullFileName.endsWith(File.separator)) {
+          return false;
+        }
+        InputStream inputStream = null;
+        try {
+          inputStream = EditorApp.Companion.getInstance()
+              .getApp().getApplicationContext().getContentResolver().openInputStream(Uri.parse(strFullFileName));
+          return inputStream.available() != 0;
+        } catch (Throwable ignore) {
+        } finally {
+          if (inputStream != null) {
+            try {
+              inputStream.close();
+            } catch (Throwable ignore) {
+            }
+          }
+        }
+        return false;
+      } else {
+        File file = new File(strFullFileName);
+        return (file.isFile() && file.exists());
+      }
     }
   }
 
@@ -212,6 +234,9 @@ public class FileUtils {
   }
 
   public static String getFileParentPath(String path) {
+    if (FilePathUtils.isContentUri(path)) {
+      path = FilePathUtils.transUriPath2FilePath(path);
+    }
     String outpath = "";
     if (!TextUtils.isEmpty(path)) {
       try {
@@ -230,6 +255,9 @@ public class FileUtils {
    * get the file name only. ex:(sdcard/test/test.jpg)=test
    */
   public static String getFileName(String fullFilePath) {
+    if (FilePathUtils.isContentUri(fullFilePath)) {
+      fullFilePath = FilePathUtils.transUriPath2FilePath(fullFilePath);
+    }
     File f = new File(fullFilePath);
     String strFileName = "";
     if (f != null) {
@@ -244,23 +272,48 @@ public class FileUtils {
     return strFileName;
   }
 
-  public static void saveBitmap(String fullPath, Bitmap bitmap, int nQuality) {
-    if (fullPath == null || bitmap == null) return;
-    File f = new File(fullPath);
-    try {
-      if (f.exists()) {
-        f.delete();
-      }
-    } catch (Throwable ignore) {
-      return;
-    }
-    FileOutputStream fOut;
-    try {
-      fOut = new FileOutputStream(f);
-    } catch (FileNotFoundException ignore) {
-      return;
-    }
 
+  public static String getFileNameWithExt(String fullFilePath) {
+    if (FilePathUtils.isContentUri(fullFilePath)) {
+      fullFilePath = FilePathUtils.transUriPath2FilePath(fullFilePath);
+    }
+    if (fullFilePath == null) return null;
+    if (fullFilePath.endsWith(File.separator)) return "";
+
+    String strFileName = fullFilePath;
+    int pos = strFileName.lastIndexOf(File.separator);
+    if (pos > 0) {
+      strFileName = strFileName.substring(pos + 1);
+    }
+    return strFileName;
+  }
+
+  public static void saveBitmap(String fullPath, Bitmap bitmap, int nQuality) {
+    OutputStream fOut = null;
+    if (FilePathUtils.isContentUri(fullPath)) {
+      try {
+        fOut = EditorApp.Companion.getInstance().app.getApplicationContext().getContentResolver().openOutputStream(Uri.parse(fullPath));
+      } catch (Throwable ignore) {
+      }
+    } else {
+      if (fullPath == null || bitmap == null) return;
+      File f = new File(fullPath);
+      try {
+        if (f.exists()) {
+          f.delete();
+        }
+      } catch (Throwable ignore) {
+        return;
+      }
+      try {
+        fOut = new FileOutputStream(f);
+      } catch (FileNotFoundException ignore) {
+        return;
+      }
+    }
+    if (fOut == null) {
+      return;
+    }
     String strFile = fullPath.toUpperCase(Locale.US);
     Bitmap.CompressFormat cf = Bitmap.CompressFormat.JPEG;
     if (strFile.endsWith(".PNG")) cf = Bitmap.CompressFormat.PNG;

@@ -16,6 +16,9 @@
   <color name="guideline">#AAFFFFFF</color>
   <color name="surrounding_area">#B0000000</color>
 
+  <color name="main_color">#7A5FFF</color>
+  <color name="color_4E4E51">#FF4E4E51</color>
+  <color name="color_3f3f3f">#FF3f3f3f</color>
 
   <!--Common-->
   <color name="black">#000000</color>

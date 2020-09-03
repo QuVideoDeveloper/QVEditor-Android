@@ -231,7 +231,7 @@ class FakeView @JvmOverloads constructor(
 
   }
 
-  override fun setFakeViewListener(listener: IFakeViewListener) {
+  override fun setFakeViewListener(listener: IFakeViewListener?) {
     fakeViewListener = listener
   }
 

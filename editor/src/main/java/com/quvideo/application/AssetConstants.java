@@ -6,6 +6,7 @@ import com.quvideo.application.editor.sound.AudioTemplate;
 import com.quvideo.application.slide.SlideTemplate;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
+import com.quvideo.mobile.engine.QEXytUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,8 @@ public class AssetConstants {
   public static ArrayList<String> mMosaicTemplateList = new ArrayList<>();
   // 效果插件
   public static ArrayList<String> mPluginTemplateList = new ArrayList<>();
+  // 混合模式
+  public static ArrayList<String> mOverlayTemplateList = new ArrayList<>();
 
   // 字体
   public static ArrayList<String> mFontTemplateList = new ArrayList<>();
@@ -84,9 +87,9 @@ public class AssetConstants {
     mTransTemplateList.add("assets_android://quvideo/trans/0x4A0000000000012E.xyt");
     // fx
     mFxTemplateList.add("assets_android://quvideo/fx/0x06000000000000D9.xyt");
-    mFxTemplateList.add("assets_android://quvideo/fx/0x06000000000000DA.xyt");
+    mFxTemplateList.add("assets_android://quvideo/fx/0x0600000000000114.xyt");
+    mFxTemplateList.add("assets_android://quvideo/fx/0x0600000000000117.xyt");
     mFxTemplateList.add("assets_android://quvideo/fx/0x0600000000000141.xyt");
-    mFxTemplateList.add("assets_android://quvideo/fx/0x0600000000000145.xyt");
     // Sticker
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000480.xyt");
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000481.xyt");
@@ -94,6 +97,7 @@ public class AssetConstants {
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000483.xyt");
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000484.xyt");
     // subtitle
+    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000000.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B3.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B4.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028A.xyt");
@@ -111,6 +115,9 @@ public class AssetConstants {
     mPluginTemplateList.add("assets_android://quvideo/plugin/0x0400600000000496.zip");
     mPluginTemplateList.add("assets_android://quvideo/plugin/0x0400600000000507.zip");
     mPluginTemplateList.add("assets_android://quvideo/plugin/0x0400600000000508.zip");
+    // 混合模式
+    mOverlayTemplateList.add("assets_android://quvideo/overlay/0x4B000000000F0001.xyt");
+    mOverlayTemplateList.add("assets_android://quvideo/overlay/0x4B000000000F0004.xyt");
 
     // 字体
     mFontTemplateList.add("assets_android://quvideo/font/2019122513524848.ttf");
@@ -133,6 +140,7 @@ public class AssetConstants {
     mScanTemplateList.addAll(mSubtitleTemplateList);
     mScanTemplateList.addAll(mStickerTemplateList);
     mScanTemplateList.addAll(mMosaicTemplateList);
+    mScanTemplateList.addAll(mOverlayTemplateList);
 
     mScanZipTemplateList.addAll(mPluginTemplateList);
     mScanZipTemplateList.addAll(mSlideTemplateList);
@@ -172,9 +180,9 @@ public class AssetConstants {
   };
 
   public static final String[] TEST_FONT_TID = new String[] {
-     StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122513524848.ttf",
-     StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122514034848.ttf",
-     StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122514043737.ttf",
+      StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122513524848.ttf",
+      StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122514034848.ttf",
+      StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/font/2019122514043737.ttf",
   };
 
   public static final String WATERMARK_LOG_PATH = StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp())
@@ -215,6 +223,7 @@ public class AssetConstants {
     if (xytType == XytType.Transition
         || xytType == XytType.Filter
         || xytType == XytType.FxFilter
+        || xytType == XytType.Overlay
         || xytType == XytType.Theme) {
       // 无--主题/转场/滤镜/特效滤镜
       result.add(new EditFilterTemplate(0, " ", R.drawable.cam_icon_no_filter_nor));
@@ -225,7 +234,9 @@ public class AssetConstants {
     for (Long ttid : keySet) {
       xytInfo = temp.get(ttid);
       if (xytInfo != null && isCurrentType(xytType, xytInfo)) {
-        result.add(new EditFilterTemplate(ttid));
+        if (xytType != XytType.SubFx || QEXytUtil.isSupportSubFx(xytInfo.filePath)) {
+          result.add(new EditFilterTemplate(ttid));
+        }
       }
     }
     return result.toArray(new EditFilterTemplate[result.size()]);
@@ -245,9 +256,12 @@ public class AssetConstants {
       case Filter:
         return xytInfo.ttidHexStr.contains("0x04")
             && !xytInfo.ttidHexStr.contains("0x04000000005")
+            && !xytInfo.ttidHexStr.contains("0x4B000000000F")
             && !xytInfo.ttidHexStr.contains("0x04006");
       case FxFilter:
         return xytInfo.ttidHexStr.contains("0x04000000005");
+      case Overlay:
+        return xytInfo.ttidHexStr.contains("0x4B000000000F");
       case Sticker:
         return xytInfo.ttidHexStr.contains("0x05") && !xytInfo.ttidHexStr.contains("0x05000000003");
       case Transition:
@@ -255,6 +269,7 @@ public class AssetConstants {
       case Subtitle:
         return xytInfo.ttidHexStr.contains("0x09");
       case Fx:
+      case SubFx:
         return xytInfo.ttidHexStr.contains("0x06");
     }
     return false;
@@ -268,7 +283,9 @@ public class AssetConstants {
     Sticker,
     Subtitle,
     Fx,
+    SubFx,
     FxPlugin,
+    Overlay,
     Slide
   }
 }

@@ -12,8 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
@@ -22,14 +20,15 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.quvideo.application.DPUtils;
+import com.quvideo.application.editor.EditorActivity;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.glidedecoder.EffectThumbParams;
+import com.quvideo.application.superedit.ZXingManager;
 import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.application.utils.FileUtils;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SimpleTemplateAdapter
@@ -37,13 +36,16 @@ public class SimpleTemplateAdapter
 
   private List<SimpleTemplate> mTemplates = new ArrayList<>();
 
-  private MutableLiveData<LinkedList<Integer>> mSelected = new MutableLiveData<>();
-
   private Activity mActivity;
 
   private BaseMenuView mBaseMenuView;
 
   private OnItemSelectListener mOnItemClickListener;
+
+  private boolean isNeedScan = ZXingManager.isHadSuperZXing();
+
+  private int mSelectedIndex = 0;
+  private int addOffset = isNeedScan ? 1 : 0;
 
   public interface OnItemSelectListener {
     void onItemSelected(SimpleTemplate template);
@@ -52,18 +54,7 @@ public class SimpleTemplateAdapter
   public SimpleTemplateAdapter(AppCompatActivity activity, BaseMenuView baseMenuView) {
     this.mActivity = activity;
     this.mBaseMenuView = baseMenuView;
-    mSelected.setValue(new LinkedList<Integer>() {{
-      offer(0);
-      offer(0);
-    }});
-    mSelected.observe(activity, new Observer<List<Integer>>() {
-      @Override
-      public void onChanged(List<Integer> integers) {
-        for (Integer pos : integers) {
-          notifyItemChanged(pos);
-        }
-      }
-    });
+    mSelectedIndex = 0;
   }
 
   public void updateList(List<SimpleTemplate> templates) {
@@ -72,10 +63,12 @@ public class SimpleTemplateAdapter
   }
 
   public void changeFocus(int position) {
-    mSelected.postValue(new LinkedList<Integer>() {{
-      offer(mSelected.getValue().get(mSelected.getValue().size() - 1));
-      offer(position);
-    }});
+    int oldIndex = mSelectedIndex;
+    mSelectedIndex = position;
+    if (oldIndex >= 0 && oldIndex < getItemCount() - addOffset) {
+      notifyItemChanged(oldIndex + addOffset);
+    }
+    notifyItemChanged(mSelectedIndex + addOffset);
   }
 
   public void setOnItemClickListener(OnItemSelectListener listener) {
@@ -92,7 +85,16 @@ public class SimpleTemplateAdapter
 
   @Override
   public void onBindViewHolder(@NonNull TemplateHolder holder, final int position) {
-    final SimpleTemplate item = mTemplates.get(position);
+    if (isNeedScan && position == 0) {
+      holder.mTextView.setText(R.string.mn_edit_qrcode_scan);
+      holder.mImgFocus.setVisibility(View.GONE);
+      holder.mImageView.setImageResource(R.drawable.editor_tool_qrcode_scan);
+      holder.mImageView.setOnClickListener(v -> {
+        ZXingManager.go2CaptureActivity(mActivity, EditorActivity.INTENT_REQUEST_QRCODE);
+      });
+      return;
+    }
+    final SimpleTemplate item = mTemplates.get(position - addOffset);
     XytInfo xytInfo = XytManager.getXytInfo(item.getTemplateId());
     if (!TextUtils.isEmpty(item.getTitle())) {
       holder.mTextView.setText(item.getTitle());
@@ -100,7 +102,7 @@ public class SimpleTemplateAdapter
       holder.mTextView.setText(
           xytInfo.getTitle(mActivity.getResources().getConfiguration().locale));
     }
-    boolean isSelected = position == mSelected.getValue().get(mSelected.getValue().size() - 1);
+    boolean isSelected = (position - addOffset) == mSelectedIndex;
     if (item.getThumbnailResId() <= 0) {
       String thumbnailAssetPath = xytInfo.filePath.replace(".xyt", "/thumbnail.webp");
       if (FileUtils.isFileExisted(thumbnailAssetPath)) {
@@ -146,10 +148,7 @@ public class SimpleTemplateAdapter
     holder.mImageView.setOnClickListener(v -> {
       if (mOnItemClickListener != null) {
         mOnItemClickListener.onItemSelected(item);
-        mSelected.postValue(new LinkedList<Integer>() {{
-          offer(mSelected.getValue().get(mSelected.getValue().size() - 1));
-          offer(position);
-        }});
+        changeFocus(position - addOffset);
       } else {
         item.onClick(mActivity);
         mBaseMenuView.dismissMenu();
@@ -159,7 +158,7 @@ public class SimpleTemplateAdapter
 
   @Override
   public int getItemCount() {
-    return mTemplates.size();
+    return mTemplates.size() + addOffset;
   }
 
   class TemplateHolder extends RecyclerView.ViewHolder {

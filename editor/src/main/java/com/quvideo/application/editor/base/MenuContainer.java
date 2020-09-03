@@ -1,9 +1,11 @@
 package com.quvideo.application.editor.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class MenuContainer extends RelativeLayout {
@@ -65,6 +67,20 @@ public class MenuContainer extends RelativeLayout {
         mOnMenuListener.onMenuChange(baseMenuLayer.getMenuType());
       }
     }
+  }
+
+  public boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    if (mBaseMenuLayers.size() > 0) {
+      int count = mBaseMenuLayers.size();
+      BaseMenuLayer baseMenuLayer;
+      for (int index = count - 1; index >= 0; index--) {
+        baseMenuLayer = mBaseMenuLayers.get(index);
+        if (baseMenuLayer != null && baseMenuLayer.onActivityResult(requestCode, resultCode, data)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public interface OnMenuListener {

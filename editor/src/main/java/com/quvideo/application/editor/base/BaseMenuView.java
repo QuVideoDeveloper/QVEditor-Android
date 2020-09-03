@@ -89,6 +89,7 @@ public abstract class BaseMenuView extends BaseMenuLayer implements View.OnClick
 
     if (mFakeApi != null) {
       mFakeApi.setTarget(null, null);
+      mFakeApi.setFakeViewListener(null);
       mFakeApi = null;
     }
   }

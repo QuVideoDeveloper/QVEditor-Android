@@ -5,9 +5,9 @@ import android.view.View;
 import com.quvideo.application.TimeFormatUtil;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
-import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
+import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPSplit;
@@ -20,10 +20,10 @@ public class EditSplitDialog extends BaseMenuView {
   private int clipIndex = 0;
 
   public EditSplitDialog(Context context, MenuContainer container,
-      IQEWorkSpace workSpace, int clipIndex, ItemOnClickListener l) {
+      IQEWorkSpace workSpace, int clipIndex) {
     super(context, workSpace);
     this.clipIndex = clipIndex;
-    showMenu(container, l);
+    showMenu(container, null);
   }
 
   @Override public MenuType getMenuType() {
@@ -44,15 +44,16 @@ public class EditSplitDialog extends BaseMenuView {
 
   private void initData() {
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
+    VeRange srcTrimRange = new VeRange(0, clipData.getTrimRange().getTimeLength());
     mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
         .start(TimeFormatUtil.INSTANCE.formatTime(0))
-        .end(TimeFormatUtil.INSTANCE.formatTime(clipData.getTrimRange().getTimeLength()))
+        .end(TimeFormatUtil.INSTANCE.formatTime(srcTrimRange.getTimeLength()))
         .progress(0)
         .progressExchange(progress -> {
           String base = TimeFormatUtil.INSTANCE.formatTime(progress);
           return base + "." + progress % 1000;
         })
-        .seekRange(new CustomSeekbarPop.SeekRange(0, clipData.getTrimRange().getTimeLength())));
+        .seekRange(new CustomSeekbarPop.SeekRange(0, srcTrimRange.getTimeLength())));
   }
 
   @Override public void onClick(View v) {

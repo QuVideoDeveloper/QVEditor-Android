@@ -178,7 +178,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
     if (baseEffect.destRange.getTimeLength() > 0) {
       maxTime = baseEffect.destRange.getLimitValue();
     } else {
-      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+      maxTime =  mWorkSpace.getStoryboardAPI().getDuration();
     }
     currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
     mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);

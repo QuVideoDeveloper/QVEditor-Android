@@ -81,7 +81,7 @@ public class EffectEditPluginDialog extends BaseMenuView {
     if (baseEffect.destRange.getTimeLength() > 0) {
       maxTime = baseEffect.destRange.getLimitValue();
     } else {
-      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+      maxTime = mWorkSpace.getStoryboardAPI().getDuration();
     }
 
     mKeyFrameTimeline.setMaxOffsetTime(maxTime - startTime, new KeyFrameTimeline.OnKeyFrameListener() {
@@ -112,6 +112,12 @@ public class EffectEditPluginDialog extends BaseMenuView {
         for (SubPluginAttriItem subPluginAttriItem : subPluginInfo.attributeList) {
           if (subPluginAttriItem.name.equals(name)) {
             isSupportKeyFrame = subPluginAttriItem.is_support_key;
+            if (subPluginAttriItem.min_value < -5000) {
+              subPluginAttriItem.min_value = -5000;
+            }
+            if (subPluginAttriItem.max_value > 5000) {
+              subPluginAttriItem.max_value = 5000;
+            }
             mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
                 .start("" + subPluginAttriItem.min_value)
                 .end("" + subPluginAttriItem.max_value)

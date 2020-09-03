@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.text.TextUtils
 import com.bumptech.glide.Glide
+import com.quvideo.application.db.DraftDBHelper
 import com.quvideo.application.glidedecoder.EffectThumbParams
 import com.quvideo.application.glidedecoder.XytModelLoaderFactory
 import com.quvideo.application.sp.DemoSharedPref
@@ -32,6 +33,7 @@ class EditorApp private constructor() {
   ) {
     app = ctx
 
+    DraftDBHelper.setAppContext(app)
     QEEngineClient.init(app, Builder(licensePath).build())
     val lastCersionCode = DemoSharedPref.getInstance()
         .lastVersionCode

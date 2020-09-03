@@ -106,7 +106,7 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
     if (baseEffect.destRange.getTimeLength() > 0) {
       maxTime = baseEffect.destRange.getLimitValue();
     } else {
-      maxTime = mWorkSpace.getPlayerAPI().getPlayerControl().getPlayerDuration();
+      maxTime = mWorkSpace.getStoryboardAPI().getDuration();
     }
 
     mKeyFrameTimeline.setMaxOffsetTime(maxTime - startTime, new KeyFrameTimeline.OnKeyFrameListener() {
@@ -223,7 +223,9 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
               for (KeyRotationInfo item : baseKeyFrames) {
                 if (item.relativeTime == focusTs) {
                   update = true;
-                  item.rotation = new Ve3DDataF(0, 0, curFakePos.getDegrees());
+                  float oldX = item.rotation.x;
+                  float oldY = item.rotation.y;
+                  item.rotation = new Ve3DDataF(oldX, oldY, curFakePos.getDegrees());
                   baseKeyFrame = item;
                   break;
                 }
@@ -232,7 +234,8 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
           }
           if (!update) {
             baseKeyFrame = new KeyRotationInfo(curPlayerTime - startTime,
-                0, 0, curFakePos.getDegrees());
+                ((AnimEffect) baseEffect).mEffectPosInfo.degree.x,
+                ((AnimEffect) baseEffect).mEffectPosInfo.degree.y, curFakePos.getDegrees());
           }
         } else if (curKeyFrameType == BaseKeyFrame.KeyFrameType.Scale) {
           EffectPosInfo oriPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
