@@ -230,10 +230,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
     @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
       currentTime = progress;
       if (playerStatus == PlayerStatus.STATUS_PAUSE
-          || playerStatus == PlayerStatus.STATUS_PLAYING
           || playerStatus == PlayerStatus.STATUS_STOP
           || playerStatus == PlayerStatus.STATUS_SEEKING) {
         updateFakeFocus(progress);
+      } else if (playerStatus == PlayerStatus.STATUS_PLAYING) {
+        if (mFakeApi != null) {
+          mFakeApi.setTarget(null, null);
+        }
       }
     }
 

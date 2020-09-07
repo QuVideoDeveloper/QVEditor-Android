@@ -480,12 +480,15 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
     @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
       curPlayerTime = progress;
       if (playerStatus == PlayerStatus.STATUS_PAUSE
-          || playerStatus == PlayerStatus.STATUS_PLAYING
           || playerStatus == PlayerStatus.STATUS_STOP
           || playerStatus == PlayerStatus.STATUS_SEEKING) {
         mKeyFrameTimeline.setCurOffsetTime(progress - startTime);
         updateBtnEnable(mKeyFrameTimeline.getFocusTs());
         updatePosAndAlpha(progress);
+      } else if (playerStatus == PlayerStatus.STATUS_PLAYING) {
+        mKeyFrameTimeline.setCurOffsetTime(progress - startTime);
+        updateBtnEnable(-1);
+        updatePosAndAlpha(-1);
       }
     }
 
