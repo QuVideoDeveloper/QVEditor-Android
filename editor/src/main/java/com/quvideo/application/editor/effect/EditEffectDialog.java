@@ -31,6 +31,7 @@ import com.quvideo.application.editor.effect.collage.CollageFilterDialog;
 import com.quvideo.application.editor.effect.collage.CollageOverlayDialog;
 import com.quvideo.application.editor.effect.keyframe.EffectKeyFrameDialog;
 import com.quvideo.application.editor.effect.mask.EffectMaskDialog;
+import com.quvideo.application.editor.effect.operate.EffectOPCustomKeyOffset;
 import com.quvideo.application.editor.effect.plugin.EffectPluginDialog;
 import com.quvideo.application.editor.effect.subfx.CollageSubFxDialog;
 import com.quvideo.application.editor.effect.subtitle.EditEffectInputDialog;
@@ -67,7 +68,6 @@ import com.quvideo.mobile.engine.model.effect.AudioFade;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
 import com.quvideo.mobile.engine.model.effect.EffectKeyFrameInfo;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
-import com.quvideo.mobile.engine.model.effect.keyframe.BaseKeyFrame;
 import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
@@ -80,8 +80,6 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioReplace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPCopy;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDestRange;
-import com.quvideo.mobile.engine.work.operate.effect.EffectOPKeyFrameUpdateOffset;
-import com.quvideo.mobile.engine.work.operate.effect.EffectOPKeyFrameUpdateOffsetAll;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMirror;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
@@ -309,15 +307,12 @@ public class EditEffectDialog extends BaseEffectMenuView {
           }
           FakePosUtils.INSTANCE.updateEffectPosByFakePos(curFakePos, targetPosInfo);
           if (isHadKeyFrame) {
-            updateKeyFrameOffset(targetPosInfo, false);
-            if (backupPosInfo != null && oldEffectKeyFrameInfo != null && oldEffectKeyFrameInfo.scaleList.size() > 1) {
-              // 放大倍数是相对effectposinfo的，所以size不可以变化
-              targetPosInfo.size = new Ve3DDataF(backupPosInfo.size);
-            }
+            updateKeyFrameOffset(targetPosInfo, backupPosInfo, true);
+          } else {
+            EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, targetPosInfo);
+            effectOPPosInfo.setFastRefresh(true);
+            mWorkSpace.handleOperation(effectOPPosInfo);
           }
-          EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, targetPosInfo);
-          effectOPPosInfo.setFastRefresh(true);
-          mWorkSpace.handleOperation(effectOPPosInfo);
         }
 
         @Override public void onEffectMoveStart() {
@@ -344,16 +339,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
           }
           FakePosUtils.INSTANCE.updateEffectPosByFakePos(curFakePos, targetPosInfo);
           if (isHadKeyFrame) {
-            updateKeyFrameOffset(targetPosInfo, true);
-            if (backupPosInfo != null && oldEffectKeyFrameInfo != null && oldEffectKeyFrameInfo.scaleList.size() > 1) {
-              // 放大倍数是相对effectposinfo的，所以size不可以变化
-              targetPosInfo.size = new Ve3DDataF(backupPosInfo.size);
-            }
+            updateKeyFrameOffset(targetPosInfo, backupPosInfo, false);
+          } else {
+            // 放大倍数是相对effectposinfo的，所以size不可以变化
+            EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, targetPosInfo);
+            effectOPPosInfo.setFastRefresh(false);
+            mWorkSpace.handleOperation(effectOPPosInfo);
           }
-          // 放大倍数是相对effectposinfo的，所以size不可以变化
-          EffectOPPosInfo effectOPPosInfo = new EffectOPPosInfo(groupId, index, targetPosInfo);
-          effectOPPosInfo.setFastRefresh(false);
-          mWorkSpace.handleOperation(effectOPPosInfo);
         }
 
         @Override public void checkEffectTouchHit(@NotNull PointF pointF) {
@@ -399,7 +391,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
   /**
    * 更新关键帧的属性
    */
-  private void updateKeyFrameOffset(EffectPosInfo targetPosInfo, boolean isEnd) {
+  private void updateKeyFrameOffset(EffectPosInfo targetPosInfo, EffectPosInfo backupPosInfo, boolean fastRefresh) {
     if (oldEffectPosInfo != null && oldEffectKeyFrameInfo != null) {
       int selectIndex = mEffectAdapter.getSelectIndex();
       Ve3DDataF curPosOffset = null;
@@ -410,11 +402,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curPosOffset.x += oldEffectKeyFrameInfo.positionList.get(0).baseOffset.x;
         curPosOffset.y += oldEffectKeyFrameInfo.positionList.get(0).baseOffset.y;
         curPosOffset.z += oldEffectKeyFrameInfo.positionList.get(0).baseOffset.z;
-        if (isEnd) {
-          EffectOPKeyFrameUpdateOffset posKeyFrameOffsetOP = new EffectOPKeyFrameUpdateOffset(groupId, selectIndex,
-              BaseKeyFrame.KeyFrameType.Position, curPosOffset);
-          mWorkSpace.handleOperation(posKeyFrameOffsetOP);
-        }
       }
       Ve3DDataF curRotateOffset = null;
       if (oldEffectKeyFrameInfo.rotationList.size() > 1) {
@@ -424,11 +411,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curRotateOffset.x += oldEffectKeyFrameInfo.rotationList.get(0).baseOffset.x;
         curRotateOffset.y += oldEffectKeyFrameInfo.rotationList.get(0).baseOffset.y;
         curRotateOffset.z += oldEffectKeyFrameInfo.rotationList.get(0).baseOffset.z;
-        if (isEnd) {
-          EffectOPKeyFrameUpdateOffset rotateKeyFrameOffsetOP = new EffectOPKeyFrameUpdateOffset(groupId, selectIndex,
-              BaseKeyFrame.KeyFrameType.Rotation, curRotateOffset);
-          mWorkSpace.handleOperation(rotateKeyFrameOffsetOP);
-        }
       }
       Ve3DDataF curAnchorOffset = null;
       if (oldEffectKeyFrameInfo.anchorOffsetList.size() > 1) {
@@ -438,11 +420,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curAnchorOffset.x += oldEffectKeyFrameInfo.anchorOffsetList.get(0).baseOffset.x;
         curAnchorOffset.y += oldEffectKeyFrameInfo.anchorOffsetList.get(0).baseOffset.y;
         curAnchorOffset.z += oldEffectKeyFrameInfo.anchorOffsetList.get(0).baseOffset.z;
-        if (isEnd) {
-          EffectOPKeyFrameUpdateOffset anchorKeyFrameOffsetOP = new EffectOPKeyFrameUpdateOffset(groupId, selectIndex,
-              BaseKeyFrame.KeyFrameType.AnchorOffset, curAnchorOffset);
-          mWorkSpace.handleOperation(anchorKeyFrameOffsetOP);
-        }
       }
       Ve3DDataF curScaleOffset = null;
       if (oldEffectKeyFrameInfo.scaleList.size() > 1) {
@@ -452,17 +429,15 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curScaleOffset.x *= oldEffectKeyFrameInfo.scaleList.get(0).baseOffset.x;
         curScaleOffset.y *= oldEffectKeyFrameInfo.scaleList.get(0).baseOffset.y;
         curScaleOffset.z = 1.0f;
-        if (isEnd) {
-          EffectOPKeyFrameUpdateOffset scaleKeyFrameOffsetOP = new EffectOPKeyFrameUpdateOffset(groupId, selectIndex,
-              BaseKeyFrame.KeyFrameType.Scale, curScaleOffset);
-          mWorkSpace.handleOperation(scaleKeyFrameOffsetOP);
-        }
       }
-      if (!isEnd) {
-        EffectOPKeyFrameUpdateOffsetAll opKeyFrameUpdateOffsetAll = new EffectOPKeyFrameUpdateOffsetAll(groupId, selectIndex,
-            curPosOffset, curRotateOffset, curScaleOffset, curAnchorOffset);
-        mWorkSpace.handleOperation(opKeyFrameUpdateOffsetAll);
+      if (backupPosInfo != null && oldEffectKeyFrameInfo != null && oldEffectKeyFrameInfo.scaleList.size() > 1) {
+        // 放大倍数是相对effectposinfo的，所以size不可以变化
+        targetPosInfo.size = new Ve3DDataF(backupPosInfo.size);
       }
+      EffectOPCustomKeyOffset effectOPCustomKeyOffset = new EffectOPCustomKeyOffset(groupId, selectIndex,
+          curPosOffset, curRotateOffset, curScaleOffset, curAnchorOffset,
+          fastRefresh, targetPosInfo);
+      mWorkSpace.handleOperation(effectOPCustomKeyOffset);
     }
   }
 
