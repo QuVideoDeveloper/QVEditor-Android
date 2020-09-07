@@ -160,9 +160,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
                 && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
               mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
             }
-            isHadKeyFrame = ((AnimEffect) baseEffect).mEffectKeyFrameInfo.positionList.size() > 0
-                || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.rotationList.size() > 0
-                || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.scaleList.size() > 0;
+            if (baseEffect instanceof AnimEffect) {
+              isHadKeyFrame = ((AnimEffect) baseEffect).mEffectKeyFrameInfo.positionList.size() > 0
+                  || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.rotationList.size() > 0
+                  || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.scaleList.size() > 0;
+            } else {
+              isHadKeyFrame = false;
+            }
             startTime = baseEffect.destRange.getPosition();
             if (baseEffect.destRange.getTimeLength() > 0) {
               maxTime = baseEffect.destRange.getLimitValue();
@@ -499,9 +503,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
         } else {
           maxTime = mWorkSpace.getStoryboardAPI().getDuration();
         }
-        isHadKeyFrame = ((AnimEffect) baseEffect).mEffectKeyFrameInfo.positionList.size() > 0
-            || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.rotationList.size() > 0
-            || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.scaleList.size() > 0;
+        if (baseEffect instanceof AnimEffect) {
+          isHadKeyFrame = ((AnimEffect) baseEffect).mEffectKeyFrameInfo.positionList.size() > 0
+              || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.rotationList.size() > 0
+              || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.scaleList.size() > 0;
+        } else {
+          isHadKeyFrame = false;
+        }
         updateFakeView(selectIndex, baseEffect);
       }
     }
@@ -811,9 +819,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
               } else {
                 maxTime = mWorkSpace.getStoryboardAPI().getDuration();
               }
-              isHadKeyFrame = ((AnimEffect) baseEffect).mEffectKeyFrameInfo.positionList.size() > 0
-                  || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.rotationList.size() > 0
-                  || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.scaleList.size() > 0;
+              if (baseEffect instanceof AnimEffect) {
+                isHadKeyFrame = ((AnimEffect) baseEffect).mEffectKeyFrameInfo.positionList.size() > 0
+                    || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.rotationList.size() > 0
+                    || ((AnimEffect) baseEffect).mEffectKeyFrameInfo.scaleList.size() > 0;
+              } else {
+                isHadKeyFrame = false;
+              }
               updateFakeView(index, baseEffect);
             }
           }
