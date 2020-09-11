@@ -144,13 +144,18 @@ public class SlideShowActivity extends AppCompatActivity {
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
     adapter = new SlideAdapter(this, new SlideAdapter.OnSlideClickListener() {
       @Override public void onClick(SlideInfo item) {
+        if (mSlideWorkSpace == null || !mSlideWorkSpace.getPlayerAPI().isPlayerReady()) {
+          return;
+        }
         if (mPlayerControllerView != null) {
           mPlayerControllerView.seekPlayer(item.previewPos);
         }
       }
 
       @Override public void onReplaceClick(SlideInfo item) {
-
+        if (mSlideWorkSpace == null || !mSlideWorkSpace.getPlayerAPI().isPlayerReady()) {
+          return;
+        }
         replaceSlideNode(item.index);
       }
     });

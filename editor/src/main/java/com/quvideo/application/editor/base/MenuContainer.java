@@ -45,7 +45,17 @@ public class MenuContainer extends RelativeLayout {
     return false;
   }
 
-  public void addMenuLayer(BaseMenuLayer menuLayer) {
+  /**
+   * 获取当前最上层的menulayer类型
+   */
+  public synchronized BaseMenuLayer.MenuType getTopMenuType() {
+    if (mBaseMenuLayers.size() > 0) {
+      return mBaseMenuLayers.get(mBaseMenuLayers.size() - 1).getMenuType();
+    }
+    return null;
+  }
+
+  public synchronized void addMenuLayer(BaseMenuLayer menuLayer) {
     mBaseMenuLayers.add(menuLayer);
     LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -54,7 +64,7 @@ public class MenuContainer extends RelativeLayout {
     changeCurMenu();
   }
 
-  public void removeMenuLayer(BaseMenuLayer menuLayer) {
+  public synchronized void removeMenuLayer(BaseMenuLayer menuLayer) {
     mBaseMenuLayers.remove(menuLayer);
     removeView(menuLayer);
     changeCurMenu();

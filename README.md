@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.3.5"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.3.6"
 }
 ```
 
@@ -740,6 +740,13 @@ public interface PlayerAPI {
    */
   public float getAttriInfoByTime(int groupId, int effectIndex, int subType, String attrName, int offsetTime);
 
+  /**
+   * 配置变速时获取相应的src/scale 时间(针对使用了变速的区域)
+   * bSrc为true时，range应该传入原始时间，返回的是缩放后的时间，
+   * bSrc为false时，range应该传入缩放后的时间，返回的是原始时间；
+   */
+  public VeRange convertSpeedRange(int clipIndex, VeRange range, boolean isSrc);
+
 ```
 
 #### 3. 获取剪辑工程信息
@@ -1306,6 +1313,7 @@ ClipAddItem参数说明：
 | :-: | :-: | :-: | :-: |
 | clipFilePath | 文件地址 | String | 必须 |
 | trimRange | 切入点 | VeRange | 非必须 |
+| srcRange | 源视频文件区间, 仅用于保存 | VeRange | 非必须 |
 | cropRect | 裁切区域 | Rect | 非必须 |
 | rotateAngle | 旋转角度 | int | 非必须 |
 | filterInfo | 滤镜 | FilterInfo | 非必须 |
@@ -1430,7 +1438,16 @@ ClipAddItem参数说明：
 	mWorkSpace.handleOperation(clipOPTrimRange);
 ```
 
-16）图片时长
+
+16）视频源区间
+```
+	// clipIndex表示第几个片段，从0开始
+	// srcRange裁剪区域（srcRange表示从视频源文件选择的区间，目前数据只是存储）
+	ClipOPSrcRange clipOPSrcRange = new ClipOPSrcRange(clipIndex, srcRange裁剪区域);
+	mWorkSpace.handleOperation(clipOPSrcRange);
+```
+
+17）图片时长
 ```
 	// clipIndex表示第几个片段，从0开始
 	// duration图片时长
@@ -1438,7 +1455,7 @@ ClipAddItem参数说明：
 	mWorkSpace.handleOperation(clipOPPicTrim);
 ```
 
-17）图片动画
+18）图片动画
 ```
 	// clipIndex表示第几个片段，从0开始
 	// isAnimEnable是否开启图片动画
@@ -1446,7 +1463,7 @@ ClipAddItem参数说明：
 	mWorkSpace.handleOperation(clipOPPicAnim);
 ```
 
-18）背景
+19）背景
 ```
 	// clipIndex表示第几个片段，从0开始
 	// clipBgData背景数据 {@see ClipBgData}
@@ -1476,7 +1493,7 @@ ClipBgData构造器
 ```
 
 
-19）位置修改
+20）位置修改
 ```
   // 方式一：
 	// clipIndex表示第几个片段，从0开始
@@ -1493,7 +1510,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPPosInfo);
 ```
 
-20）镜头参数调节
+21）镜头参数调节
 ```
 	// clipIndex表示第几个片段，从0开始
 	// paramAdjust镜头参数调节数据 {@see ParamAdjust}
@@ -1502,7 +1519,7 @@ ClipBgData构造器
 ```
 
 
-21）曲线调色调节
+22）曲线调色调节
 ```
 	// clipIndex表示第几个片段，从0开始
 	// colorCurveInfo曲线调色数据 {@see ColorCurveInfo}
@@ -1511,7 +1528,7 @@ ClipBgData构造器
 ```
 
 
-22）新增滤镜
+23）新增滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// filterInfo滤镜信息
@@ -1519,7 +1536,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFilterAdd);
 ```
 
-23）修改滤镜
+24）修改滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// filterIndex表示删除第几个滤镜
@@ -1528,7 +1545,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFilterUpdate);
 ```
 
-24）删除滤镜
+25）删除滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// filterIndex表示删除第几个滤镜
@@ -1536,7 +1553,7 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFilterDel);
 ```
 
-25）特效滤镜
+26）特效滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// fxFilterInfo特效滤镜信息 {@see FxFilterInfo}，null表示不使用特效滤镜
@@ -1544,13 +1561,29 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFxFilter);
 ```
 
-26）转场
+27）转场
 ```
 	// clipIndex表示第几个片段，从0开始
 	// crossInfo转场信息 {@see CrossInfo}，null表示不使用转场
 	ClipOPTrans clipOPTrans = new ClipOPTrans(clipIndex, crossInfo);
 	mWorkSpace.handleOperation(clipOPTrans);
 ```
+
+28）替换clip
+```
+	// clipIndex为clip添加的位置，0为第一个
+	// 替换的数据 clipReplaceItem;
+	ClipOPReplace clipOPReplace = new ClipOPReplace(clipIndex, clipReplaceItem);
+	mWorkSpace.handleOperation(clipOPReplace);
+```
+ClipReplaceItem：
+| 名称  | 解释 | 类型 | 是否必须 |
+| :-: | :-: | :-: | :-: |
+| clipFilePath | 文件地址 | String | 必须 |
+| trimRange | 切入点 | VeRange | 非必须 |
+| srcRange | 源视频文件区间, 仅用于保存 | VeRange | 非必须 |
+| cropRect | 裁切区域 | Rect | 非必须 |
+
 
 #### 6. Effect剪辑功能接口
 1）添加

@@ -41,9 +41,11 @@ import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.application.widget.sort.CusSortRecycler;
 import com.quvideo.application.widget.sort.ItemDragHelperCallback;
+import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.ClipAddItem;
+import com.quvideo.mobile.engine.model.clip.ClipReplaceItem;
 import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
@@ -53,6 +55,7 @@ import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPCopy;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPDel;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPMove;
+import com.quvideo.mobile.engine.work.operate.clip.ClipOPReplace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPReverse;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPSplit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -134,6 +137,8 @@ public class EditEditDialog extends BaseMenuView {
           context.getString(R.string.mn_edit_effect_position)));
       add(new EditOperate(R.drawable.edit_icon_delete_nor,
           context.getString(R.string.mn_edit_title_delete)));
+      add(new EditOperate(R.drawable.edit_icon_edit_nor,
+          context.getString(R.string.mn_edit_bgm_edit)));
       add(new EditOperate(R.drawable.edit_icon_muteoff_n,
           context.getString(R.string.mn_edit_title_volume)));
       add(new EditOperate(R.drawable.edit_icon_filter_nor,
@@ -206,11 +211,28 @@ public class EditEditDialog extends BaseMenuView {
     if (count <= 0) {
       return 0;
     }
+    VeRange preRange = null;
+    VeRange nextRange = null;
+    VeRange curRange = null;
+    int startTime = 0;
     for (int index = 0; index < count; index++) {
+      curRange = clipList.get(index).getDestRange();
+      if (preRange == null) {
+        startTime = 0;
+      } else {
+        startTime = (curRange.getPosition() + preRange.getLimitValue()) / 2;
+      }
+      if (index < count - 1) {
+        nextRange = clipList.get(index + 1).getDestRange();
+      }
       int endTime = clipList.get(index).getDestRange().getLimitValue();
-      if (endTime > curTime) {
+      if (nextRange != null) {
+        endTime = (endTime + nextRange.getPosition()) / 2 - 1;
+      }
+      if (startTime <= curTime && endTime >= curTime) {
         return index;
       }
+      preRange = curRange;
     }
     return count - 1;
   }
@@ -220,6 +242,7 @@ public class EditEditDialog extends BaseMenuView {
       if (operate instanceof ClipOPAdd
           || operate instanceof ClipOPDel
           || operate instanceof ClipOPCopy
+          || operate instanceof ClipOPReplace
           || operate instanceof ClipOPMove
           || operate instanceof ClipOPSplit) {
         // 添加 / 删除 clip完成监听
@@ -261,6 +284,9 @@ public class EditEditDialog extends BaseMenuView {
     } else if (operate.getResId() == R.drawable.edit_icon_location_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditClipPosInfoDialog(getContext(), mMenuContainer, mWorkSpace, selIndex, mFakeApi);
+    } else if (operate.getResId() == R.drawable.edit_icon_edit_nor) {
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      doClipReplace(selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_delete_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       doClipDel(selIndex);
@@ -323,6 +349,35 @@ public class EditEditDialog extends BaseMenuView {
       ClipOPCopy clipOPCopy = new ClipOPCopy(selClipIndex);
       mWorkSpace.handleOperation(clipOPCopy);
     }
+  }
+
+  private void doClipReplace(int selClipIndex) {
+    GallerySettings settings = new GallerySettings.Builder()
+        .minSelectCount(1)
+        .maxSelectCount(1)
+        .showMode(GalleryDef.MODE_BOTH)
+        .build();
+    GalleryClient.getInstance().initSetting(settings);
+    //enter gallery
+    GalleryClient.getInstance().performLaunchGallery(getActivity());
+    GalleryClient.getInstance().initProvider(new IGalleryProvider() {
+      @Override
+      public boolean checkFileEditAble(String filePath) {
+        int res = MediaFileUtils.checkFileEditAble(filePath);
+        return res == SDKErrCode.RESULT_OK;
+      }
+
+      @Override
+      public void onGalleryFileDone(ArrayList<MediaModel> mediaList) {
+        super.onGalleryFileDone(mediaList);
+        if (mediaList != null && mediaList.size() > 0 && mWorkSpace != null) {
+          ClipReplaceItem clipReplaceItem = new ClipReplaceItem();
+          clipReplaceItem.clipFilePath = mediaList.get(0).getFilePath();
+          ClipOPReplace clipOPReplace = new ClipOPReplace(selClipIndex, clipReplaceItem);
+          mWorkSpace.handleOperation(clipOPReplace);
+        }
+      }
+    });
   }
 
   private void doClipDel(int selClipIndex) {

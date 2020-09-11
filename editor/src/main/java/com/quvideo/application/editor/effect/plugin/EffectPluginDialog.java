@@ -85,7 +85,7 @@ public class EffectPluginDialog extends BaseMenuView {
       }
     });
     AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
-    mPluginAdapter.updateList(baseEffect.mEffectSubPluginList);
+    mPluginAdapter.updateList(baseEffect.mEffectSubPluginList, -1);
     mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
     // 操作view
     RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
@@ -157,7 +157,8 @@ public class EffectPluginDialog extends BaseMenuView {
           mWorkSpace.getPlayerAPI().getPlayerControl().pause();
         }
         AnimEffect baseEffect = (AnimEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
-        mPluginAdapter.updateList(baseEffect.mEffectSubPluginList);
+        mPluginAdapter.updateList(baseEffect.mEffectSubPluginList,
+            operate instanceof EffectOPSubPluginAdd ? baseEffect.mEffectSubPluginList.size() - 1 : -1);
         mWorkSpace.getPlayerAPI().getPlayerControl().seek(baseEffect.destRange.getPosition());
         if (mEffectPluginAttriAdapter != null) {
           int selectIndex = mPluginAdapter.getSelectIndex();

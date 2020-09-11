@@ -21,7 +21,7 @@ ext {
     downloadVersion = "1.0.2"
 
     //---------输出组件版本号
-    vivaSDKVersion = '1.3.5'
+    vivaSDKVersion = '1.3.6'
 
     //该文件设计打包脚本处理，参数格式正常情况不做特别修改
     android = [

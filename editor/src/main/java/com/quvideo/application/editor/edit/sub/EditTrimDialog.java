@@ -51,8 +51,8 @@ public class EditTrimDialog extends BaseMenuView {
     ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
     int start = clipData.getSrcRange().getPosition() + (clipData.getSrcRange().getPosition() == 0 ? 0 : 1);
     int end = clipData.getSrcRange().getLimitValue();
-    VeRange srcTrimRange = new VeRange((int) (clipData.getTrimRange().getPosition() / clipData.getTimeScale()),
-        (int) (clipData.getTrimRange().getTimeLength() / clipData.getTimeScale()));
+    VeRange srcTrimRange = mWorkSpace.convertSpeedRange(clipIndex,
+        new VeRange(clipData.getTrimRange()), false);
     mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
         .start(TimeFormatUtil.INSTANCE.formatTime(start))
         .end(TimeFormatUtil.INSTANCE.formatTime(end))
@@ -92,8 +92,8 @@ public class EditTrimDialog extends BaseMenuView {
       }
       LogUtils.d("ClipOP", "progressStart = " + progressStart + " , progressEnd = " + progressEnd);
       ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-      VeRange trimRange = new VeRange((int) (progressStart * clipData.getTimeScale()),
-          (int) ((progressEnd - progressStart) * clipData.getTimeScale()));
+      VeRange trimRange = new VeRange((int)(progressStart * clipData.getTimeScale()),
+          (int)((progressEnd - progressStart)* clipData.getTimeScale()));
       ClipOPTrimRange clipOPTrimRange = new ClipOPTrimRange(clipIndex, trimRange);
       mWorkSpace.handleOperation(clipOPTrimRange);
     }

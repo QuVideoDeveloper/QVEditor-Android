@@ -22,6 +22,7 @@ import com.quvideo.application.download.DownloadDialog;
 import com.quvideo.application.editor.EditorActivity;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseEffectMenuView;
+import com.quvideo.application.editor.base.BaseMenuLayer;
 import com.quvideo.application.editor.base.IEffectEditClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.chroma.EffectChromaDialog;
@@ -149,7 +150,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
         }
         isHadKeyFrame = false;
         List<BaseEffect> dataList = mWorkSpace.getEffectAPI().getEffectList(groupId);
-        mEffectAdapter.updateList(dataList);
+        mEffectAdapter.updateList(dataList,
+            operate instanceof EffectOPAdd ? dataList.size() - 1 : -1);
         int selectIndex = mEffectAdapter.getSelectIndex();
         if (selectIndex >= 0) {
           BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);
@@ -352,6 +354,11 @@ public class EditEffectDialog extends BaseEffectMenuView {
         }
 
         @Override public void checkEffectTouchHit(@NotNull PointF pointF) {
+          // 如果不是当前页面，则不响应点击
+          BaseMenuLayer.MenuType menuType = mMenuContainer.getTopMenuType();
+          if (menuType != MenuType.EffectEdit) {
+            return;
+          }
           List<BaseEffect> list = mWorkSpace.getEffectAPI().getEffectList(groupId);
           if (list == null || list.isEmpty()) {
             mEffectAdapter.setSelectIndex(-1);
@@ -469,7 +476,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
       }
     });
     List<BaseEffect> dataList = mWorkSpace.getEffectAPI().getEffectList(groupId);
-    mEffectAdapter.updateList(dataList);
+    mEffectAdapter.updateList(dataList, -1);
     int selectIndex = mEffectAdapter.getSelectIndex();
     if (selectIndex >= 0) {
       BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, selectIndex);

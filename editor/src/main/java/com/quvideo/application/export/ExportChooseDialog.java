@@ -102,7 +102,7 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
     });
     mRGFps.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
-        exportParams.customFps = checkedId == R.id.rb_fps_60 ? 30 : 60;
+        exportParams.customFps = checkedId == R.id.rb_fps_60 ? 60 : 30;
       }
     });
     mRGHardware.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

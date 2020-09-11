@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.utils.DeviceSizeUtil;
+import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import io.reactivex.Observable;
@@ -169,6 +170,16 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
           int time = 0;
           if (item != null) {
             time = item.getDestRange().getPosition();
+          }
+          VeRange preRange = null;
+          if (position != 0) {
+            ClipData preItem = workSpace.getClipAPI().getClipByIndex(position - 1);
+            if (preItem != null) {
+              preRange = preItem.getDestRange();
+            }
+          }
+          if (preRange != null) {
+            time = (time + preRange.getLimitValue()) / 2;
           }
           workSpace.getPlayerAPI().getPlayerControl().seek(time);
         }

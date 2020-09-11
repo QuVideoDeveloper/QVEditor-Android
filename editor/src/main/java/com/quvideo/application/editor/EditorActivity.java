@@ -279,6 +279,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   @Override
   public void onClick(View view, EditOperate operate) {
+    if (mWorkSpace == null || mWorkSpace.getPlayerAPI() == null || !mWorkSpace.getPlayerAPI().isPlayerReady()) {
+      return;
+    }
     if (operate.getResId() == R.drawable.edit_icon_crop_n) {
       new EditEditDialog(this, mMenuLayout, mWorkSpace, this, mCropImageView, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {

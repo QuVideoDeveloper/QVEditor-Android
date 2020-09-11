@@ -39,9 +39,15 @@ public class EffectPluginAdapter extends RecyclerView.Adapter<EffectPluginAdapte
     this.mOnPluginClickListener = effectlickListener;
   }
 
-  public void updateList(List<SubPluginInfo> dataList) {
+  public void updateList(List<SubPluginInfo> dataList, int index) {
     this.mDataList = dataList;
-    selectIndex = dataList.size() > 0 ? 0 : -1;
+    if (index < 0 || index >= dataList.size()) {
+      if (selectIndex < 0 || selectIndex >= dataList.size()) {
+        selectIndex = dataList.size() > 0 ? 0 : -1;
+      }
+    } else {
+      selectIndex = index;
+    }
     notifyDataSetChanged();
   }
 
@@ -65,6 +71,8 @@ public class EffectPluginAdapter extends RecyclerView.Adapter<EffectPluginAdapte
           }
         }
       });
+      holder.mImgFocus.setVisibility(View.GONE);
+      holder.mTvContent.setText("");
       return;
     }
     boolean isSelected = position == selectIndex + addOffset;

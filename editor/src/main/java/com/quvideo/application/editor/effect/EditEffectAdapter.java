@@ -53,11 +53,15 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
     addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
   }
 
-  public void updateList(List<BaseEffect> dataList) {
+  public void updateList(List<BaseEffect> dataList, int index) {
     this.mDataList = dataList;
     addOffset = QEGroupConst.GROUP_ID_BGMUSIC == groupId && mDataList.size() > 0 ? 0 : 1;
-    if (selectIndex >= dataList.size() || selectIndex < 0) {
-      selectIndex = dataList.size() > 0 ? 0 : -1;
+    if (index < 0 || index >= dataList.size()) {
+      if (selectIndex < 0 || selectIndex >= dataList.size()) {
+        selectIndex = dataList.size() > 0 ? 0 : -1;
+      }
+    } else {
+      selectIndex = index;
     }
     notifyDataSetChanged();
   }
