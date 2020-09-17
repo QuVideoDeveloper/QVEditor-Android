@@ -309,6 +309,12 @@ class CameraMgr implements LifecycleObserver {
     }
   }
 
+  void reduceMusic(int offsetTime) {
+    if (isMusicMode()) {
+      mRecorderMusicMgr.reduceMusic(offsetTime);
+    }
+  }
+
   void handleRecordAction(@NonNull String filePath) {
     int recordState = mRecorderMgr.getRecorderState();
     if (recordState == RecorderMgr.RECORDER_STATE_IDLE) {

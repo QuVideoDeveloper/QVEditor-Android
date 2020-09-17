@@ -222,7 +222,11 @@ public class CameraActivity extends AppCompatActivity {
           }
           cameraMgr.stopRecording();
 
+          RecorderClipInfo delItem = clipInfoList.get(clipInfoList.size() - 1);
+          Integer[] range = delItem.getRecorderPos();
+          int offsetTime = range[1] - range[0];
           clipInfoList.remove(clipInfoList.size() - 1);
+          cameraMgr.reduceMusic(offsetTime);
           int realDuration = 0;
           for (RecorderClipInfo clipInfo : clipInfoList) {
             realDuration += (clipInfo.getRecorderPos()[1] - clipInfo.getRecorderPos()[0]);

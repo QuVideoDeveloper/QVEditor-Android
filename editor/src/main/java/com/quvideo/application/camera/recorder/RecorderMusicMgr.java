@@ -75,6 +75,14 @@ public class RecorderMusicMgr {
     }
   }
 
+  public void reduceMusic(int offsetTime) {
+    try {
+      mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() - offsetTime);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   public void playMusic() {
     try {
       mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
