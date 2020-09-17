@@ -265,7 +265,8 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
             || menuType == BaseMenuLayer.MenuType.EffectSubtitleStroke
             || menuType == BaseMenuLayer.MenuType.EffectSubtitleShadow
             || menuType == BaseMenuLayer.MenuType.EffectSubtitleAlign
-            || menuType == BaseMenuLayer.MenuType.EffectSubtitleInput) {
+            || menuType == BaseMenuLayer.MenuType.EffectSubtitleInput
+            || menuType == BaseMenuLayer.MenuType.AudioRecord) {
           rlTitle.setVisibility(View.INVISIBLE);
         } else {
           rlTitle.setVisibility(View.VISIBLE);
