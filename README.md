@@ -66,12 +66,14 @@
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_range.png" width="637" height="441" align="center">
 
 #### 5. 坐标系
-剪辑中使用的坐标系，统一使用视频流(stream)的坐标系，即视频流的左上角为（0, 0），右下角为（stream.width，stream.height）。角度水平向右为0度，顺时针为增大。
+
+剪辑中使用的正常坐标系，统一使用视频流(stream)的坐标系，即视频流的左上角为（0, 0），右下角为（stream.width，stream.height）。角度水平向右为0度，顺时针为增大。
 
 
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="574" height="542" align="center">
 
-
+剪辑中使用的万分比坐标系，统一使用视频流转化为对应比例的坐标系，即视频流的左上角为（0, 0），右下角为（10000，10000）。
+即把stream映射到万分比左边中，10000级表示 stream.width或stream.height。
 
 #### 6. 剪辑操作符
 由于剪辑需要始终保持单线程操作，所以在工程剪辑时，我们将每个操作定义为一个剪辑操作符BaseOperate。剪辑操作符有sdk已经预设的大量操作符，开发者也可以自行组合实现新的操作符。执行时，开发者只需要创建操作符，并将操作符交给workspace执行即可，接下来就是等待执行完成的回调。
