@@ -1,14 +1,9 @@
 package com.quvideo.application.editor;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -61,12 +56,17 @@ import com.quvideo.mobile.engine.project.QEStoryBoardResult;
 import com.quvideo.mobile.engine.project.QEWorkSpaceListener;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.utils.MediaFileUtils;
+import com.quvideo.mobile.engine.work.BaseOPSavePrj;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPRatio;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
-import java.io.File;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import xiaoying.utils.LogUtils;
@@ -166,6 +166,8 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
             EditorActivity.this.finish();
             return;
           }
+          BaseOPSavePrj baseOPSavePrj = new BaseOPSavePrj();
+          mWorkSpace.handleOperation(baseOPSavePrj);
           DraftInfoDao draftInfoDao = new DraftInfoDao();
           DraftModel draftModel = new DraftModel();
           draftModel.createTime = System.currentTimeMillis();
@@ -200,24 +202,41 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         dialog.setOnDialogItemListener(new ExportChooseDialog.OnDialogItemListener() {
 
           @Override public void onConfirmExport(ExportParams exportParams) {
-            Bitmap bitmap = mWorkSpace.getProjectThumbnail();
             String thumbnail = FileUtils.getFileParentPath(exportParams.outputPath)
                 + FileUtils.getFileName(exportParams.outputPath) + "_thumbnail.jpg";
-            if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
-              FileUtils.saveBitmap(thumbnail, bitmap, 100);
-            } else {
-              ContentValues contentValues = new ContentValues();
-              contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
-              contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
-              contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
-              contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
-              Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-              thumbnail = path.toString();
-              FileUtils.saveBitmap(thumbnail, bitmap, 100);
-            }
-            if (bitmap != null) {
-              bitmap.recycle();
-            }
+            Observable.create((ObservableOnSubscribe<Boolean>) emitter -> emitter.onNext(true))
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(new Observer<Boolean>() {
+                  @Override public void onSubscribe(Disposable d) {
+                  }
+
+                  @Override public void onNext(Boolean result) {
+                    Bitmap bitmap = mWorkSpace.getProjectThumbnail();
+                    // TODO 用于兼容target 29
+                    //if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
+                    FileUtils.saveBitmap(thumbnail, bitmap, 80);
+                    //} else {
+                    //  ContentValues contentValues = new ContentValues();
+                    //  contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+                    //  contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
+                    //  contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
+                    //  contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+                    //  Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                    //  thumbnail = path.toString();
+                    //  FileUtils.saveBitmap(thumbnail, bitmap, 100);
+                    //}
+                    if (bitmap != null) {
+                      bitmap.recycle();
+                    }
+                  }
+
+                  @Override public void onError(Throwable e) {
+                  }
+
+                  @Override public void onComplete() {
+                  }
+                });
             ExportDialog exportDialog = new ExportDialog();
             exportDialog.showExporting(EditorActivity.this, thumbnail, exportParams, mWorkSpace);
           }

@@ -238,7 +238,9 @@ public class MediaManager {
     item.mediaType = mediaType;
     item.mediaId = cursor.getInt(0);
     item.title = item.displayTitle = cursor.getString(1);
-    item.path = Uri.withAppendedPath(baseUri, "" + item.mediaId).toString();
+    // TODO 用于target 29的兼容
+    //item.path = Uri.withAppendedPath(baseUri, "" + item.mediaId).toString();
+    item.path = cursor.getString(2);
     item.date = cursor.getLong(3);
     if (String.valueOf(item.date).length() <= 10) {
       //to mill seconds

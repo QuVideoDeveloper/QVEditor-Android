@@ -5,9 +5,40 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Thu, 20 Aug 2020 14:30:10 +0800
+ Exported at: Tue, 15 Sep 2020 13:46:15 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="gocut_purchase_Privacy">Privacy Policy</string>
+    <string name="gocut_purchase_alert_subtitle">Over 91.98% of the new users choose 3 day free trial.Unlock all the following features</string>
+    <string name="gocut_purchase_all_features">PRO users enjoy all the features</string>
+    <string name="gocut_purchase_all_features_purchased">You can enjoy all the features</string>
+    <string name="gocut_purchase_cancel_anytime">Cancel Anytime</string>
+    <string name="gocut_purchase_close">Close</string>
+    <string name="gocut_purchase_continue">Continue</string>
+    <string name="gocut_purchase_custom_background">Custom background</string>
+    <string name="gocut_purchase_effects">Special effects</string>
+    <string name="gocut_purchase_enjoy_features">Enjoy all features and materials</string>
+    <string name="gocut_purchase_filter">Filter</string>
+    <string name="gocut_purchase_font">Font</string>
+    <string name="gocut_purchase_free_trial">3 DAY FREE TRIAL</string>
+    <string name="gocut_purchase_hd">HD export</string>
+    <string name="gocut_purchase_make_videos">Make great videos</string>
+    <string name="gocut_purchase_monthly_title">Weekly:$6.99/Week</string>
+    <string name="gocut_purchase_more">Stay tuned</string>
+    <string name="gocut_purchase_now">Subscribe now</string>
+    <string name="gocut_purchase_popular">Most Popular</string>
+    <string name="gocut_purchase_quite">Do you really want to quit the free trial?</string>
+    <string name="gocut_purchase_remove_watermark">Remove watermark</string>
+    <string name="gocut_purchase_restore">Restore</string>
+    <string name="gocut_purchase_sticker">Stickers</string>
+    <string name="gocut_purchase_subscribe_desc">Payment will be charged to iTunes Account at confirmation of purchase. Subscription automatically renews unless auto-renew is turned off at least\u0020\u002024-hours before the end of the current period. Your account will be charged for renewal within 24-hour prior to the end of the current period, and identify the cost of the renewal. Subscriptions may be managed by the user and auto-renewal may be turned off by going to the user\'s Account Settings after purchase.</string>
+    <string name="gocut_purchase_subscribe_policy">Subscription Policy</string>
+    <string name="gocut_purchase_terms">Terms of use</string>
+    <string name="gocut_purchase_transition">Transition</string>
+    <string name="gocut_purchase_yearly_buy">Subscribe</string>
+    <string name="gocut_purchase_yearly_buy_config">FREE TRIAL</string>
+    <string name="gocut_purchase_yearly_title">Yearly:$39.99/Year</string>
+    <string name="gocut_purchase_yearly_title_normal">Then $39.99/year, auto-renewable</string>
     <string name="mn_app_brvah_load_end">No more</string>
     <string name="mn_app_brvah_load_failed">Load failed, try again</string>
     <string name="mn_app_brvah_loading">Loading</string>
@@ -82,6 +113,8 @@
     <string name="mn_edit_firework">Fireworks</string>
     <string name="mn_edit_font">Font</string>
     <string name="mn_edit_foodie">Foodie</string>
+    <string name="mn_edit_guide_angle">Slide the wheel left and right to adjust the direction</string>
+    <string name="mn_edit_guide_location">Click below to fine-tune the position</string>
     <string name="mn_edit_kaleidoscope">Kaleidoscope</string>
     <string name="mn_edit_keyframe_animator_title">Animator</string>
     <string name="mn_edit_kids">Kids</string>
@@ -100,9 +133,11 @@
     <string name="mn_edit_music_fade_out_turn_on">Fade-out on</string>
     <string name="mn_edit_music_repeat_turn_off">Repeat off</string>
     <string name="mn_edit_music_repeat_turn_on">Repeat on</string>
+    <string name="mn_edit_my_projects">My projects</string>
     <string name="mn_edit_none">None</string>
     <string name="mn_edit_party">Party</string>
     <string name="mn_edit_plastic">Plastic</string>
+    <string name="mn_edit_project">Project</string>
     <string name="mn_edit_qrcode_scan">QR-Code</string>
     <string name="mn_edit_quit_confirm_title">Are you sure to quit editing? The edit will not be saved after exiting.</string>
     <string name="mn_edit_reset">Reset</string>
@@ -118,8 +153,12 @@
     <string name="mn_edit_subtitle_align">Align</string>
     <string name="mn_edit_subtitle_anim_state_off">Anim off</string>
     <string name="mn_edit_subtitle_anim_state_on">Anim on</string>
+    <string name="mn_edit_subtitle_blod_off">Blod Off</string>
+    <string name="mn_edit_subtitle_blod_on">Blod On</string>
     <string name="mn_edit_subtitle_font">Font</string>
     <string name="mn_edit_subtitle_input">Input</string>
+    <string name="mn_edit_subtitle_italic_off">Italic Off</string>
+    <string name="mn_edit_subtitle_italic_on">Italic On</string>
     <string name="mn_edit_subtitle_shadow">Shadow</string>
     <string name="mn_edit_subtitle_stroke">Border</string>
     <string name="mn_edit_template_center">Effects</string>
@@ -143,6 +182,7 @@
     <string name="mn_edit_title_axle_z">Z Axle</string>
     <string name="mn_edit_title_background">Background</string>
     <string name="mn_edit_title_bgm">Music</string>
+    <string name="mn_edit_title_bgm_dot">Marker</string>
     <string name="mn_edit_title_bgm_repeat">Repeat</string>
     <string name="mn_edit_title_change_voice">Voice</string>
     <string name="mn_edit_title_chroma">Chroma</string>

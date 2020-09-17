@@ -97,7 +97,43 @@
         android:background="@drawable/edit_item_bg_normal"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/colorbar_text_color"
+        app:layout_constraintEnd_toStartOf="@+id/btn_blod"
         app:layout_constraintStart_toEndOf="@+id/btn_edit"  />
+
+    <Button
+        android:id="@+id/btn_blod"
+        android:layout_width="64dp"
+        android:layout_height="25dp"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:text="@string/mn_edit_subtitle_blod_off"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/edit_item_bg_normal"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@id/colorbar_text_color"
+        app:layout_constraintEnd_toStartOf="@+id/btn_italic"
+        app:layout_constraintStart_toEndOf="@+id/btn_anim"  />
+
+    <Button
+        android:id="@+id/btn_italic"
+        android:layout_width="64dp"
+        android:layout_height="25dp"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:text="@string/mn_edit_subtitle_italic_off"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/edit_item_bg_normal"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@id/colorbar_text_color"
+        app:layout_constraintStart_toEndOf="@+id/btn_blod"  />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/subtitle_font_recyclerview"

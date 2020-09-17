@@ -37,6 +37,8 @@ public class EditClipCropDialog extends BaseMenuView {
 
   private boolean isChanged = false;
 
+  private Bitmap mBitmap;
+
   public EditClipCropDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       int clipIndex, AppCompatImageView cropImageView, IFakeViewApi fakeViewApi) {
     super(context, workSpace);
@@ -88,8 +90,9 @@ public class EditClipCropDialog extends BaseMenuView {
           }
 
           @Override public void onNext(Bitmap bitmap) {
-            if (bitmap != null) {
-              mCropImageView.setImageBitmap(bitmap);
+            mBitmap = bitmap;
+            if (mBitmap != null) {
+              mCropImageView.setImageBitmap(mBitmap);
               initFakeView();
               btnZoomIn.setEnabled(true);
               btnZoomOut.setEnabled(true);
@@ -160,7 +163,12 @@ public class EditClipCropDialog extends BaseMenuView {
   };
 
   @Override protected void releaseAll() {
+    mCropImageView.setImageBitmap(null);
     mCropImageView.setVisibility(GONE);
+    if (mBitmap != null && !mBitmap.isRecycled()) {
+      mBitmap.recycle();
+      mBitmap = null;
+    }
   }
 
   @Override public void onClick(View v) {
@@ -172,6 +180,7 @@ public class EditClipCropDialog extends BaseMenuView {
           (int) (fakePosInfo.getCenterX() + fakePosInfo.getWidth() / 2),
           (int) (fakePosInfo.getCenterY() + fakePosInfo.getHeight() / 2));
       cropRect = getIntersectRect(cropRect, new Rect(0, 0, clipSourceSize.width, clipSourceSize.height));
+      cropRect = getRelativeRect(cropRect, clipSourceSize);
       ClipOPCrop clipOPCrop = new ClipOPCrop(clipIndex, cropRect);
       mWorkSpace.handleOperation(clipOPCrop);
     }
@@ -192,5 +201,29 @@ public class EditClipCropDialog extends BaseMenuView {
       return null;
     }
     return result;
+  }
+
+  /**
+   * streamSize转万分比尺寸
+   */
+  private static Rect getRelativeRect(Rect rtAbsolute, VeMSize frameSize) {
+    if (rtAbsolute == null || frameSize == null || frameSize.width <= 0 || frameSize.height <= 0) {
+      return null;
+    }
+
+    Rect rtTextBounds = new Rect();
+    rtTextBounds.left = getScaleValue(rtAbsolute.left, frameSize.width);
+    rtTextBounds.top = getScaleValue(rtAbsolute.top, frameSize.height);
+    rtTextBounds.right = getScaleValue(rtAbsolute.right, frameSize.width);
+    rtTextBounds.bottom = getScaleValue(rtAbsolute.bottom, frameSize.height);
+    return rtTextBounds;
+  }
+
+  private static int getScaleValue(float lAbsoluteValue, int lFullSize) {
+    if (lFullSize == 0) {
+      return 0;
+    }
+    float fTemp = lAbsoluteValue * 10000f / lFullSize;
+    return Math.round(fTemp);
   }
 }

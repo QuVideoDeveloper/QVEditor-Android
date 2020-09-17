@@ -145,7 +145,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.3.6"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.3.7"
 }
 ```
 
@@ -854,7 +854,7 @@ ClipData参数说明：
 | srcRange | 源文件区间 | VeRange |
 | trimRange | 片段裁切区间 | VeRange |
 | destRange | 片段出入区间 | VeRange |
-| cropRect | 裁剪区域 | Rect |
+| cropRect | 裁剪区域（万分比区域） | Rect |
 | sourceSize | 源视频宽高，相对streamSize的尺寸 | VeMSize |
 | rotateAngle | 旋转角度 | int |
 | isMute | 是否静音 | boolean |
@@ -1226,6 +1226,9 @@ TextBubble参数说明：
 | mDftTextColor | 默认颜色，如0xFFFFFFFF,即ARGB | int |
 | mShadowInfo | 字幕阴影信息 {@see ShadowInfo} | ShadowInfo |
 | mStrokeInfo | 字幕描边信息 {@see StrokeInfo} | StrokeInfo |
+| isBold | 是否粗体 | boolean |
+| isItalic | 是否斜体 | boolean |
+
 
 ShadowInfo参数说明：
 | 名称  | 解释 | 类型 |
@@ -1264,6 +1267,9 @@ BaseOperate说明：
 ```
 // 是否操作成功
 operate.success();
+
+// 是否操作结束保存工程当前状态(保存为线程操作，但备份工程需要耗时，请尽量避免不必要的过多保存操作)
+setNeedSavePrj(isNeedSavePrj);
 ```
 
 
@@ -1314,7 +1320,7 @@ ClipAddItem参数说明：
 | clipFilePath | 文件地址 | String | 必须 |
 | trimRange | 切入点 | VeRange | 非必须 |
 | srcRange | 源视频文件区间, 仅用于保存 | VeRange | 非必须 |
-| cropRect | 裁切区域 | Rect | 非必须 |
+| cropRect | 裁切区域（万分比区域） | Rect | 非必须 |
 | rotateAngle | 旋转角度 | int | 非必须 |
 | filterInfo | 滤镜 | FilterInfo | 非必须 |
 
@@ -1424,7 +1430,7 @@ ClipAddItem参数说明：
 14）裁切
 ```
 	// clipIndex表示第几个片段，从0开始
-	// cropRect表示裁切区域
+	// cropRect表示裁切区域（万分比区域）
 	ClipOPCrop clipOPCrop = new ClipOPCrop(clipIndex, cropRect);
 	mWorkSpace.handleOperation(clipOPCrop);
 ```
@@ -1582,7 +1588,7 @@ ClipReplaceItem：
 | clipFilePath | 文件地址 | String | 必须 |
 | trimRange | 切入点 | VeRange | 非必须 |
 | srcRange | 源视频文件区间, 仅用于保存 | VeRange | 非必须 |
-| cropRect | 裁切区域 | Rect | 非必须 |
+| cropRect（万分比区域） | 裁切区域 | Rect | 非必须 |
 
 
 #### 6. Effect剪辑功能接口
@@ -2062,7 +2068,47 @@ EffectReplaceItem参数说明：
 ```
 
 
-39）获取画中画抠色图片
+39）字幕文本粗体
+单字幕：
+```
+	// groupId默认为GROUP_ID_SUBTITLE
+	// effectIndex为同类型中第几个效果
+	// isBlod表示是否设置粗体
+	EffectOPSubtitleBlod effectOPSubtitleBlod = new EffectOPSubtitleBlod(effectIndex, isBlod);
+	mWorkSpace.handleOperation(effectOPSubtitleBlod);
+```
+组合字幕：
+```
+	// groupId默认为GROUP_ID_SUBTITLE
+	// effectIndex为同类型中第几个效果
+	// textIndex表示组合字幕中的第几个字幕
+	// isBlod表示是否设置粗体
+	EffectOPMultiSubtitleBlod effectOPMultiSubtitleBlod = new EffectOPMultiSubtitleBlod(effectIndex, textIndex, isBlod);
+	mWorkSpace.handleOperation(effectOPMultiSubtitleBlod);
+```
+
+
+40）字幕文本斜体
+单字幕：
+```
+	// groupId默认为GROUP_ID_SUBTITLE
+	// effectIndex为同类型中第几个效果
+	// isItalic表示是否设置斜体
+	EffectOPSubtitleItalic effectOPSubtitleItalic = new EffectOPSubtitleItalic(effectIndex, isItalic);
+	mWorkSpace.handleOperation(effectOPSubtitleItalic);
+```
+组合字幕：
+```
+	// groupId默认为GROUP_ID_SUBTITLE
+	// effectIndex为同类型中第几个效果
+	// textIndex表示组合字幕中的第几个字幕
+	// isItalic表示是否设置斜体
+	EffectOPMultiSubtitleItalic effectOPMultiSubtitleItalic = new EffectOPMultiSubtitleItalic(effectIndex, textIndex, isItalic);
+	mWorkSpace.handleOperation(effectOPMultiSubtitleItalic);
+```
+
+
+41）获取画中画抠色图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2086,7 +2132,7 @@ chromaColor.getColorByPosition(float relateX, float relateY);
 chromaColor.recycle();
 ```
 
-40）关键帧设置
+42）关键帧设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2096,7 +2142,7 @@ chromaColor.recycle();
 ```
 
 
-41）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
+43）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2107,7 +2153,7 @@ chromaColor.recycle();
 ```
 
 
-42）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+44）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2117,7 +2163,7 @@ chromaColor.recycle();
 ```
 
 
-43）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+45）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2128,7 +2174,7 @@ chromaColor.recycle();
 ```
 
 
-44）修改关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+46）修改关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2139,7 +2185,7 @@ chromaColor.recycle();
 ```
 
 
-45）修改全部关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+47）修改全部关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2151,8 +2197,15 @@ chromaColor.recycle();
 	mWorkSpace.handleOperation(effectOPKeyFrameUpdateOffsetAll);
 ```
 
+#### 7. 工程保存功能接口
+```
+	// 用于保存工程当前状态
+	BaseOPSavePrj baseOPSavePrj = new BaseOPSavePrj();
+	mWorkSpace.handleOperation(baseOPSavePrj);
+```
 
-#### 7. 导出
+
+#### 8. 导出
 ```
   /**
    * 开始导出
@@ -2170,7 +2223,7 @@ ExportParams参数说明：
 | isSoftwareCodec | 是否软件编解码,默认使用硬件 | boolean |
 | videoBitrateScales | 视频比特率浮动 参数,默认不变,设置了customBitrate 后，就只使用customBitrate | float |
 | customBitrate | 自定义比特率, <=0表示非自定义 | int |
-| customFps | 自定义帧率, <=0表示非自定义 | int |
+| customFps | 自定义帧率, <=0表示非自定义, sdk将根据自己的算法设定fps | int |
 | isFullKeyFrame | 是否纯i帧，只支持转码时使用 | boolean |
 | exportRange | 导出时间区域 | VeRange |
 | customLimitSize | 自定义的导出分辨率限制，使用自定义的话，expType就不重要了，只会判断是否gif | VeMSize |
@@ -2212,7 +2265,7 @@ public interface IExportListener {
 }
 ```
 
-#### 8. 高级玩法-剪辑操作拓展功能
+#### 9. 高级玩法-剪辑操作拓展功能
 由于各开发者对剪辑玩法关联的期望不同，为了支持开发者在玩法上的创意想法，剪辑操作允许开发者进行自定义组合。
 如：开发者期望对Clip倒放后立刻对Clip进行静音。则开发者可以自定义操作符：
 ```
@@ -2242,7 +2295,7 @@ ClipOPReverseMute clipOPReverseMute = new ClipOPReverseMute(clipIndex);
 workspace.handleOperation(clipOPReverseMute);
 ```
 
-#### 9. 高级玩法-对撤销/重做的支持（此功能开发中，如遇问题，可以联系我们）
+#### 10. 高级玩法-对撤销/重做的支持（此功能开发中，如遇问题，可以联系我们）
 当开发者想进行一些撤销/重做的玩法时，可以在进行剪辑操作前，对需要支持撤销的剪辑设置是否支持undo。即：
 ```
 	// 设置支持undo
@@ -2296,7 +2349,7 @@ BaseOperate.EngineWorkType参数说明：
 | redo | 重做 |
 
 
-#### 10. 高级玩法-自由黑帧模式
+#### 11. 高级玩法-自由黑帧模式
 当初始化时设置isUseStuffClip为true时，即开启自由黑帧模式。自由黑帧模式和普通剪辑模式的主要区别，即在对效果出入区间的限制上。
 ##### 普通剪辑模式
 如果片段clip的播放效果总时长在60s，而贴纸效果的出入区间是在55s~70s。则导出时，视频总长度只会是60s，贴纸时间为55s~60s，60s以后的内容将自动截断。

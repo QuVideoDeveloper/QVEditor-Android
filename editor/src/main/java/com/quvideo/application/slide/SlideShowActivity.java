@@ -1,12 +1,7 @@
 package com.quvideo.application.slide;
 
-import android.content.ContentValues;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,7 +39,11 @@ import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPMove;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPReplace;
-import java.io.File;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 
 public class SlideShowActivity extends AppCompatActivity {
@@ -103,24 +102,41 @@ public class SlideShowActivity extends AppCompatActivity {
         dialog.setOnDialogItemListener(new ExportChooseDialog.OnDialogItemListener() {
 
           @Override public void onConfirmExport(ExportParams exportParams) {
-            Bitmap bitmap = mSlideWorkSpace.getProjectThumbnail();
             String thumbnail = FileUtils.getFileParentPath(exportParams.outputPath)
                 + FileUtils.getFileName(exportParams.outputPath) + "_thumbnail.jpg";
-            if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
-              FileUtils.saveBitmap(thumbnail, bitmap, 100);
-            } else {
-              ContentValues contentValues = new ContentValues();
-              contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
-              contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
-              contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
-              contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
-              Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-              thumbnail = path.toString();
-              FileUtils.saveBitmap(thumbnail, bitmap, 100);
-            }
-            if (bitmap != null) {
-              bitmap.recycle();
-            }
+            Observable.create((ObservableOnSubscribe<Boolean>) emitter -> emitter.onNext(true))
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(new Observer<Boolean>() {
+                  @Override public void onSubscribe(Disposable d) {
+                  }
+
+                  @Override public void onNext(Boolean result) {
+                    Bitmap bitmap = mSlideWorkSpace.getProjectThumbnail();
+                    // TODO 用于兼容target 29
+                    //if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
+                    FileUtils.saveBitmap(thumbnail, bitmap, 80);
+                    //} else {
+                    //  ContentValues contentValues = new ContentValues();
+                    //  contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+                    //  contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
+                    //  contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
+                    //  contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+                    //  Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                    //  thumbnail = path.toString();
+                    //  FileUtils.saveBitmap(thumbnail, bitmap, 100);
+                    //}
+                    if (bitmap != null) {
+                      bitmap.recycle();
+                    }
+                  }
+
+                  @Override public void onError(Throwable e) {
+                  }
+
+                  @Override public void onComplete() {
+                  }
+                });
             ExportDialog exportDialog = new ExportDialog();
             exportDialog.showExporting(SlideShowActivity.this, thumbnail, exportParams,
                 mSlideWorkSpace);

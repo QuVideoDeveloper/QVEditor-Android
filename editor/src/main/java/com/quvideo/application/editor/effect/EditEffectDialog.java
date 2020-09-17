@@ -323,17 +323,21 @@ public class EditEffectDialog extends BaseEffectMenuView {
         @Override public void onEffectMoveStart() {
           EffectOPLock effectOPLock = new EffectOPLock(groupId, index, true);
           mWorkSpace.handleOperation(effectOPLock);
-          EffectOPStaticPic
-              effectOPStaticPic = new EffectOPStaticPic(groupId, index, true);
-          mWorkSpace.handleOperation(effectOPStaticPic);
+          if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
+            EffectOPStaticPic
+                effectOPStaticPic = new EffectOPStaticPic(groupId, index, true);
+            mWorkSpace.handleOperation(effectOPStaticPic);
+          }
         }
 
         @Override public void onEffectMoveEnd(boolean moved) {
           EffectOPLock effectOPLock = new EffectOPLock(groupId, index, false);
           mWorkSpace.handleOperation(effectOPLock);
-          EffectOPStaticPic
-              effectOPStaticPic = new EffectOPStaticPic(groupId, index, false);
-          mWorkSpace.handleOperation(effectOPStaticPic);
+          if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
+            EffectOPStaticPic
+                effectOPStaticPic = new EffectOPStaticPic(groupId, index, false);
+            mWorkSpace.handleOperation(effectOPStaticPic);
+          }
           FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
           BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
           EffectPosInfo targetPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;

@@ -5,9 +5,40 @@
  Release: Working copy
  Locale: zh-CN, Chinese (China)
  Exported by: shijie xu
- Exported at: Thu, 20 Aug 2020 14:30:10 +0800
+ Exported at: Tue, 15 Sep 2020 13:46:15 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="gocut_purchase_Privacy">隐私协议</string>
+    <string name="gocut_purchase_alert_subtitle">超过91.98%的用户选择免费试用。解锁以下所有功能</string>
+    <string name="gocut_purchase_all_features">PRO用户畅享所有功能</string>
+    <string name="gocut_purchase_all_features_purchased">您可享受所有功能</string>
+    <string name="gocut_purchase_cancel_anytime">随时取消</string>
+    <string name="gocut_purchase_close">关闭</string>
+    <string name="gocut_purchase_continue">继续</string>
+    <string name="gocut_purchase_custom_background">自定义背景</string>
+    <string name="gocut_purchase_effects">特效</string>
+    <string name="gocut_purchase_enjoy_features">享受所有功能和素材</string>
+    <string name="gocut_purchase_filter">滤镜</string>
+    <string name="gocut_purchase_font">字体</string>
+    <string name="gocut_purchase_free_trial">3天免费试用</string>
+    <string name="gocut_purchase_hd">高清导出</string>
+    <string name="gocut_purchase_make_videos">制作精彩视频</string>
+    <string name="gocut_purchase_monthly_title">按周：$6.99/周</string>
+    <string name="gocut_purchase_more">敬请期待</string>
+    <string name="gocut_purchase_now">立即订阅</string>
+    <string name="gocut_purchase_popular">最受欢迎</string>
+    <string name="gocut_purchase_quite">真的要退出免费试用吗?</string>
+    <string name="gocut_purchase_remove_watermark">去水印</string>
+    <string name="gocut_purchase_restore">恢复订阅</string>
+    <string name="gocut_purchase_sticker">贴纸</string>
+    <string name="gocut_purchase_subscribe_desc">确认购买后，您的iTunes账户将被收取费用。订阅将会自动续订，除非在当前订阅结束前至少24小时关闭自动续订。您的帐户将在当前订阅结束前的最后24小时内收取续订费用。您可以在购买后前往Apple ID账户设置中管理和关闭自动续订。</string>
+    <string name="gocut_purchase_subscribe_policy">订阅政策</string>
+    <string name="gocut_purchase_terms">用户条款</string>
+    <string name="gocut_purchase_transition">转场</string>
+    <string name="gocut_purchase_yearly_buy">订阅</string>
+    <string name="gocut_purchase_yearly_buy_config">免费试用</string>
+    <string name="gocut_purchase_yearly_title">按年：$39.99/年</string>
+    <string name="gocut_purchase_yearly_title_normal">然后$39.99/年，自动续期</string>
     <string name="mn_app_brvah_load_end">没有更多数据</string>
     <string name="mn_app_brvah_load_failed">加载失败，请点我重试</string>
     <string name="mn_app_brvah_loading">正在加载中...</string>
@@ -82,6 +113,8 @@
     <string name="mn_edit_firework">烟花</string>
     <string name="mn_edit_font">字体</string>
     <string name="mn_edit_foodie">美食</string>
+    <string name="mn_edit_guide_angle">左右滑动滚轮调节方向</string>
+    <string name="mn_edit_guide_location">点击下方微调位置</string>
     <string name="mn_edit_kaleidoscope">万花筒</string>
     <string name="mn_edit_keyframe_animator_title">关键帧动画</string>
     <string name="mn_edit_kids">亲子</string>
@@ -100,9 +133,11 @@
     <string name="mn_edit_music_fade_out_turn_on">缓出开启</string>
     <string name="mn_edit_music_repeat_turn_off">循环关闭</string>
     <string name="mn_edit_music_repeat_turn_on">循环开启</string>
+    <string name="mn_edit_my_projects">我的项目</string>
     <string name="mn_edit_none">无</string>
     <string name="mn_edit_party">派对</string>
     <string name="mn_edit_plastic">光影</string>
+    <string name="mn_edit_project">项目</string>
     <string name="mn_edit_qrcode_scan">二维码</string>
     <string name="mn_edit_quit_confirm_title">是否确认退出编辑？退出后将不保存编辑。</string>
     <string name="mn_edit_reset">重置</string>
@@ -118,8 +153,12 @@
     <string name="mn_edit_subtitle_align">对齐</string>
     <string name="mn_edit_subtitle_anim_state_off">动画关闭</string>
     <string name="mn_edit_subtitle_anim_state_on">动画开启</string>
+    <string name="mn_edit_subtitle_blod_off">粗体关闭</string>
+    <string name="mn_edit_subtitle_blod_on">粗体开启</string>
     <string name="mn_edit_subtitle_font">字体</string>
     <string name="mn_edit_subtitle_input">编辑</string>
+    <string name="mn_edit_subtitle_italic_off">斜体关闭</string>
+    <string name="mn_edit_subtitle_italic_on">斜体开启</string>
     <string name="mn_edit_subtitle_shadow">阴影</string>
     <string name="mn_edit_subtitle_stroke">描边</string>
     <string name="mn_edit_template_center">素材中心</string>
@@ -143,6 +182,7 @@
     <string name="mn_edit_title_axle_z">Z轴</string>
     <string name="mn_edit_title_background">背景</string>
     <string name="mn_edit_title_bgm">背景音乐</string>
+    <string name="mn_edit_title_bgm_dot">踩点</string>
     <string name="mn_edit_title_bgm_repeat">循环</string>
     <string name="mn_edit_title_change_voice">变声</string>
     <string name="mn_edit_title_chroma">抠像</string>

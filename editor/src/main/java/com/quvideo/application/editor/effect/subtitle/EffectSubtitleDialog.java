@@ -10,15 +10,18 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.subtitle.view.ColorBarBgView;
-import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
+import com.quvideo.mobile.engine.model.effect.TextBubble;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.work.BaseOperate;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleBlod;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleColor;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleFont;
-import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleItalic;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleAnim;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleBlod;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleItalic;
 
 public class EffectSubtitleDialog extends BaseMenuView {
 
@@ -36,7 +39,7 @@ public class EffectSubtitleDialog extends BaseMenuView {
   // 修改动画
   private Button mBtnAnim;
   // 修改描边、阴影、对齐
-  private Button mBtnStroke, mBtnShadow, mBtnAlign;
+  private Button mBtnStroke, mBtnShadow, mBtnAlign, mBtnBlod, mBtnItalic;
 
   private EffectSubtitleAdapter mEffectSubtitleAdapter;
   private EffectFontAdapter mEffectFontAdapter;
@@ -64,12 +67,16 @@ public class EffectSubtitleDialog extends BaseMenuView {
     mTextColorSeekBar = view.findViewById(R.id.colorbar_text_color);
     mIvInput = view.findViewById(R.id.btn_edit);
     mBtnAnim = view.findViewById(R.id.btn_anim);
+    mBtnBlod = view.findViewById(R.id.btn_blod);
+    mBtnItalic = view.findViewById(R.id.btn_italic);
     mBtnStroke = view.findViewById(R.id.btn_stroke);
     mBtnShadow = view.findViewById(R.id.btn_shadow);
     mBtnAlign = view.findViewById(R.id.btn_align);
 
     mIvInput.setOnClickListener(mOnClickListener);
     mBtnAnim.setOnClickListener(mOnClickListener);
+    mBtnBlod.setOnClickListener(mOnClickListener);
+    mBtnItalic.setOnClickListener(mOnClickListener);
     mBtnStroke.setOnClickListener(mOnClickListener);
     mBtnShadow.setOnClickListener(mOnClickListener);
     mBtnAlign.setOnClickListener(mOnClickListener);
@@ -80,17 +87,29 @@ public class EffectSubtitleDialog extends BaseMenuView {
     } else {
       mBtnAnim.setText(R.string.mn_edit_subtitle_anim_state_off);
     }
+    mBtnBlod.setText(R.string.mn_edit_subtitle_blod_off);
+    mBtnItalic.setText(R.string.mn_edit_subtitle_italic_off);
     mRvText.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
     mEffectSubtitleAdapter = new EffectSubtitleAdapter(curEffect.getTextBubbleInfo().mTextBubbleList,
         new EffectSubtitleAdapter.OnSubtitleClickListener() {
           @Override public void onClick(int index) {
+            TextBubble textBubble = mEffectSubtitleAdapter.getSelectItem();
+            if (!textBubble.isBold) {
+              mBtnBlod.setText(R.string.mn_edit_subtitle_blod_off);
+            } else {
+              mBtnBlod.setText(R.string.mn_edit_subtitle_blod_on);
+            }
+            if (!textBubble.isItalic) {
+              mBtnItalic.setText(R.string.mn_edit_subtitle_italic_off);
+            } else {
+              mBtnItalic.setText(R.string.mn_edit_subtitle_italic_on);
+            }
             mEffectFontAdapter.updateSelectPath(mEffectSubtitleAdapter.getSelectItem().mFontPath);
             mTextColorSeekBar.setCurrColor(mEffectSubtitleAdapter.getSelectItem().mTextColor);
           }
         });
     mRvText.setAdapter(mEffectSubtitleAdapter);
-
     mRvFont.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
     mEffectFontAdapter = new EffectFontAdapter(new EffectFontAdapter.OnFontClickListener() {
@@ -103,6 +122,17 @@ public class EffectSubtitleDialog extends BaseMenuView {
     });
     mRvFont.setAdapter(mEffectFontAdapter);
     mEffectFontAdapter.updateSelectPath(mEffectSubtitleAdapter.getSelectItem().mFontPath);
+
+    if (!mEffectSubtitleAdapter.getSelectItem().isBold) {
+      mBtnBlod.setText(R.string.mn_edit_subtitle_blod_off);
+    } else {
+      mBtnBlod.setText(R.string.mn_edit_subtitle_blod_on);
+    }
+    if (!mEffectSubtitleAdapter.getSelectItem().isItalic) {
+      mBtnItalic.setText(R.string.mn_edit_subtitle_italic_off);
+    } else {
+      mBtnItalic.setText(R.string.mn_edit_subtitle_italic_on);
+    }
 
     mTextColorSeekBar.setCurrColor(mEffectSubtitleAdapter.getSelectItem().mTextColor);
     mTextColorSeekBar.setCallback(new ColorBarBgView.Callback() {
@@ -122,11 +152,22 @@ public class EffectSubtitleDialog extends BaseMenuView {
 
   private BaseObserver mBaseObserver = new BaseObserver() {
     @Override public void onChange(BaseOperate operate) {
-      if (operate instanceof EffectOPSubtitleAnim
-          || operate instanceof EffectOPMultiSubtitleFont
-          || operate instanceof EffectOPMultiSubtitleColor
-          || operate instanceof EffectOPMultiSubtitleText) {
-        BaseEffect curEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+      if (operate instanceof EffectOPMultiSubtitleItalic
+          || operate instanceof EffectOPMultiSubtitleBlod
+          || operate instanceof EffectOPSubtitleItalic
+          || operate instanceof EffectOPSubtitleBlod) {
+        SubtitleEffect curEffect = (SubtitleEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+        mEffectSubtitleAdapter.updateDataList(curEffect.getTextBubbleInfo().mTextBubbleList);
+        if (!mEffectSubtitleAdapter.getSelectItem().isBold) {
+          mBtnBlod.setText(R.string.mn_edit_subtitle_blod_off);
+        } else {
+          mBtnBlod.setText(R.string.mn_edit_subtitle_blod_on);
+        }
+        if (!mEffectSubtitleAdapter.getSelectItem().isItalic) {
+          mBtnItalic.setText(R.string.mn_edit_subtitle_italic_off);
+        } else {
+          mBtnItalic.setText(R.string.mn_edit_subtitle_italic_on);
+        }
       }
     }
   };
@@ -144,6 +185,24 @@ public class EffectSubtitleDialog extends BaseMenuView {
         }
         EffectOPSubtitleAnim effectOPSubtitleAnim = new EffectOPSubtitleAnim(effectIndex, !curEffect.getTextBubbleInfo().isAnimOn);
         mWorkSpace.handleOperation(effectOPSubtitleAnim);
+      } else if (v.equals(mBtnBlod)) {
+        TextBubble textBubble = mEffectSubtitleAdapter.getSelectItem();
+        if (textBubble.isBold) {
+          mBtnBlod.setText(R.string.mn_edit_subtitle_blod_off);
+        } else {
+          mBtnBlod.setText(R.string.mn_edit_subtitle_blod_on);
+        }
+        EffectOPSubtitleBlod effectOPSubtitleBlod = new EffectOPSubtitleBlod(effectIndex, !textBubble.isBold);
+        mWorkSpace.handleOperation(effectOPSubtitleBlod);
+      } else if (v.equals(mBtnItalic)) {
+        TextBubble textBubble = mEffectSubtitleAdapter.getSelectItem();
+        if (textBubble.isItalic) {
+          mBtnItalic.setText(R.string.mn_edit_subtitle_italic_off);
+        } else {
+          mBtnItalic.setText(R.string.mn_edit_subtitle_italic_on);
+        }
+        EffectOPSubtitleItalic effectOPSubtitleItalic = new EffectOPSubtitleItalic(effectIndex, !textBubble.isItalic);
+        mWorkSpace.handleOperation(effectOPSubtitleItalic);
       } else if (v.equals(mBtnStroke)) {
         new EffectSubtitleStrokeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, effectIndex,
             mEffectSubtitleAdapter.getSelectIndex());

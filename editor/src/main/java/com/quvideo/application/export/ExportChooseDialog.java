@@ -1,13 +1,10 @@
 package com.quvideo.application.export;
 
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +52,7 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
     initItemShowState();
     mBtnConfirm.setOnClickListener(this);
     mBtnCancel.setOnClickListener(this);
-    exportParams.customFps = 30;
+    exportParams.customFps = -1;
     exportParams.expType = ExportParams.VIDEO_EXP_TYPE_720P;
   }
 
@@ -102,7 +99,13 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
     });
     mRGFps.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
-        exportParams.customFps = checkedId == R.id.rb_fps_60 ? 60 : 30;
+        if (checkedId == R.id.rb_fps_none) {
+          exportParams.customFps = -1;
+        } else if (checkedId == R.id.rb_fps_60) {
+          exportParams.customFps = 60;
+        } else {
+          exportParams.customFps = 30;
+        }
       }
     });
     mRGHardware.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -142,17 +145,18 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
       /**
        * 创建图片地址uri,用于保存拍照后的照片 Android 10以后使用这种方法
        */
-      if (Build.VERSION.SDK_INT >= 29) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
-        contentValues.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
-        contentValues.put(MediaStore.Downloads.TITLE, fileName);
-        contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
-        contentValues.put(MediaStore.Downloads.DATE_ADDED, systemTime / 1000);
-        contentValues.put(MediaStore.Downloads.DATE_MODIFIED, systemTime / 1000);
-        Uri path = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-        exportParams.outputPath = path.toString();
-      }
+      // TODOCODE 用于兼容target29
+      //if (Build.VERSION.SDK_INT >= 29) {
+      //  ContentValues contentValues = new ContentValues();
+      //  contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+      //  contentValues.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+      //  contentValues.put(MediaStore.Downloads.TITLE, fileName);
+      //  contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+      //  contentValues.put(MediaStore.Downloads.DATE_ADDED, systemTime / 1000);
+      //  contentValues.put(MediaStore.Downloads.DATE_MODIFIED, systemTime / 1000);
+      //  Uri path = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+      //  exportParams.outputPath = path.toString();
+      //}
 
       dismiss();
       mOnDialogItemListener.onConfirmExport(exportParams);

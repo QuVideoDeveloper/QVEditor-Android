@@ -32,7 +32,7 @@ public class FilePathUtils {
     if (TextUtils.isEmpty(uriPath)) {
       return "";
     }
-    if (uriKeyMaps.contains(uriPath)) {
+    if (uriKeyMaps.containsKey(uriPath)) {
       return uriKeyMaps.get(uriPath);
     }
     Context context = EditorApp.Companion.getInstance().getApp().getApplicationContext();

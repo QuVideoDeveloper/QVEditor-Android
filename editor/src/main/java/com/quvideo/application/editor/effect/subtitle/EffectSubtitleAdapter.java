@@ -59,7 +59,7 @@ public class EffectSubtitleAdapter extends RecyclerView.Adapter<EffectSubtitleAd
       public void onClick(View v) {
         if (mOnSubtitleClickListener != null) {
           changeSelect(position);
-          if (position == 0) {
+          if (position >= 0) {
             mOnSubtitleClickListener.onClick(position);
           }
         }

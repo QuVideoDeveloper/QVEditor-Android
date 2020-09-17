@@ -241,6 +241,20 @@
         android:orientation="horizontal">
 
       <RadioButton
+          android:id="@+id/rb_fps_none"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:textColor="@color/color_333333"
+          android:textSize="16sp"
+          android:text="@string/mn_edit_none"
+          android:layout_marginEnd="10dp"
+          android:gravity="center"
+          android:checked="true"
+          android:button="@null"
+          android:background="@drawable/export_dialog_item_bg_selector"/>
+
+      <RadioButton
           android:id="@+id/rb_fps_30"
           android:layout_width="0dp"
           android:layout_height="match_parent"
@@ -250,7 +264,7 @@
           android:text="30fps"
           android:layout_marginEnd="10dp"
           android:gravity="center"
-          android:checked="true"
+          android:checked="false"
           android:button="@null"
           android:background="@drawable/export_dialog_item_bg_selector"/>
 
