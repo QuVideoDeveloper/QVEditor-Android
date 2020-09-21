@@ -147,7 +147,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.3.7"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.4.3"
 }
 ```
 

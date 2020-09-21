@@ -12,6 +12,7 @@ import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.effect.subtitle.view.ColorBarBgView;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
 import com.quvideo.mobile.engine.model.effect.TextBubble;
+import com.quvideo.mobile.engine.model.effect.TextBubbleInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.work.BaseOperate;
@@ -82,6 +83,18 @@ public class EffectSubtitleDialog extends BaseMenuView {
     mBtnAlign.setOnClickListener(mOnClickListener);
 
     SubtitleEffect curEffect = (SubtitleEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+    if (curEffect.getTextBubbleInfo().mBubbleSubtype == TextBubbleInfo.BUBBLE_SUBTYPE_ANIM) {
+      mBtnAnim.setEnabled(true);
+      mBtnBlod.setEnabled(true);
+      mBtnItalic.setEnabled(true);
+    } else {
+      mBtnAnim.setEnabled(false);
+      mBtnBlod.setEnabled(false);
+      mBtnItalic.setEnabled(false);
+      mBtnAnim.setAlpha(0.1f);
+      mBtnBlod.setAlpha(0.1f);
+      mBtnItalic.setAlpha(0.1f);
+    }
     if (curEffect.getTextBubbleInfo().isAnimOn) {
       mBtnAnim.setText(R.string.mn_edit_subtitle_anim_state_on);
     } else {
@@ -89,6 +102,7 @@ public class EffectSubtitleDialog extends BaseMenuView {
     }
     mBtnBlod.setText(R.string.mn_edit_subtitle_blod_off);
     mBtnItalic.setText(R.string.mn_edit_subtitle_italic_off);
+
     mRvText.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
     mEffectSubtitleAdapter = new EffectSubtitleAdapter(curEffect.getTextBubbleInfo().mTextBubbleList,

@@ -85,4 +85,5 @@ dependencies {
   implementation "com.amitshekhar.android:android-networking:$rootProject.downloadVersion"
 
   api  "com.quvideo.mobile.external:sdk-engine:$rootProject.ext.vivaSDKVersion"
+
 }
