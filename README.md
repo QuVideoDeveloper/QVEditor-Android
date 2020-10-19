@@ -147,7 +147,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.4.3"
+    implementation "com.quvideo.mobile.external:sdk-engine:1.4.5"
 }
 ```
 
@@ -903,6 +903,7 @@ FilterInfo参数说明：
 | :-: | :-: | :-: |
 | filterPath | 滤镜路径 | String |
 | filterLevel | 滤镜程度,0~100 | int  |
+| externalSource | 滤镜外部图片源数据，依赖模板支持(如3D LUT滤镜模板) | String  |
 
 FxFilterInfo参数说明：
 | 名称  | 解释 | 类型 |
@@ -1078,13 +1079,14 @@ EffectMaskInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | maskType | 蒙版类型{@see EffectMaskInfo.MaskType} | MaskType |
-| centerX | 中心点-X，在streamSize的坐标系中，中心点尽量保持在素材位置内 | float |
-| centerY | 中心点-Y，在streamSize的坐标系中，中心点尽量保持在素材位置内 | float |
-| radiusY | 垂直方向半径，在streamSize的坐标系中 | float |
-| radiusX | 水平方向半径，在streamSize的坐标系中 | float |
+| centerX | 中心点-X，中心点尽量保持在素材位置内。相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+| centerY | 中心点-Y，中心点尽量保持在素材位置内。相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+| radiusY | 垂直方向半径，相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+| radiusX | 水平方向半径，相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
 | rotation | 旋转角度， 0~360 | float |
 | softness | 羽化程度，取值范围：[0~10000] | int |
 | reverse | 是否反选 | boolean |
+| maskKeyFrameInfo | 蒙版关键帧信息{@see MaskKeyFrameInfo} | MaskKeyFrameInfo |
 
 
 EffectMaskInfo.MaskType
@@ -1095,6 +1097,30 @@ EffectMaskInfo.MaskType
 | MASK_MIRROR | 镜像蒙版 |
 | MASK_RADIAL | 径向蒙版 |
 | MASK_RECTANGLE | 矩形蒙版 |
+
+
+MaskKeyFrameInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| maskPosList | 蒙版位置关键帧信息列表{@see KeyMaskPosInfo} | KeyMaskPosInfo列表 |
+| rotationList | 旋转角度关键帧信息列表{@see KeyAttributeInfo} | KeyAttributeInfo列表|
+| softnessList | 羽化程度关键帧信息列表{@see KeyAttributeInfo} | KeyAttributeInfo列表|
+| reverseList | 反选信息关键帧信息列表{@see KeyBAttrInfo} | KeyBAttrInfo列表|
+
+
+KeyMaskPosInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| centerX | 中心点-X，中心点尽量保持在素材位置内。相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+| centerY | 中心点-Y，中心点尽量保持在素材位置内。相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+| radiusY | 垂直方向半径，相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+| radiusX | 水平方向半径，相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
+
+
+KeyBAttrInfo参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| attrValue | 属性关键帧：属性值 | boolean |
 
 
 EffectChromaInfo参数说明：
@@ -1186,6 +1212,14 @@ KeyAlphaInfo参数说明：
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | alpha | 不透明度 0~100 | int |
+
+
+CollageEffect参数说明：
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| timeScale | 变速值，默认1.0f | float |
+| isVideoReverse | 是否倒放视频源，视频&音频可分开倒放| boolean |
+| isAudioReverse | 是否倒放音频源，视频&音频可分开倒放| boolean |
 
 
 MosaicEffect参数说明：
@@ -1778,7 +1812,30 @@ EffectAddItem参数说明：
 ```
 
 
-18）替换音频
+18）画中画变速
+```
+  // 目前只支持画中画
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// speedValue变速缩放值。如0.25表示4倍速。保留两位小数
+	EffectOPCollageSpeed effectOPCollageSpeed = new EffectOPCollageSpeed(groupId, effectIndex, speedValue);
+	mWorkSpace.handleOperation(effectOPCollageSpeed);
+```
+
+
+19）画中画倒放
+```
+  // 目前只支持画中画
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// isVideoReverse表示是否倒放视频源
+	// isAudioReverse表示是否倒放音频源
+	EffectOPCollageReserve effectOPCollageReserve = new EffectOPCollageReserve(groupId, effectIndex, isVideoReverse, isAudioReverse);
+	mWorkSpace.handleOperation(effectOPCollageReserve);
+```
+
+
+20）替换音频
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1789,7 +1846,7 @@ EffectAddItem参数说明：
 ```
 
 
-19）替换效果素材文件
+21）替换效果素材文件
 ```
 	// groupId为effect的类型
 	// effectIndex为effect添加的位置，0为第一个
@@ -1806,7 +1863,7 @@ EffectReplaceItem参数说明：
 | mEffectPosInfo | null则根据原有的effectPosInfo进行简单的缩放处理 | EffectPosInfo | 非必须 |
 
 
-20）画中画混合模式设置
+22）画中画混合模式设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1816,7 +1873,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-21）画中画蒙版设置
+23）画中画蒙版设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1826,7 +1883,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-22）画中画抠色设置（绿幕）
+24）画中画抠色设置（绿幕）
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1836,7 +1893,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-23）画中画滤镜设置
+25）画中画滤镜设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1846,7 +1903,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-24）画中画参数调节设置
+26）画中画参数调节设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1856,7 +1913,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-25）画中画曲线调色设置
+27）画中画曲线调色设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1866,7 +1923,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-26）画中画添加子特效
+28）画中画添加子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1877,7 +1934,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-27）画中画修改子特效出入点时间区间
+29）画中画修改子特效出入点时间区间
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1887,7 +1944,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubFxDestRange);
 ```
 
-28）画中画修改子特效是否关闭
+30）画中画修改子特效是否关闭
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1898,7 +1955,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-29）画中画删除子特效
+31）画中画删除子特效
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1907,7 +1964,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubFxDel);
 ```
 
-30）显示静态图片
+32）显示静态图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -1918,7 +1975,7 @@ EffectReplaceItem参数说明：
 备注：由于一些动态贴纸/字幕，有效果变化，可以通过该操作，使效果关闭动画显示固定效果。
 
 
-31）马赛克模糊程度
+33）马赛克模糊程度
 ```
 	// groupId默认为GROUP_ID_MOSAIC
 	// effectIndex为同类型中第几个效果
@@ -1928,7 +1985,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-32）字幕动画开关
+34）字幕动画开关
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
 	// effectIndex为同类型中第几个效果
@@ -1937,7 +1994,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPSubtitleAnim);
 ```
 
-33）字幕文本
+35）字幕文本
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1956,7 +2013,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleText);
 ```
 
-34）字幕字体
+36）字幕字体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1976,7 +2033,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-35）字幕文本颜色
+37）字幕文本颜色
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -1995,7 +2052,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleColor);
 ```
 
-36）字幕文本对齐方式
+38）字幕文本对齐方式
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -2031,7 +2088,7 @@ EffectReplaceItem参数说明：
   public static final int ALIGNMENT_ABOVE_CENTER = 1024;
 ```
 
-37）字幕文本阴影
+39）字幕文本阴影
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -2050,7 +2107,7 @@ EffectReplaceItem参数说明：
 	mWorkSpace.handleOperation(effectOPMultiSubtitleShadow);
 ```
 
-38）字幕文本描边
+40）字幕文本描边
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -2070,7 +2127,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-39）字幕文本粗体
+41）字幕文本粗体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -2090,7 +2147,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-40）字幕文本斜体
+42）字幕文本斜体
 单字幕：
 ```
 	// groupId默认为GROUP_ID_SUBTITLE
@@ -2110,7 +2167,7 @@ EffectReplaceItem参数说明：
 ```
 
 
-41）获取画中画抠色图片
+43）获取画中画抠色图片
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2134,7 +2191,7 @@ chromaColor.getColorByPosition(float relateX, float relateY);
 chromaColor.recycle();
 ```
 
-42）关键帧设置
+44）关键帧设置
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2144,7 +2201,7 @@ chromaColor.recycle();
 ```
 
 
-43）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
+45）更新某类关键帧数据列表(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation、Alpha)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2155,7 +2212,7 @@ chromaColor.recycle();
 ```
 
 
-44）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+46）插入单个关键帧(相同时间存在则替换，目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2165,7 +2222,7 @@ chromaColor.recycle();
 ```
 
 
-45）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+47）删除某个时间的关键帧(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2176,7 +2233,7 @@ chromaColor.recycle();
 ```
 
 
-46）修改关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+48）修改关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2187,7 +2244,7 @@ chromaColor.recycle();
 ```
 
 
-47）修改全部关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
+49）修改全部关键帧的偏移量(目前只支持位置相关关键帧,Position、AnchorOffset、Scale和Rotation)
 ```
 	// groupId为effect的类型
 	// effectIndex为同类型中第几个效果
@@ -2198,6 +2255,17 @@ chromaColor.recycle();
 	EffectOPKeyFrameUpdateOffsetAll effectOPKeyFrameUpdateOffsetAll = new EffectOPKeyFrameUpdateOffsetAll(groupId, effectIndex, posOffsetValue, rotateOffsetValue, scaleOffsetValue, anchorOffsetValue);
 	mWorkSpace.handleOperation(effectOPKeyFrameUpdateOffsetAll);
 ```
+
+
+50）修改蒙版关键帧数据
+```
+	// groupId为effect的类型
+	// effectIndex为同类型中第几个效果
+	// maskKeyFrameInfo表示蒙版关键帧数据，null表示清除关键帧 {@see MaskKeyFrameInfo}
+	EffectOPMaskKeyFrame effectOPMaskKeyFrame = new EffectOPMaskKeyFrame(groupId, effectIndex, maskKeyFrameInfo);
+	mWorkSpace.handleOperation(effectOPMaskKeyFrame);
+```
+
 
 #### 7. 工程保存功能接口
 ```

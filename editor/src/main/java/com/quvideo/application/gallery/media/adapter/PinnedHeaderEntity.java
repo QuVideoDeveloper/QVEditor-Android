@@ -3,8 +3,6 @@ package com.quvideo.application.gallery.media.adapter;
 import com.quvideo.application.gallery.adapterhelper.entity.MultiItemEntity;
 
 /**
- * Created by Oubowu on 2016/7/21 17:51.
- * <p>
  * 实体类，可以将自己想要填充的数据包装进去，同时附带这个数据对应的类型
  */
 public class PinnedHeaderEntity<T> implements MultiItemEntity {

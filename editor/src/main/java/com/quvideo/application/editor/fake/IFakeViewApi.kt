@@ -2,9 +2,9 @@ package com.quvideo.application.editor.fake
 
 import android.graphics.PointF
 import android.graphics.Rect
+import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
-import com.quvideo.mobile.engine.model.effect.EffectMaskInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 
 interface IFakeViewApi {
@@ -23,7 +23,7 @@ interface IFakeViewApi {
   fun setChromaTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?)
 
   /** 设置对应的Effect */
-  fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?, maskInfo: EffectMaskInfo?)
+  fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?, maskInfo: FakeMaskPosData?)
 
   /** 获取fakeview上的位置信息 */
   fun getFakePosInfo(): FakePosInfo?

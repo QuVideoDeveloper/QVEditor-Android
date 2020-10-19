@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by santa on 2020-04-17.
  */
 public class EffectSubtitleAdapter extends RecyclerView.Adapter<EffectSubtitleAdapter.TemplateHolder> {
 

@@ -6,7 +6,6 @@ import java.util.List;
 /**
  * Spannable text 封装， 用户处理Spannable text
  *
- * Created by admin on 2017/8/25.
  */
 
 public class SpannableTextInfo {

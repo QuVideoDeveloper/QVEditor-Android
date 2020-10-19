@@ -14,9 +14,6 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class AudioTemplateAdapter extends RecyclerView.Adapter<AudioTemplateAdapter.TemplateHolder> {
 
   private List<AudioTemplate> mTemplates = new ArrayList<>();

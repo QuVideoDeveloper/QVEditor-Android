@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class EffectPluginAdapter extends RecyclerView.Adapter<EffectPluginAdapter.TemplateHolder> {
 
   private List<SubPluginInfo> mDataList = new ArrayList<>();

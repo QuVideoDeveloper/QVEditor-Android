@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by liuzhonghu on 2017/8/1.
  *
  * @Description 文件夹数据模型
  */

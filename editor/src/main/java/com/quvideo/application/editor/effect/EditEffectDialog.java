@@ -49,6 +49,7 @@ import com.quvideo.application.gallery.GallerySettings;
 import com.quvideo.application.gallery.model.GalleryDef;
 import com.quvideo.application.gallery.model.MediaModel;
 import com.quvideo.application.gallery.provider.IGalleryProvider;
+import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.application.superedit.ZXingManager;
 import com.quvideo.application.utils.RandomUtil;
 import com.quvideo.application.utils.ToastUtils;
@@ -63,6 +64,7 @@ import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.model.AnimEffect;
 import com.quvideo.mobile.engine.model.AudioEffect;
 import com.quvideo.mobile.engine.model.BaseEffect;
+import com.quvideo.mobile.engine.model.CollageEffect;
 import com.quvideo.mobile.engine.model.FloatEffect;
 import com.quvideo.mobile.engine.model.SubtitleEffect;
 import com.quvideo.mobile.engine.model.effect.AudioFade;
@@ -78,9 +80,11 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPAdd;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioFade;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioRepeat;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAudioReplace;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPCollageReserve;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPCopy;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDel;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPDestRange;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPLayerId;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPLock;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMirror;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleText;
@@ -409,7 +413,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
     if (oldEffectPosInfo != null && oldEffectKeyFrameInfo != null) {
       int selectIndex = mEffectAdapter.getSelectIndex();
       Ve3DDataF curPosOffset = null;
-      if (oldEffectKeyFrameInfo.positionList.size() > 1) {
+      if (oldEffectKeyFrameInfo.positionList.size() > 0) {
         curPosOffset = new Ve3DDataF(targetPosInfo.center.x - oldEffectPosInfo.center.x,
             targetPosInfo.center.y - oldEffectPosInfo.center.y,
             targetPosInfo.center.z - oldEffectPosInfo.center.z);
@@ -418,7 +422,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curPosOffset.z += oldEffectKeyFrameInfo.positionList.get(0).baseOffset.z;
       }
       Ve3DDataF curRotateOffset = null;
-      if (oldEffectKeyFrameInfo.rotationList.size() > 1) {
+      if (oldEffectKeyFrameInfo.rotationList.size() > 0) {
         curRotateOffset = new Ve3DDataF(targetPosInfo.degree.x - oldEffectPosInfo.degree.x,
             targetPosInfo.degree.y - oldEffectPosInfo.degree.y,
             targetPosInfo.degree.z - oldEffectPosInfo.degree.z);
@@ -427,7 +431,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curRotateOffset.z += oldEffectKeyFrameInfo.rotationList.get(0).baseOffset.z;
       }
       Ve3DDataF curAnchorOffset = null;
-      if (oldEffectKeyFrameInfo.anchorOffsetList.size() > 1) {
+      if (oldEffectKeyFrameInfo.anchorOffsetList.size() > 0) {
         curAnchorOffset = new Ve3DDataF(targetPosInfo.anchorOffset.x - oldEffectPosInfo.anchorOffset.x,
             targetPosInfo.anchorOffset.y - oldEffectPosInfo.anchorOffset.y,
             targetPosInfo.anchorOffset.z - oldEffectPosInfo.anchorOffset.z);
@@ -436,7 +440,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curAnchorOffset.z += oldEffectKeyFrameInfo.anchorOffsetList.get(0).baseOffset.z;
       }
       Ve3DDataF curScaleOffset = null;
-      if (oldEffectKeyFrameInfo.scaleList.size() > 1) {
+      if (oldEffectKeyFrameInfo.scaleList.size() > 0) {
         curScaleOffset = new Ve3DDataF(targetPosInfo.size.x / oldEffectPosInfo.size.x,
             targetPosInfo.size.y / oldEffectPosInfo.size.y,
             1.0f);
@@ -444,7 +448,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
         curScaleOffset.y *= oldEffectKeyFrameInfo.scaleList.get(0).baseOffset.y;
         curScaleOffset.z = 1.0f;
       }
-      if (backupPosInfo != null && oldEffectKeyFrameInfo != null && oldEffectKeyFrameInfo.scaleList.size() > 1) {
+      if (backupPosInfo != null && oldEffectKeyFrameInfo.scaleList.size() > 1) {
         // 放大倍数是相对effectposinfo的，所以size不可以变化
         targetPosInfo.size = new Ve3DDataF(backupPosInfo.size);
       }
@@ -643,8 +647,21 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_COLLAGE_ADJUST:
           new CollageAdjustDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           break;
+        case EffectBarItem.ACTION_COLLAGE_TIMESCALE:
+          new CollageSpeedDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+          break;
+        case EffectBarItem.ACTION_COLLAGE_RESERVE: {
+          mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+          CollageEffect collageEffect = (CollageEffect) mWorkSpace.getEffectAPI().getEffect(groupId, index);
+          mWorkSpace.handleOperation(new EffectOPCollageReserve(groupId, index,
+              !collageEffect.isVideoReverse, !collageEffect.isAudioReverse));
+          break;
+        }
         case EffectBarItem.ACTION_COLLAGE_CURVE_ADJUST:
           new CollageCurveAdjustDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+          break;
+        case EffectBarItem.ACTION_COLLAGE_MOTION:
+          SuperEditManager.gotoEditCollageMotionDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           break;
         case EffectBarItem.ACTION_KEYFRAME:
           mWorkSpace.getPlayerAPI().getPlayerControl().pause();
@@ -683,6 +700,20 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
           mWorkSpace.handleOperation(effectOPDel);
+          break;
+        //case EffectBarItem.ACTION_BGM_DOT:
+        //  if (SuperEditManager.isHadSuperEdit()) {
+        //    SuperEditManager.gotoEditAudioDotDialog(getActivity(), mMenuContainer, mWorkSpace, groupId, index);
+        //  }
+        //  break;
+        case EffectBarItem.ACTION_AUDIO_SPEED:
+          if (SuperEditManager.isHadSuperEdit()) {
+            SuperEditManager.gotoEditAudioSpeedDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
+          }
+          break;
+        case EffectBarItem.ACTION_COLLAGE_UP_TO_TOP:
+          // 置顶
+          setEffectLayerToTop(index, ((FloatEffect) baseEffect).effectLayerId);
           break;
         default:
           ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
@@ -868,6 +899,37 @@ public class EditEffectDialog extends BaseEffectMenuView {
     });
   }
 
+  /**
+   * 置顶
+   */
+  private void setEffectLayerToTop(int effectIndex, float oldLayerId) {
+    float maxLayerId = getMaxLayer();
+    if (oldLayerId != maxLayerId) {
+      EffectOPLayerId effectOPLayerId = new EffectOPLayerId(groupId, effectIndex, maxLayerId + 0.005f);
+      mWorkSpace.handleOperation(effectOPLayerId);
+    }
+  }
+
+  private float getMaxLayer() {
+    float maxLayerId = QEGroupConst.STORYBOARD_LAYER_BASE_EFFECT_MIN;
+    maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_SUBTITLE));
+    maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_STICKER));
+    maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_COLLAGES));
+    maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_MOSAIC));
+    return maxLayerId;
+  }
+
+  private float getMaxLayer(int groupId) {
+    float maxLayerId = QEGroupConst.STORYBOARD_LAYER_BASE_EFFECT_MIN;
+    List<BaseEffect> baseEffects = mWorkSpace.getEffectAPI().getEffectList(groupId);
+    if (baseEffects != null) {
+      for (BaseEffect item : baseEffects) {
+        maxLayerId = Math.max(maxLayerId, ((FloatEffect) item).effectLayerId);
+      }
+    }
+    return maxLayerId;
+  }
+
   @Override
   protected String getBottomTitle() {
     if (groupId == QEGroupConst.GROUP_ID_MOSAIC) {
@@ -905,11 +967,9 @@ public class EditEffectDialog extends BaseEffectMenuView {
           new EffectBarItem(EffectBarItem.ACTION_EDIT, R.drawable.edit_icon_edit_nor,
               getContext().getString(R.string.mn_edit_bgm_edit), isOpEnabled));
     }
-    if (groupId != QEGroupConst.GROUP_ID_BGMUSIC) {
-      list.add(
-          new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
-              getContext().getString(R.string.mn_edit_title_trim), isOpEnabled));
-    }
+    list.add(
+        new EffectBarItem(EffectBarItem.ACTION_TRIM, R.drawable.edit_icon_trim_n,
+            getContext().getString(R.string.mn_edit_title_trim), isOpEnabled));
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING
         || groupId == QEGroupConst.GROUP_ID_RECORD
@@ -990,12 +1050,23 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_COLLAGE_ADJUST, R.drawable.edit_icon_adjust_nor,
               getContext().getString(R.string.mn_edit_title_adjust), isOpEnabled));
+      list.add((
+          new EffectBarItem(EffectBarItem.ACTION_COLLAGE_TIMESCALE, R.drawable.edit_icon_speed_nor,
+              getContext().getString(R.string.mn_edit_title_speed), isOpEnabled)));
+      list.add((
+          new EffectBarItem(EffectBarItem.ACTION_COLLAGE_RESERVE, R.drawable.edit_icon_reserve_nor,
+              getContext().getString(R.string.mn_edit_title_reserve), isOpEnabled)));
     }
     if (groupId == QEGroupConst.GROUP_ID_COLLAGES
         || groupId == QEGroupConst.GROUP_ID_STICKER) {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_COLLAGE_CURVE_ADJUST, R.drawable.editor_tool_adjust_curve,
               getContext().getString(R.string.mn_edit_title_adjust_curve), isOpEnabled));
+      if (SuperEditManager.isHadSuperEdit()) {
+        list.add(
+            new EffectBarItem(EffectBarItem.ACTION_COLLAGE_MOTION, R.drawable.editor_icon_tool_motion_tile,
+                getContext().getString(R.string.mn_edit_collage_motion), isOpEnabled));
+      }
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
@@ -1006,6 +1077,14 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_KEYFRAME, R.drawable.editor_tool_keyframeanimator_icon,
               getContext().getString(R.string.mn_edit_keyframe_animator_title), isOpEnabled));
+    }
+    if (groupId == QEGroupConst.GROUP_ID_STICKER
+        || groupId == QEGroupConst.GROUP_ID_SUBTITLE
+        || groupId == QEGroupConst.GROUP_ID_MOSAIC
+        || groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+      list.add(
+          new EffectBarItem(EffectBarItem.ACTION_COLLAGE_UP_TO_TOP, R.drawable.editor_icon_tool_level_top,
+              getContext().getString(R.string.mn_edit_collage_top), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING) {
@@ -1041,6 +1120,13 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_BGM_REPEAT, R.drawable.editor_tool_effect_sound_icon,
               getContext().getString(R.string.mn_edit_title_bgm_repeat), isOpEnabled));
+      if (SuperEditManager.isHadSuperEdit()) {
+        list.add(new EffectBarItem(EffectBarItem.ACTION_AUDIO_SPEED, R.drawable.edit_icon_speed_nor,
+            getContext().getString(R.string.mn_edit_title_speed), isOpEnabled));
+        //list.add(
+        //    new EffectBarItem(EffectBarItem.ACTION_BGM_DOT, R.drawable.editor_icon_music_dot,
+        //        getContext().getString(R.string.mn_edit_title_bgm_dot), isOpEnabled));
+      }
       if (mWorkSpace.getStoryboardAPI().getThemeId() != 0) {
         list.add(
             new EffectBarItem(EffectBarItem.ACTION_BGM_RESET_TO_THEME, R.drawable.editor_icon_collage_tool_chroma_reset,

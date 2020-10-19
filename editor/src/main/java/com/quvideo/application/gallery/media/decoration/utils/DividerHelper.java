@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by Oubowu on 2016/7/26 14:14.
  * <p>绘制分割线工具类</p>
  */
 public class DividerHelper {

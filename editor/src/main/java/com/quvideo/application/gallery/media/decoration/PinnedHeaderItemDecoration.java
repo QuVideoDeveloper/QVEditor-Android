@@ -20,9 +20,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
- * Created by Oubowu on 2016/7/21 15:38.
  * <p>这个是单独一个布局的标签</p>
- * <p>porting from https://github.com/takahr/pinned-section-item-decoration</p>
  * <p>注意：标签所在最外层布局不能设置marginTop，因为往上滚动遮不住真正的标签;marginBottom还有问题待解决</p>
  */
 public class PinnedHeaderItemDecoration extends RecyclerView.ItemDecoration {

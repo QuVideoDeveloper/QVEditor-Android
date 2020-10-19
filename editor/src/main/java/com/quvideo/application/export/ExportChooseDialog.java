@@ -1,11 +1,7 @@
 package com.quvideo.application.export;
 
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +10,12 @@ import android.widget.RadioGroup;
 import com.quvideo.application.editor.R;
 import com.quvideo.mobile.engine.QEEngineClient;
 import com.quvideo.mobile.engine.model.export.ExportParams;
-import java.io.File;
 
 public class ExportChooseDialog extends Dialog implements View.OnClickListener {
 
   private View contentView;
   private View rootView;
-  private RadioGroup mRGFormat, mRGResolution, mRGHardware, mRGFps;
+  private RadioGroup mRGFormat, mRGResolution, mRGHardware, mRGFps, mRGH265;
   private RadioButton mRB4k;
   private Button mBtnConfirm, mBtnCancel;
   private ExportParams exportParams = new ExportParams();
@@ -44,6 +39,7 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
     mRGResolution = contentView.findViewById(R.id.rg_resolution);
     mRGHardware = contentView.findViewById(R.id.rg_hardware);
     mRGFps = contentView.findViewById(R.id.rg_fps);
+    mRGH265 = contentView.findViewById(R.id.rg_h265);
     mRB4k = contentView.findViewById(R.id.rb_resolution_4k);
 
     mBtnConfirm = contentView.findViewById(R.id.btn_confirm);
@@ -106,6 +102,11 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
         } else {
           exportParams.customFps = 30;
         }
+      }
+    });
+    mRGH265.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+      @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+        exportParams.isH265First = checkedId == R.id.rb_h265_on;
       }
     });
     mRGHardware.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

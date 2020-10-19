@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 
 /**
- * Created by liuzhonghu on 2017/8/1.
  *
  * @Description
  */

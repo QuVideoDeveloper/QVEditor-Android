@@ -11,9 +11,6 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.IEffectEditClickListener;
 import java.util.List;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class EffectOperateAdapter extends RecyclerView.Adapter<EffectOperateAdapter.Holder> {
 
   private List<EffectBarItem> mlist;

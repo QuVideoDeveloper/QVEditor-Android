@@ -49,6 +49,7 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     ClipBG, // clip背景
     ClipTrans, // clip转场
     ClipTrim, // clip裁切
+    ClipPicDuration, // clip图片时长
     ClipVolume, // clip音量
     EffectEdit, // effect编辑
     EffectPlugin, // effect编辑效果插件
@@ -75,8 +76,12 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     CollageOverlay, // 画中画混合模式
     CollageAdjust, // 画中画参数调节
     CollageCurveAdjust, // 画中画曲线调色
+    CollageSpeed, // 画中画变速
+    CollageMotion, // 画中画拼贴
     Audio, // 音频
     AudioRecord, // 音频录音
     AudioAdd, // 音频添加
+    AudioSpeed, // 音频变速
+    AudioDots, // 音频踩点显示
   }
 }

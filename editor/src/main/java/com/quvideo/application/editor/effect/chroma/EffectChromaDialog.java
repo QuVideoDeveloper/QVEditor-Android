@@ -92,7 +92,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
       @Override public void onClick(View v) {
         EffectOPChroma effectOPChroma = new EffectOPChroma(groupId, effectIndex, null);
         mWorkSpace.handleOperation(effectOPChroma);
-        mFakeApi.setTarget(null, null, null);
+        mFakeApi.setTarget(null, null);
         mCustomSeekbarPop.setVisibility(View.INVISIBLE);
         isPicking = false;
         focusStartTime(currentTime);
@@ -172,13 +172,13 @@ public class EffectChromaDialog extends BaseEffectMenuView {
 
   private void initFakeView() {
     mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
-    mFakeApi.setTarget(null, null, null);
+    mFakeApi.setTarget(null, null);
     BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
     startTime = baseEffect.destRange.getPosition();
     if (baseEffect.destRange.getTimeLength() > 0) {
       maxTime = baseEffect.destRange.getLimitValue();
     } else {
-      maxTime =  mWorkSpace.getStoryboardAPI().getDuration();
+      maxTime = mWorkSpace.getStoryboardAPI().getDuration();
     }
     currentTime = mWorkSpace.getPlayerAPI().getPlayerControl().getCurrentPlayerTime();
     mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);

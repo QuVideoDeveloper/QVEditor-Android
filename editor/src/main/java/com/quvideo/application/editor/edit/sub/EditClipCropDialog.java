@@ -111,6 +111,9 @@ public class EditClipCropDialog extends BaseMenuView {
   }
 
   private void initFakeView() {
+    if (mFakeApi == null || clipSourceSize == null) {
+      return;
+    }
     mFakeApi.setStreamSize(clipSourceSize);
     Rect cropRect = mWorkSpace.getClipAPI().getClipByIndex(clipIndex).cropRect;
     if (cropRect == null) {

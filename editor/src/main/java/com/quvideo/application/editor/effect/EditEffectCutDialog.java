@@ -10,6 +10,7 @@ import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.application.widget.seekbar.DoubleSeekbar;
+import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeRange;
 import com.quvideo.mobile.engine.entity.VideoInfo;
 import com.quvideo.mobile.engine.model.BaseEffect;
@@ -96,6 +97,9 @@ public class EditEffectCutDialog extends BaseMenuView {
       if (progressStart >= progressEnd) {
         ToastUtils.show(getContext(), R.string.mn_edit_tips_no_allow_trim, Toast.LENGTH_SHORT);
         return;
+      }
+      if (groupId == QEGroupConst.GROUP_ID_COLLAGES) {
+
       }
       EffectOPTrimRange effectOPTrimRange = new EffectOPTrimRange(groupId, effectIndex, new VeRange(progressStart,
           (progressEnd - progressStart)));

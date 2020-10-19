@@ -3,7 +3,6 @@ package com.quvideo.application.gallery.enums;
 import androidx.annotation.Keep;
 
 /**
- * Created by liuzhonghu on 2017/8/1.
  *
  * @Description
  */

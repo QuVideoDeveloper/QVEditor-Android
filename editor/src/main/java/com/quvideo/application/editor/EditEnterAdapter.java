@@ -11,9 +11,6 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import java.util.List;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class EditEnterAdapter extends RecyclerView.Adapter<EditEnterAdapter.Holder> {
 
     private List<EditOperate> mlist;

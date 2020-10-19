@@ -1,17 +1,21 @@
 package com.quvideo.application.editor.effect;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.widget.seekbar.CustomSeekbarPop;
 import com.quvideo.application.widget.seekbar.DoubleSeekbar;
+import com.quvideo.mobile.engine.model.AnimEffect;
 import com.quvideo.mobile.engine.model.BaseEffect;
 import com.quvideo.mobile.engine.model.FloatEffect;
+import com.quvideo.mobile.engine.model.effect.keyframe.BaseKeyFrame;
+import com.quvideo.mobile.engine.model.effect.keyframe.KeyAlphaInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPAlpha;
+import com.quvideo.mobile.engine.work.operate.effect.EffectOPKeyFrameUpdate;
+import java.util.List;
 
 public class EditEffectAlphaDialog extends BaseMenuView {
 
@@ -19,6 +23,8 @@ public class EditEffectAlphaDialog extends BaseMenuView {
 
   private int groupId = 0;
   private int effectIndex = 0;
+
+  private boolean isHadKeyFrame = false;
 
   public EditEffectAlphaDialog(Context context, MenuContainer container,
       IQEWorkSpace workSpace, int groupId, int effectIndex) {
@@ -50,6 +56,14 @@ public class EditEffectAlphaDialog extends BaseMenuView {
     if (baseEffect instanceof FloatEffect) {
       alpha = ((FloatEffect) baseEffect).alpha;
     }
+    if (baseEffect instanceof AnimEffect) {
+      AnimEffect animEffect = ((AnimEffect) baseEffect);
+      isHadKeyFrame = animEffect.mEffectKeyFrameInfo != null && animEffect.mEffectKeyFrameInfo.alphaList != null
+          && animEffect.mEffectKeyFrameInfo.alphaList.size() > 0;
+      if (isHadKeyFrame) {
+        alpha = animEffect.mEffectKeyFrameInfo.alphaList.get(0).baseValue;
+      }
+    }
     mCustomSeekbarPop.init(new CustomSeekbarPop.InitBuilder()
         .start("0")
         .end("100")
@@ -75,8 +89,21 @@ public class EditEffectAlphaDialog extends BaseMenuView {
   }
 
   private void setClipVolume(int alpha) {
-    EffectOPAlpha clipOPVolume = new EffectOPAlpha(groupId, effectIndex, alpha);
-    mWorkSpace.handleOperation(clipOPVolume);
+    if (isHadKeyFrame) {
+      BaseEffect effect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
+      List<KeyAlphaInfo> baseKeyFrames = ((AnimEffect) effect).mEffectKeyFrameInfo.alphaList;
+      if (baseKeyFrames != null) {
+        for (KeyAlphaInfo baseKeyFrame : baseKeyFrames) {
+          baseKeyFrame.baseValue = alpha;
+        }
+        EffectOPKeyFrameUpdate effectOPKeyFrameUpdate = new EffectOPKeyFrameUpdate(groupId, effectIndex,
+            BaseKeyFrame.KeyFrameType.Alpha, baseKeyFrames);
+        mWorkSpace.handleOperation(effectOPKeyFrameUpdate);
+      }
+    } else {
+      EffectOPAlpha clipOPVolume = new EffectOPAlpha(groupId, effectIndex, alpha);
+      mWorkSpace.handleOperation(clipOPVolume);
+    }
   }
 
   @Override

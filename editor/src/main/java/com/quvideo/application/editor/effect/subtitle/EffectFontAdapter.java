@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by santa on 2020-04-17.
  */
 public class EffectFontAdapter extends RecyclerView.Adapter<EffectFontAdapter.TemplateHolder> {
 

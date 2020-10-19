@@ -1,8 +1,5 @@
 package com.quvideo.application.editor.effect;
 
-/**
- * Created by santa on 2020-04-29.
- */
 public class EffectBarItem {
 
   public static final int ACTION_EDIT = 0;
@@ -26,12 +23,22 @@ public class EffectBarItem {
   public static final int ACTION_BGM_REPEAT = 18;
   public static final int ACTION_BGM_RESET_TO_THEME = 19;
   public static final int ACTION_QRCODE = 20;
-  public static final int ACTION_COLLAGE_FILTER= 21;
-  public static final int ACTION_COLLAGE_FX= 22;
-  public static final int ACTION_COLLAGE_OVERLAY= 23;
-  public static final int ACTION_COLLAGE_ADJUST= 24;
-  public static final int ACTION_COLLAGE_CURVE_ADJUST= 25;
+  public static final int ACTION_COLLAGE_FILTER = 21;
+  public static final int ACTION_COLLAGE_FX = 22;
+  public static final int ACTION_COLLAGE_OVERLAY = 23;
+  public static final int ACTION_COLLAGE_ADJUST = 24;
+  public static final int ACTION_COLLAGE_CURVE_ADJUST = 25;
   public static final int ACTION_COLLAGE_SUBEFFECT_DISABLE = 27;
+  public static final int ACTION_COLLAGE_TIMESCALE = 28;
+  public static final int ACTION_COLLAGE_RESERVE = 29;
+  public static final int ACTION_COLLAGE_UP_TO_TOP = 30;
+
+  // 暂不对外的操作
+  public static final int ACTION_BGM_DOT = 101;
+  // 音频变速
+  public static final int ACTION_AUDIO_SPEED = 102;
+  // 画面拼贴
+  public static final int ACTION_COLLAGE_MOTION= 103;
 
   private int action;
   private int resId;

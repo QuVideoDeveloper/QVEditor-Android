@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.gallery.media.decoration.entity.ClickBounds;
 
 /**
- * Created by Oubowu on 2016/7/24 20:51.
  * <p>用来处理标签的点击事件，现在仅仅支持单击，将来也许会实现长按和双击事件</p>
  */
 public class OnItemTouchListener implements RecyclerView.OnItemTouchListener {

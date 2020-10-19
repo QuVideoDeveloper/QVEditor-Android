@@ -1,7 +1,6 @@
 package com.quvideo.application.gallery.enums;
 
 /**
- * Created by liuzhonghu on 2017/8/1.
  *
  * @Description
  */

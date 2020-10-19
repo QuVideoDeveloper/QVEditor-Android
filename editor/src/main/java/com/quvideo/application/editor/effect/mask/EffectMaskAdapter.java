@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseEffectMenuView;
+import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.model.effect.EffectMaskInfo;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public class EffectMaskAdapter extends RecyclerView.Adapter<EffectMaskAdapter.Te
   private OnItemSelectListener mOnItemClickListener;
 
   private EffectMaskInfo.MaskType selectType = EffectMaskInfo.MaskType.MASK_NONE;
+
+  private boolean isEnable = false;
 
   public interface OnItemSelectListener {
     void onItemSelected(MaskItem template);
@@ -45,6 +49,10 @@ public class EffectMaskAdapter extends RecyclerView.Adapter<EffectMaskAdapter.Te
       }
     }
     notifyDataSetChanged();
+  }
+
+  public void setEnable(boolean enable) {
+    isEnable = enable;
   }
 
   public void setOnItemClickListener(OnItemSelectListener listener) {
@@ -73,6 +81,10 @@ public class EffectMaskAdapter extends RecyclerView.Adapter<EffectMaskAdapter.Te
     holder.mImageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        if (!isEnable) {
+          ToastUtils.show(mContext, R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
+          return;
+        }
         if (mOnItemClickListener != null && item.maskType != selectType) {
           item.reverse = false;
           mOnItemClickListener.onItemSelected(item);

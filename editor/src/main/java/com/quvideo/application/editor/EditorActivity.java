@@ -38,13 +38,20 @@ import com.quvideo.application.editor.theme.EditThemeDialog;
 import com.quvideo.application.export.ExportChooseDialog;
 import com.quvideo.application.export.ExportDialog;
 import com.quvideo.application.export.PreviewActivity;
+import com.quvideo.application.gallery.GalleryClient;
+import com.quvideo.application.gallery.GallerySettings;
+import com.quvideo.application.gallery.model.GalleryDef;
+import com.quvideo.application.gallery.model.MediaModel;
+import com.quvideo.application.gallery.provider.IGalleryProvider;
 import com.quvideo.application.player.PlayerControllerView;
+import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.application.utils.FileUtils;
 import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.QEEngineClient;
 import com.quvideo.mobile.engine.constant.QEGroupConst;
 import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.entity.VeRange;
+import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.model.clip.ClipAddItem;
 import com.quvideo.mobile.engine.model.clip.FilterInfo;
 import com.quvideo.mobile.engine.model.effect.EffectAddItem;
@@ -71,9 +78,6 @@ import java.util.ArrayList;
 import java.util.List;
 import xiaoying.utils.LogUtils;
 
-/**
- * Created by santa on 2020-04-29.
- */
 public class EditorActivity extends AppCompatActivity implements ItemOnClickListener {
 
   public static final int INTENT_REQUEST_QRCODE = 101;
@@ -215,7 +219,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
                     Bitmap bitmap = mWorkSpace.getProjectThumbnail();
                     // TODO 用于兼容target 29
                     //if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
-                    FileUtils.saveBitmap(thumbnail, bitmap, 80);
+                    FileUtils.saveBitmap(thumbnail, bitmap, 100);
                     //} else {
                     //  ContentValues contentValues = new ContentValues();
                     //  contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
@@ -318,7 +322,11 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         EffectOPDel effectOPDel = new EffectOPDel(QEGroupConst.GROUP_ID_WATERMARK, 0);
         mWorkSpace.handleOperation(effectOPDel);
       } else {
-        addWaterMarkWithRes();
+        if (!SuperEditManager.isHadSuperEdit()) {
+          addWaterMarkWithRes(AssetConstants.WATERMARK_LOG_PATH);
+        } else {
+          choosePhoto4WaterMark();
+        }
       }
     } else if (operate.getResId() == R.drawable.edit_icon_mosaic_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_MOSAIC,
@@ -337,14 +345,46 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     }
   }
 
-  private void addWaterMarkWithRes() {
+  /**
+   * 替换数据源
+   */
+  public void choosePhoto4WaterMark() {
+    //update settings
+    GallerySettings settings = new GallerySettings.Builder()
+        .minSelectCount(1)
+        .maxSelectCount(1)
+        .showMode(GalleryDef.MODE_PHOTO)
+        .build();
+
+    GalleryClient.getInstance().initSetting(settings);
+    //enter gallery
+    GalleryClient.getInstance().performLaunchGallery(this);
+
+    GalleryClient.getInstance().initProvider(new IGalleryProvider() {
+      @Override
+      public boolean checkFileEditAble(String filePath) {
+        int res = MediaFileUtils.checkFileEditAble(filePath);
+        return res == SDKErrCode.RESULT_OK;
+      }
+
+      @Override
+      public void onGalleryFileDone(ArrayList<MediaModel> mediaList) {
+        super.onGalleryFileDone(mediaList);
+        if (mediaList != null && mediaList.size() > 0) {
+          addWaterMarkWithRes(mediaList.get(0).getFilePath());
+        }
+      }
+    });
+  }
+
+  private void addWaterMarkWithRes(String waterPath) {
     EffectAddItem effectAddItem = new EffectAddItem();
-    effectAddItem.mEffectPath = AssetConstants.WATERMARK_LOG_PATH;
+    effectAddItem.mEffectPath = waterPath;
     effectAddItem.mEffectPosInfo = new EffectPosInfo();
     VeMSize steamSize = mWorkSpace.getStoryboardAPI().getStreamSize();
-    VeMSize watermarkSize = MediaFileUtils.getImageResolution(AssetConstants.WATERMARK_LOG_PATH);
-    float width = watermarkSize.width;
-    float height = watermarkSize.height;
+    VeMSize watermarkSize = MediaFileUtils.getImageResolution(waterPath);
+    float width = Math.min(watermarkSize.width, steamSize.width / 10);
+    float height = watermarkSize.height * width / watermarkSize.width;
     effectAddItem.mEffectPosInfo.size.x = width;
     effectAddItem.mEffectPosInfo.size.y = height;
     effectAddItem.mEffectPosInfo.center.x =
@@ -385,7 +425,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     @Override public void onChange(BaseOperate operate) {
       if (operate instanceof ClipOPAdd) {
         if (!isAddWaterMarkAfterInit) {
-          addWaterMarkWithRes();
+          if (!SuperEditManager.isHadSuperEdit()) {
+            addWaterMarkWithRes(AssetConstants.WATERMARK_LOG_PATH);
+          }
           isAddWaterMarkAfterInit = true;
         }
       }

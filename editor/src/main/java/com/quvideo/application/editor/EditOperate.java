@@ -1,8 +1,5 @@
 package com.quvideo.application.editor;
 
-/**
- * Created by santa on 2020-04-29.
- */
 public class EditOperate {
 
     private int resId;

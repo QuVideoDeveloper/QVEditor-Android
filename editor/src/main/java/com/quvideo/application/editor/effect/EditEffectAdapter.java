@@ -25,9 +25,6 @@ import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.TemplateHolder> {
 
   private List<BaseEffect> mDataList = new ArrayList<>();
@@ -100,8 +97,9 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
         || item.groupId == QEGroupConst.GROUP_ID_DUBBING) {
       // 音乐/音效
       int thumbRes = 0;
+      boolean isFind = false;
       for (AudioTemplate audio : AssetConstants.TEST_MUSIC_TID) {
-        if (audio.getAudioPath().equals(item.mEffectPath)) {
+        if (audio.getAudioPath() != null && audio.getAudioPath().equals(item.mEffectPath)) {
           thumbRes = audio.getThumbnailResId();
           break;
         }
@@ -111,6 +109,9 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
           thumbRes = audio.getThumbnailResId();
           break;
         }
+      }
+      if (!TextUtils.isEmpty(item.mEffectPath) && !isFind) {
+        thumbRes = R.drawable.gallery_folder_entrance_icon1;
       }
       if (thumbRes != 0) {
         Glide.with(holder.mImageView)

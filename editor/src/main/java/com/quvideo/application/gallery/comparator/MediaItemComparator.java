@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.Locale;
 
 /**
- * Created by Chandler on 2017/3/9.
  */
 
 public class MediaItemComparator implements Comparator<MediaItem> {

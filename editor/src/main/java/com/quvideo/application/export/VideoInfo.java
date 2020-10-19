@@ -1,7 +1,6 @@
 package com.quvideo.application.export;
 
 /**
- * Created by Administrator on 2017/11/15.
  */
 public class VideoInfo {
   public int frameWidth;

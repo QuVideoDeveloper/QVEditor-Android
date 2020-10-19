@@ -3,7 +3,6 @@ package com.quvideo.application.gallery.adapterhelper.loadmore;
 import com.quvideo.application.editor.R;
 
 /**
- * Created by BlingBling on 2016/10/11.
  */
 
 public final class SimpleLoadMoreView extends LoadMoreView {

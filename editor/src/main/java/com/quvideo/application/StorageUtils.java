@@ -9,9 +9,12 @@ public class StorageUtils {
 
   private static final String PATH_ROOT = ".demo/";
   private static final String PATH_TEMPLATE = ".template/";
+  private static final String PATH_AUDIODOT = "audioDot/";
 
   // 素材目录
   private static String mTemplatePath;
+  // 踩点目录
+  private static String mAudioAppDir;
 
   private static String outerAppDir;
 
@@ -32,8 +35,11 @@ public class StorageUtils {
       outerAppDir = innerDir;
     }
     mTemplatePath = outerAppDir + PATH_ROOT + PATH_TEMPLATE;
+    mAudioAppDir = outerAppDir + PATH_ROOT + PATH_AUDIODOT;
     FileUtils.createMultilevelDirectory(mTemplatePath);
     FileUtils.createNoMediaFileInPath(mTemplatePath);
+    FileUtils.createMultilevelDirectory(mAudioAppDir);
+    FileUtils.createNoMediaFileInPath(mAudioAppDir);
   }
 
   public static synchronized String getAppPath(Context context) {
@@ -48,5 +54,12 @@ public class StorageUtils {
       init(context);
     }
     return mTemplatePath;
+  }
+
+  public static synchronized String getAudioAppDir(Context context) {
+    if (TextUtils.isEmpty(mAudioAppDir)) {
+      init(context);
+    }
+    return mAudioAppDir;
   }
 }

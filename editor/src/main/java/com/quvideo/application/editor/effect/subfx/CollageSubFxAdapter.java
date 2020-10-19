@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by santa on 2020-04-17.
  */
 public class CollageSubFxAdapter extends RecyclerView.Adapter<CollageSubFxAdapter.TemplateHolder> {
 

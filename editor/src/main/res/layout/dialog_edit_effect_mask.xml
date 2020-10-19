@@ -32,19 +32,61 @@
   <com.quvideo.application.widget.seekbar.CustomSeekbarPop
       android:id="@+id/seekbar"
       android:layout_width="match_parent"
-      android:layout_height="80dp"
+      android:layout_height="60dp"
       android:layout_gravity="center"
       android:layout_marginEnd="35dp"
       android:layout_marginStart="35dp"
+      android:layout_marginBottom="10dp"
       android:visibility="invisible"
-      app:layout_constraintBottom_toTopOf="@id/clip_recyclerview"
+      app:layout_constraintBottom_toTopOf="@id/v_keyframe_timeline"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
+
+  <com.quvideo.application.editor.effect.keyframe.KeyFrameTimeline
+      android:id="@+id/v_keyframe_timeline"
+      android:layout_width="0dp"
+      android:layout_height="20dp"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="10dp"
+      android:layout_gravity="center"
+      android:layout_marginStart="35dp"
+      android:layout_marginEnd="20dp"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintBottom_toTopOf="@id/clip_recyclerview"
+      app:layout_constraintEnd_toStartOf="@+id/btn_keyframe_add"
+      app:layout_constraintStart_toStartOf="parent" />
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btn_keyframe_add"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:src="@drawable/editorx_icon_keyframe_add"
+      android:gravity="center"
+      android:layout_marginBottom="5dp"
+      android:background="@drawable/edit_item_bg_normal"
+      app:layout_constraintEnd_toStartOf="@+id/btn_keyframe_del"
+      app:layout_constraintBottom_toTopOf="@id/clip_recyclerview"
+      app:layout_constraintStart_toEndOf="@+id/v_keyframe_timeline"  />
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/btn_keyframe_del"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:src="@drawable/editorx_icon_keyframe_delete"
+      android:gravity="center"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="10dp"
+      android:layout_marginBottom="5dp"
+      android:background="@drawable/edit_item_bg_normal"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/clip_recyclerview"
+      app:layout_constraintStart_toEndOf="@+id/btn_keyframe_add"  />
 
  <androidx.recyclerview.widget.RecyclerView
      android:id="@+id/clip_recyclerview"
      android:layout_width="match_parent"
-     android:layout_height="113dp"
+     android:layout_height="80dp"
+     android:layout_marginBottom="10dp"
      app:layout_constraintStart_toStartOf="parent"
      app:layout_constraintEnd_toEndOf="parent"
      app:layout_constraintBottom_toTopOf="@id/layout_bottom"/>

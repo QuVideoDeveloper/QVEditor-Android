@@ -42,16 +42,32 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toTopOf="@id/layout_bottom"
       >
-  <com.quvideo.application.widget.seekbar.CustomSeekbarPop
-    android:id="@+id/seekbar"
-    android:layout_width="match_parent"
-    android:layout_height="36dp"
-      android:layout_marginLeft="32dp"
-      android:layout_marginRight="32dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+
+    <com.quvideo.application.widget.seekbar.CustomSeekbarPop
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_mute"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/editor_tool_mute_icon"
+        android:layout_margin="15dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -176,7 +176,9 @@ public class AssetConstants {
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_2.mp3",
           "Music2", R.drawable.music_2),
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_3.mp3",
-          "Music3", R.drawable.music_3)
+          "Music3", R.drawable.music_3),
+      new AudioTemplate(null,
+          EditorApp.Companion.getInstance().app.getString(R.string.mn_edit_audio_direct), R.drawable.gallery_folder_entrance_icon1)
   };
 
   public static final String[] TEST_FONT_TID = new String[] {

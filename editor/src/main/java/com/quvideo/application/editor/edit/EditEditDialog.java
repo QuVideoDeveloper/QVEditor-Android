@@ -26,6 +26,7 @@ import com.quvideo.application.editor.edit.sub.EditCurveAdjustDialog;
 import com.quvideo.application.editor.edit.sub.EditFilterDialog;
 import com.quvideo.application.editor.edit.sub.EditFxFilterDialog;
 import com.quvideo.application.editor.edit.sub.EditMagicSoundDialog;
+import com.quvideo.application.editor.edit.sub.EditPicDurationDialog;
 import com.quvideo.application.editor.edit.sub.EditSpeedDialog;
 import com.quvideo.application.editor.edit.sub.EditSplitDialog;
 import com.quvideo.application.editor.edit.sub.EditTransDialog;
@@ -55,6 +56,7 @@ import com.quvideo.mobile.engine.work.operate.clip.ClipOPAdd;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPCopy;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPDel;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPMove;
+import com.quvideo.mobile.engine.work.operate.clip.ClipOPPicAnim;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPReplace;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPReverse;
 import com.quvideo.mobile.engine.work.operate.clip.ClipOPSplit;
@@ -67,6 +69,8 @@ public class EditEditDialog extends BaseMenuView {
   private EditClipAdapter clipAdapter;
 
   private AppCompatImageView mCropImageView;
+
+  private EditOperateAdapter mOperateAdapter;
 
   public EditEditDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       ItemOnClickListener l, AppCompatImageView cropImageView, IFakeViewApi iFakeViewApi) {
@@ -125,55 +129,76 @@ public class EditEditDialog extends BaseMenuView {
     helper.attachToRecyclerView(clipRecyclerView);
 
     initData();
+    RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
+    editRecyclerView.setLayoutManager(
+        new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+    mOperateAdapter = new EditOperateAdapter(this);
+    editRecyclerView.setAdapter(mOperateAdapter);
+    refreshMenu();
+  }
+
+  private void refreshMenu() {
     // operate
     List<EditOperate> list = new ArrayList<EditOperate>() {{
-      add(new EditOperate(R.drawable.edit_icon_trim_n,
-          context.getString(R.string.mn_edit_title_trim)));
+      ClipData clipData = mWorkSpace.getClipAPI().getClipByIndex(clipAdapter.getSelClipIndex());
+      if (clipData == null || clipData.isVideo()) {
+        add(new EditOperate(R.drawable.edit_icon_trim_n,
+            getContext().getString(R.string.mn_edit_title_trim)));
+      } else {
+        add(new EditOperate(R.drawable.editorx_icon_pic_trim_n,
+            getContext().getString(R.string.mn_edit_clip_img_duration)));
+        if (clipData.isPicAnimOn()) {
+          add(new EditOperate(R.drawable.editorx_icon_pic_anim_on,
+              getContext().getString(R.string.mn_edit_clip_img_anim)));
+        } else {
+          add(new EditOperate(R.drawable.editorx_icon_pic_anim_off,
+              getContext().getString(R.string.mn_edit_clip_img_anim)));
+        }
+      }
       add(new EditOperate(R.drawable.edit_icon_split_nor,
-          context.getString(R.string.mn_edit_title_split)));
+          getContext().getString(R.string.mn_edit_title_split)));
       add(new EditOperate(R.drawable.edit_icon_duplicate,
-          context.getString(R.string.mn_edit_duplicate_title)));
+          getContext().getString(R.string.mn_edit_duplicate_title)));
       add(new EditOperate(R.drawable.edit_icon_location_nor,
-          context.getString(R.string.mn_edit_effect_position)));
+          getContext().getString(R.string.mn_edit_effect_position)));
       add(new EditOperate(R.drawable.edit_icon_delete_nor,
-          context.getString(R.string.mn_edit_title_delete)));
+          getContext().getString(R.string.mn_edit_title_delete)));
       add(new EditOperate(R.drawable.edit_icon_edit_nor,
-          context.getString(R.string.mn_edit_bgm_edit)));
+          getContext().getString(R.string.mn_edit_bgm_edit)));
       add(new EditOperate(R.drawable.edit_icon_muteoff_n,
-          context.getString(R.string.mn_edit_title_volume)));
+          getContext().getString(R.string.mn_edit_title_volume)));
       add(new EditOperate(R.drawable.edit_icon_filter_nor,
-          context.getString(R.string.mn_edit_title_filter)));
+          getContext().getString(R.string.mn_edit_title_filter)));
       add(new EditOperate(R.drawable.edit_icon_effect_nor,
-          context.getString(R.string.mn_edit_title_fx_filter)));
+          getContext().getString(R.string.mn_edit_title_fx_filter)));
       add(new EditOperate(R.drawable.edit_icon_change_nor,
-          context.getString(R.string.mn_edit_title_transitions)));
+          getContext().getString(R.string.mn_edit_title_transitions)));
       add(new EditOperate(R.drawable.edit_icon_changevoice_nor,
-          context.getString(R.string.mn_edit_title_change_voice)));
+          getContext().getString(R.string.mn_edit_title_change_voice)));
       add(new EditOperate(R.drawable.edit_icon_speed_nor,
-          context.getString(R.string.mn_edit_title_speed)));
+          getContext().getString(R.string.mn_edit_title_speed)));
       if (SuperEditManager.isHadSuperEdit()) {
         add(new EditOperate(R.drawable.editor_tool_speed_icon_nor,
-            context.getString(R.string.mn_edit_title_curve_speed)));
+            getContext().getString(R.string.mn_edit_title_curve_speed)));
       }
       add(new EditOperate(R.drawable.edit_icon_adjust_nor,
-          context.getString(R.string.mn_edit_title_adjust)));
+          getContext().getString(R.string.mn_edit_title_adjust)));
       add(new EditOperate(R.drawable.editor_tool_adjust_curve,
-          context.getString(R.string.mn_edit_title_adjust_curve)));
+          getContext().getString(R.string.mn_edit_title_adjust_curve)));
       add(new EditOperate(R.drawable.editor_tool_background_icon,
-          context.getString(R.string.mn_edit_title_background)));
+          getContext().getString(R.string.mn_edit_title_background)));
       add(new EditOperate(R.drawable.edit_icon_reserve_nor,
-          context.getString(R.string.mn_edit_title_reserve)));
+          getContext().getString(R.string.mn_edit_title_reserve)));
       if (EditorApp.Companion.getInstance().getEditorConfig().isCropEditValid()) {
         add(new EditOperate(R.drawable.edit_icon_crop_n,
-            context.getString(R.string.mn_edit_title_crop)));
+            getContext().getString(R.string.mn_edit_title_crop)));
       }
       add(new EditOperate(R.drawable.editor_tool_keyframeanimator_icon,
           getContext().getString(R.string.mn_edit_keyframe_animator_title)));
     }};
-    RecyclerView editRecyclerView = view.findViewById(R.id.operate_recyclerview);
-    editRecyclerView.setLayoutManager(
-        new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
-    editRecyclerView.setAdapter(new EditOperateAdapter(list, this));
+    if (mOperateAdapter != null) {
+      mOperateAdapter.updateDatas(list);
+    }
   }
 
   private QEPlayerListener mPlayerListener = new QEPlayerListener() {
@@ -247,6 +272,9 @@ public class EditEditDialog extends BaseMenuView {
           || operate instanceof ClipOPSplit) {
         // 添加 / 删除 clip完成监听
         AndroidSchedulers.mainThread().scheduleDirect(() -> clipAdapter.updateClipList());
+        refreshMenu();
+      } else if (operate instanceof ClipOPPicAnim) {
+        refreshMenu();
       }
     }
   };
@@ -261,9 +289,15 @@ public class EditEditDialog extends BaseMenuView {
 
   private void initData() {
     clipAdapter.updateClipList();
-    clipAdapter.setOnAddClipListener(() -> {
-      int selClip = clipAdapter.getSelClipIndex();
-      gotoEdit(selClip + 1);
+    clipAdapter.setOnClipClickListener(new EditClipAdapter.OnClipClickListener() {
+      @Override public void onClipAdd() {
+        int selClip = clipAdapter.getSelClipIndex();
+        gotoEdit(selClip + 1);
+      }
+
+      @Override public void onFocusChange() {
+        refreshMenu();
+      }
     });
 
     mWorkSpace.addObserver(mBaseObserver);
@@ -275,6 +309,18 @@ public class EditEditDialog extends BaseMenuView {
     if (operate.getResId() == R.drawable.edit_icon_trim_n) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditTrimDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
+    } else if (operate.getResId() == R.drawable.editorx_icon_pic_trim_n) {
+      // 图片时长
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      new EditPicDurationDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
+    } else if (operate.getResId() == R.drawable.editorx_icon_pic_anim_on) {
+      // 图片动画关闭
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      doClipPicAnim(selIndex, false);
+    } else if (operate.getResId() == R.drawable.editorx_icon_pic_anim_off) {
+      // 图片动画打开
+      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
+      doClipPicAnim(selIndex, true);
     } else if (operate.getResId() == R.drawable.edit_icon_split_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditSplitDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
@@ -390,6 +436,10 @@ public class EditEditDialog extends BaseMenuView {
     } else {
       ToastUtils.show(getContext(), R.string.mn_edit_tips_no_allow_del_last, Toast.LENGTH_LONG);
     }
+  }
+
+  private void doClipPicAnim(int selClipIndex, boolean animOn) {
+    mWorkSpace.handleOperation(new ClipOPPicAnim(selClipIndex, animOn));
   }
 
   private void doClipReserve(int selClipIndex) {

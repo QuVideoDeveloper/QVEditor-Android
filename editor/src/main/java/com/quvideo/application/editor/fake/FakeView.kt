@@ -8,11 +8,11 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.application.editor.fake.draw.ChromaDraw
 import com.quvideo.application.editor.fake.draw.PosDraw
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
-import com.quvideo.mobile.engine.model.effect.EffectMaskInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
 
@@ -161,7 +161,7 @@ class FakeView @JvmOverloads constructor(
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
-  override fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?, maskInfo: EffectMaskInfo?) {
+  override fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?, maskInfo: FakeMaskPosData?) {
     var fakeLimitPos = FakeLimitPos(
         RectF(offsetX.toFloat(), offsetY.toFloat(),
             (measuredWidth - offsetX).toFloat(), (measuredHeight - offsetY).toFloat()),

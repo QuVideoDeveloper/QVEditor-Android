@@ -25,9 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.TemplateHolder> {
 
   private IQEWorkSpace workSpace;
@@ -35,7 +32,7 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
 
   private int selectIndex = 0;
 
-  private OnClipAddListener onAddClipListener;
+  private OnClipClickListener onClipClickListener;
 
   private List<ClipData> mClipData = new ArrayList<>();
 
@@ -46,8 +43,10 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
   private int thumbnailSize = (int) DeviceSizeUtil.dpToPixel(60f);
   private int thumbRoundedCorners = (int) DeviceSizeUtil.dpToPixel(4);
 
-  public interface OnClipAddListener {
+  public interface OnClipClickListener {
     void onClipAdd();
+
+    void onFocusChange();
   }
 
   EditClipAdapter(IQEWorkSpace workSpace) {
@@ -79,8 +78,8 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
     thumbnailCache.clear();
   }
 
-  void setOnAddClipListener(OnClipAddListener listener) {
-    onAddClipListener = listener;
+  void setOnClipClickListener(OnClipClickListener listener) {
+    onClipClickListener = listener;
   }
 
   private void loadCacheBitmap(int position, final String clipKey) {
@@ -130,6 +129,9 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
       notifyItemChanged(oldIndex);
     }
     notifyItemChanged(selectIndex);
+    if (onClipClickListener != null) {
+      onClipClickListener.onFocusChange();
+    }
   }
 
   @Override public int getItemViewType(int position) {
@@ -183,8 +185,8 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
           }
           workSpace.getPlayerAPI().getPlayerControl().seek(time);
         }
-      } else if (onAddClipListener != null) {
-        onAddClipListener.onClipAdd();
+      } else if (onClipClickListener != null) {
+        onClipClickListener.onClipAdd();
       }
     });
   }

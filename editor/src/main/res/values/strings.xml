@@ -5,7 +5,7 @@
  Release: Working copy
  Locale: en-US, English (USA)
  Exported by: shijie xu
- Exported at: Tue, 15 Sep 2020 13:46:15 +0800
+ Exported at: Wed, 14 Oct 2020 18:57:31 +0800
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="gocut_purchase_Privacy">Privacy Policy</string>
@@ -76,6 +76,7 @@
     <string name="mn_edit_adjust_vignette">Vignette</string>
     <string name="mn_edit_alpha_change">Alpha</string>
     <string name="mn_edit_angel">Little Angel</string>
+    <string name="mn_edit_audio_direct">Audio Direct</string>
     <string name="mn_edit_back_home">Home</string>
     <string name="mn_edit_background_blur">Blur</string>
     <string name="mn_edit_background_color">Color</string>
@@ -91,8 +92,12 @@
     <string name="mn_edit_check_more">more</string>
     <string name="mn_edit_chroma_accuracy">Accurate</string>
     <string name="mn_edit_cinema">Cinema</string>
+    <string name="mn_edit_clip_img_anim">Image animation</string>
+    <string name="mn_edit_clip_img_duration">Image duration</string>
     <string name="mn_edit_clip_transform_fit_in">fit</string>
     <string name="mn_edit_clip_transform_fit_out">fill</string>
+    <string name="mn_edit_collage_motion">Tiles</string>
+    <string name="mn_edit_collage_top">Top</string>
     <string name="mn_edit_common_cancel">No</string>
     <string name="mn_edit_common_yes">Yes</string>
     <string name="mn_edit_create_video">create video</string>
@@ -105,6 +110,7 @@
     <string name="mn_edit_export_failed">Export failed</string>
     <string name="mn_edit_export_format">Format</string>
     <string name="mn_edit_export_fps">Fps</string>
+    <string name="mn_edit_export_h265">H265 First</string>
     <string name="mn_edit_export_hardware">Hardware</string>
     <string name="mn_edit_export_resolution">Resolution</string>
     <string name="mn_edit_export_soft_hard">Soft-Hardware</string>
@@ -186,6 +192,10 @@
     <string name="mn_edit_title_bgm_repeat">Repeat</string>
     <string name="mn_edit_title_change_voice">Voice</string>
     <string name="mn_edit_title_chroma">Chroma</string>
+    <string name="mn_edit_title_collage_motion_mirror_close">Mirror off</string>
+    <string name="mn_edit_title_collage_motion_mirror_open">Mirror on</string>
+    <string name="mn_edit_title_collage_motion_tile_close">Turn off</string>
+    <string name="mn_edit_title_collage_motion_tile_open">Turn on</string>
     <string name="mn_edit_title_collage_overlay">Blending</string>
     <string name="mn_edit_title_collages">Collages</string>
     <string name="mn_edit_title_crop">Crop</string>

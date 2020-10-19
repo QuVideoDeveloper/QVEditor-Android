@@ -2,9 +2,9 @@ package com.quvideo.application.editor.fake
 
 import android.graphics.PointF
 import android.view.MotionEvent
+import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
-import com.quvideo.mobile.engine.model.effect.EffectMaskInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
 
@@ -69,17 +69,18 @@ object FakePosUtils {
    * FakePosInfo转EffectMaskInfo
    */
   fun updateMaskPos2FakePos(
-    fakePosInfo: FakePosInfo?,
-    maskInfo: EffectMaskInfo?
-  ) {
-    if (fakePosInfo == null || maskInfo == null) {
-      return
+    fakePosInfo: FakePosInfo?
+  ): FakeMaskPosData? {
+    if (fakePosInfo == null) {
+      return null;
     }
+    val maskInfo = FakeMaskPosData()
     maskInfo.centerX = fakePosInfo.centerX
     maskInfo.centerY = fakePosInfo.centerY
     maskInfo.radiusX = fakePosInfo.width / 2
     maskInfo.radiusY = fakePosInfo.height / 2
     maskInfo.rotation = fakePosInfo.degrees
+    return maskInfo
   }
 
   /**

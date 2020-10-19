@@ -45,6 +45,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SlideShowActivity extends AppCompatActivity {
 
@@ -206,7 +207,7 @@ public class SlideShowActivity extends AppCompatActivity {
 
   private void initData() {
     if (mSlideWorkSpace != null) {
-      ArrayList<SlideInfo> slideInfos = mSlideWorkSpace.getSlideInfoList();
+      List<SlideInfo> slideInfos = mSlideWorkSpace.getSlideInfoList();
       if (adapter != null) {
         adapter.updateList(slideInfos);
       }

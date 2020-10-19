@@ -10,9 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.editor.R;
 import java.util.List;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class EffectPluginAttriAdapter extends RecyclerView.Adapter<EffectPluginAttriAdapter.Holder> {
 
   private List<PluginEditItem> mlist;

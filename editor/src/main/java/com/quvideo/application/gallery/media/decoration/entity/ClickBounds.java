@@ -3,7 +3,6 @@ package com.quvideo.application.gallery.media.decoration.entity;
 import android.view.View;
 
 /**
- * Created by Oubowu on 2016/7/27 23:52.
  * <p>点击范围实体类，用于点击标签时做点击判断</p>
  */
 public class ClickBounds {

@@ -1,7 +1,6 @@
 package com.quvideo.application.editor.sound;
 
 /**
- * Created by santa on 2020-04-17.
  */
 public class AudioTemplate {
 

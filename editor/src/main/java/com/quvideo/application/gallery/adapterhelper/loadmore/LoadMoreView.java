@@ -5,7 +5,6 @@ import androidx.annotation.LayoutRes;
 import com.quvideo.application.gallery.adapterhelper.BaseViewHolder;
 
 /**
- * Created by BlingBling on 2016/11/11.
  */
 
 public abstract class LoadMoreView {

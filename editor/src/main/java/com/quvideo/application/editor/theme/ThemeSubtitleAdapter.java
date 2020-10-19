@@ -12,9 +12,6 @@ import com.quvideo.mobile.engine.model.ThemeSubtitleEffect;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by santa on 2020-04-17.
- */
 public class ThemeSubtitleAdapter extends RecyclerView.Adapter<ThemeSubtitleAdapter.TemplateHolder> {
 
   private List<ThemeSubtitleEffect> mDataList = new ArrayList<>();
