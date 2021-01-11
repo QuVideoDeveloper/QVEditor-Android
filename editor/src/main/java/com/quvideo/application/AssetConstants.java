@@ -104,8 +104,6 @@ public class AssetConstants {
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028B.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000133.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000280.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000317.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000354.xyt");
     // multisubtitle
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000010000A.zip");
     mMultiSubtitleTemplateList.add("assets_android://quvideo/multititle/0x090000000010000B.zip");
