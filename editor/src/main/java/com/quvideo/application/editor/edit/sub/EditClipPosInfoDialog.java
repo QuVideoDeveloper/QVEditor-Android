@@ -68,7 +68,7 @@ public class EditClipPosInfoDialog extends BaseMenuView {
     mFakeApi.setClipTarget(new ClipPosDraw(), clipPosInfo, mWorkSpace.getStoryboardAPI().getStreamSize());
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-      @Override public void onEffectMoving() {
+      @Override public void onEffectMoving(float pointX, float pointY) {
         FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
         ClipPosInfo targetClipPosInfo = new ClipPosInfo();
         FakePosUtils.INSTANCE.updateClipPos2FakePos(curFakePos, targetClipPosInfo,

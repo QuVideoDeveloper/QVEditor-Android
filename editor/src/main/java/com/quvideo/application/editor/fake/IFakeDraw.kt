@@ -199,7 +199,7 @@ abstract class IFakeDraw {
       if (!newPoint.equals(fakePosInfo?.centerX!!, fakePosInfo?.centerY!!)) {
         fakePosInfo?.centerX = newPoint.x
         fakePosInfo?.centerY = newPoint.y
-        fakeViewListener?.onEffectMoving()
+        fakeViewListener?.onEffectMoving(firstNewX, firstNewY)
       }
     } else {
       val lastOldPoint: PointF = FakePosUtils.calcNewPoint(
@@ -229,7 +229,7 @@ abstract class IFakeDraw {
             fakePosInfo?.width = fakeLimitPos?.maxWidth!!
           }
         }
-        fakeViewListener?.onEffectMoving()
+        fakeViewListener?.onEffectMoving(firstNewX, firstNewY)
       }
     }
   }
@@ -276,7 +276,7 @@ abstract class IFakeDraw {
         }
       }
       if (isChanged) {
-        fakeViewListener?.onEffectMoving()
+        fakeViewListener?.onEffectMoving(event.getX(0), event.getY(0))
       }
     } else {
       mInitialDistance = FakePosUtils.distance(event)

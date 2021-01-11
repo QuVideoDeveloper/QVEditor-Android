@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <View
+    android:id="@+id/viewBg"
+    android:layout_width="0dp"
+    android:layout_height="239dp"
+    android:background="#101112"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <include
+    android:id="@+id/layout_bottom"
+    layout="@layout/view_edit_dialog_bottom"
+    android:layout_width="0dp"
+    android:layout_height="46dp"
+    app:layout_constraintBottom_toBottomOf="@+id/viewBg"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <TextView
+    android:id="@+id/btnRotation"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawableTop="@drawable/edit_icon_rotate_nor"
+    android:drawablePadding="4dp"
+    android:gravity="center"
+    android:text="@string/mn_edit_title_rotate"
+    android:textColor="@color/white"
+    android:layout_marginStart="20dp"
+    android:textSize="10sp"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintHorizontal_chainStyle="spread"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/btnFitOut"
+    app:layout_constraintTop_toTopOf="parent" />
+
+
+  <TextView
+    android:id="@+id/btnFitOut"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:drawableTop="@drawable/editor_tool_transform_fit_out"
+    android:drawablePadding="4dp"
+    android:gravity="center"
+    android:text="@string/mn_edit_clip_transform_fit_out"
+    android:textColor="@color/white"
+    android:textSize="10sp"
+    android:layout_marginEnd="20dp"
+    app:layout_constraintBottom_toTopOf="@+id/layout_bottom"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/btnRotation"
+    app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

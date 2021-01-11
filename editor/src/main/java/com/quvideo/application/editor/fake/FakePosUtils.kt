@@ -7,6 +7,7 @@ import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
+import xiaoying.engine.base.QTransformInfo
 
 object FakePosUtils {
 
@@ -108,6 +109,24 @@ object FakePosUtils {
     } else {
       return
     }
+  }
+
+  /**
+   * FakePosInfo转ClipPosInfo
+   */
+  fun updatePlayerPos2FakePos(
+    fakePosInfo: FakePosInfo?,
+    transformInfo: QTransformInfo?,
+    playerSize: VeMSize?
+  ) {
+    if (fakePosInfo == null || transformInfo == null || playerSize == null) {
+      return
+    }
+    transformInfo.mShiftX = fakePosInfo.centerX / playerSize.width.toFloat()
+    transformInfo.mShiftY = fakePosInfo.centerY / playerSize.height.toFloat()
+    transformInfo.mAngleZ = fakePosInfo.degrees
+    transformInfo.mScaleX = fakePosInfo.width / playerSize.width
+    transformInfo.mScaleY = transformInfo.mScaleX
   }
 
   /**

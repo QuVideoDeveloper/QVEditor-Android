@@ -5,7 +5,7 @@ import android.graphics.PointF
 interface IFakeViewListener {
 
   /** 移动中 */
-  fun onEffectMoving()
+  fun onEffectMoving(pointX: Float, pointY: Float)
 
   /** 开始移动 */
   fun onEffectMoveStart()

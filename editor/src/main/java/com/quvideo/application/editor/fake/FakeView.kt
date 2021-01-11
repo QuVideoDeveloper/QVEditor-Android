@@ -15,6 +15,7 @@ import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
+import xiaoying.engine.base.QTransformInfo
 
 /**
  * Effect手势View
@@ -33,15 +34,15 @@ class FakeView @JvmOverloads constructor(
   private var offsetX = 0
   private var offsetY = 0
 
-  private fun setTarget(iFakeDraw: IFakeDraw?, fakePosInfo: FakePosInfo?, fakeLimitPos: FakeLimitPos) {
+  private fun setTarget(iFakeDraw: IFakeDraw?, fakePosInfo: FakePosInfo?, fakeLimitPos: FakeLimitPos?) {
     this.iFakeDraw?.fakeViewListener = null
     this.iFakeDraw = iFakeDraw
     this.iFakeDraw?.fakePosInfo = fakePosInfo
     this.iFakeDraw?.fakeLimitPos = fakeLimitPos
     this.iFakeDraw?.fakeViewListener = object : IFakeViewListener {
-      override fun onEffectMoving() {
+      override fun onEffectMoving(pointX: Float, pointY: Float) {
         invalidate()
-        fakeViewListener?.onEffectMoving()
+        fakeViewListener?.onEffectMoving(pointX, pointY)
       }
 
       override fun onEffectMoveStart() {
@@ -228,7 +229,6 @@ class FakeView @JvmOverloads constructor(
     // 计算比例
     scaleWidth = fitInSize.width.toFloat() / size.width
     scaleHeight = fitInSize.height.toFloat() / size.height
-
   }
 
   override fun setFakeViewListener(listener: IFakeViewListener?) {

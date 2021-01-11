@@ -305,7 +305,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
       mFakeApi.setTarget(mPosDraw, effectPosInfo);
       mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-        @Override public void onEffectMoving() {
+        @Override public void onEffectMoving(float pointX, float pointY) {
           FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
           BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, index);
           EffectPosInfo targetPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;
@@ -713,7 +713,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
           break;
         case EffectBarItem.ACTION_COLLAGE_UP_TO_TOP:
           // 置顶
-          setEffectLayerToTop(index, ((FloatEffect) baseEffect).effectLayerId);
+          setEffectLayerToTop(index, baseEffect.effectLayerId);
           break;
         default:
           ToastUtils.show(EditorApp.Companion.getInstance().getApp(),

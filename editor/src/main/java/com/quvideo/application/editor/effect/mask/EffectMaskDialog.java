@@ -375,7 +375,7 @@ public class EffectMaskDialog extends BaseEffectMenuView {
     mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-      @Override public void onEffectMoving() {
+      @Override public void onEffectMoving(float pointX, float pointY) {
         updateFakeMove();
       }
 

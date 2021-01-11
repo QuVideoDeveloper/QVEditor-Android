@@ -192,7 +192,7 @@ public class EffectKeyFrameDialog extends BaseEffectMenuView {
     updatePosAndAlpha(curPlayerTime);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-      @Override public void onEffectMoving() {
+      @Override public void onEffectMoving(float pointX, float pointY) {
         FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
         BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
         int focusTs = mKeyFrameTimeline.getFocusTs();

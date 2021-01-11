@@ -122,7 +122,7 @@ public class EditClipCropDialog extends BaseMenuView {
     mFakeApi.setClipTarget(new ClipCropDraw(), cropRect);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-      @Override public void onEffectMoving() {
+      @Override public void onEffectMoving(float pointX, float pointY) {
         isChanged = true;
       }
 

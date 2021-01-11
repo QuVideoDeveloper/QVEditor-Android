@@ -21,8 +21,6 @@ import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleColor;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleFont;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPMultiSubtitleItalic;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleAnim;
-import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleBlod;
-import com.quvideo.mobile.engine.work.operate.effect.EffectOPSubtitleItalic;
 
 public class EffectSubtitleDialog extends BaseMenuView {
 
@@ -167,9 +165,7 @@ public class EffectSubtitleDialog extends BaseMenuView {
   private BaseObserver mBaseObserver = new BaseObserver() {
     @Override public void onChange(BaseOperate operate) {
       if (operate instanceof EffectOPMultiSubtitleItalic
-          || operate instanceof EffectOPMultiSubtitleBlod
-          || operate instanceof EffectOPSubtitleItalic
-          || operate instanceof EffectOPSubtitleBlod) {
+          || operate instanceof EffectOPMultiSubtitleBlod) {
         SubtitleEffect curEffect = (SubtitleEffect) mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
         mEffectSubtitleAdapter.updateDataList(curEffect.getTextBubbleInfo().mTextBubbleList);
         if (!mEffectSubtitleAdapter.getSelectItem().isBold) {
@@ -206,7 +202,8 @@ public class EffectSubtitleDialog extends BaseMenuView {
         } else {
           mBtnBlod.setText(R.string.mn_edit_subtitle_blod_on);
         }
-        EffectOPSubtitleBlod effectOPSubtitleBlod = new EffectOPSubtitleBlod(effectIndex, !textBubble.isBold);
+        EffectOPMultiSubtitleBlod effectOPSubtitleBlod = new EffectOPMultiSubtitleBlod(effectIndex,
+            mEffectSubtitleAdapter.getSelectIndex(), !textBubble.isBold);
         mWorkSpace.handleOperation(effectOPSubtitleBlod);
       } else if (v.equals(mBtnItalic)) {
         TextBubble textBubble = mEffectSubtitleAdapter.getSelectItem();
@@ -215,7 +212,8 @@ public class EffectSubtitleDialog extends BaseMenuView {
         } else {
           mBtnItalic.setText(R.string.mn_edit_subtitle_italic_on);
         }
-        EffectOPSubtitleItalic effectOPSubtitleItalic = new EffectOPSubtitleItalic(effectIndex, !textBubble.isItalic);
+        EffectOPMultiSubtitleItalic effectOPSubtitleItalic = new EffectOPMultiSubtitleItalic(effectIndex,
+            mEffectSubtitleAdapter.getSelectIndex(), !textBubble.isItalic);
         mWorkSpace.handleOperation(effectOPSubtitleItalic);
       } else if (v.equals(mBtnStroke)) {
         new EffectSubtitleStrokeDialog(getContext(), mMenuContainer, mWorkSpace, groupId, effectIndex,

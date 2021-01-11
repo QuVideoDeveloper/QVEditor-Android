@@ -70,7 +70,7 @@
 剪辑中使用的正常坐标系，统一使用视频流(stream)的坐标系，即视频流的左上角为（0, 0），右下角为（stream.width，stream.height）。角度水平向右为0度，顺时针为增大。
 
 
-<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="574" height="542" align="center">
+<img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_xyz.png" width="416" height="375" align="center">
 
 剪辑中使用的万分比坐标系，统一使用视频流转化为对应比例的坐标系，即视频流的左上角为（0, 0），右下角为（10000，10000）。
 即把stream映射到万分比左边中，10000级表示 stream.width或stream.height。
@@ -147,7 +147,7 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:1.4.5"
+    implementation "com.quvideo.mobile.external:sdk-engine:2.0.2"
 }
 ```
 

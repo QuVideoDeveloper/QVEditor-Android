@@ -41,6 +41,7 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     ClipFxFilter, // clip特效滤镜
     ClipMagicSound, // clip变声
     ClipCurveSpeed, // clip曲线变速
+    ClipSmear, // clip涂抹
     ClipSpeed, // clip变速
     ClipSplit, // clip分割
     ClipCrop, // clip裁剪
@@ -69,6 +70,7 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     EffectAxle, // effect选择轴
     EffectSubtitle, // effect字幕
     EffectKeyFrame, // effect关键帧
+    EffecrSmear, // effect涂抹
     CollageFilter, // 画中画滤镜
     CollageFx, // 画中画特效
     CollageFxAdd, // 画中画特效添加
@@ -78,10 +80,13 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     CollageCurveAdjust, // 画中画曲线调色
     CollageSpeed, // 画中画变速
     CollageMotion, // 画中画拼贴
+    CollageSmear, // 涂抹
     Audio, // 音频
     AudioRecord, // 音频录音
     AudioAdd, // 音频添加
     AudioSpeed, // 音频变速
     AudioDots, // 音频踩点显示
+    EffectEditPaint, // effect画笔
+    PlayerPosInfo, // player位置
   }
 }

@@ -6,6 +6,7 @@ import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
+import xiaoying.engine.base.QTransformInfo
 
 interface IFakeViewApi {
 
@@ -29,11 +30,11 @@ interface IFakeViewApi {
   fun getFakePosInfo(): FakePosInfo?
 
   /** 更新chroma时的画笔颜色 */
-  fun updateChromaColor(color :Int)
+  fun updateChromaColor(color: Int)
 
-  fun setOldAnchor(oldAnchor :PointF)
+  fun setOldAnchor(oldAnchor: PointF)
 
-  fun getOldAnchor() : PointF?
+  fun getOldAnchor(): PointF?
 
   /**
    * 设置video stream size

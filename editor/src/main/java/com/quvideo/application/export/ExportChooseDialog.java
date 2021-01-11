@@ -1,7 +1,11 @@
 package com.quvideo.application.export;
 
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +14,7 @@ import android.widget.RadioGroup;
 import com.quvideo.application.editor.R;
 import com.quvideo.mobile.engine.QEEngineClient;
 import com.quvideo.mobile.engine.model.export.ExportParams;
+import java.io.File;
 
 public class ExportChooseDialog extends Dialog implements View.OnClickListener {
 
@@ -130,34 +135,23 @@ public class ExportChooseDialog extends Dialog implements View.OnClickListener {
     if (v.equals(mBtnCancel)) {
       dismiss();
     } else if (v.equals(mBtnConfirm)) {
-
-      //ContentResolver resolver = getContext().getContentResolver();
-      //ContentValues values = new ContentValues();
-      //values.put(MediaStore.Downloads.DISPLAY_NAME, "ExportTest");
-      ////注意MediaStore.Downloads.RELATIVE_PATH需要targetVersion=29,
-      ////故该方法只可在Android10的手机上执行
-      //values.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
-      //Uri external = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
-      //Uri insertUri = resolver.insert(external, values);
-
       long systemTime = System.currentTimeMillis();
       String fileName = "Export_Video_Test_" + systemTime + fileExt;
       exportParams.outputPath = "/sdcard/Download/ExportTest/" + fileName;
       /**
        * 创建图片地址uri,用于保存拍照后的照片 Android 10以后使用这种方法
        */
-      // TODOCODE 用于兼容target29
-      //if (Build.VERSION.SDK_INT >= 29) {
-      //  ContentValues contentValues = new ContentValues();
-      //  contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
-      //  contentValues.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
-      //  contentValues.put(MediaStore.Downloads.TITLE, fileName);
-      //  contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
-      //  contentValues.put(MediaStore.Downloads.DATE_ADDED, systemTime / 1000);
-      //  contentValues.put(MediaStore.Downloads.DATE_MODIFIED, systemTime / 1000);
-      //  Uri path = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-      //  exportParams.outputPath = path.toString();
-      //}
+      if (Build.VERSION.SDK_INT >= 29) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+        contentValues.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+        contentValues.put(MediaStore.Downloads.TITLE, fileName);
+        contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+        contentValues.put(MediaStore.Downloads.DATE_ADDED, systemTime / 1000);
+        contentValues.put(MediaStore.Downloads.DATE_MODIFIED, systemTime / 1000);
+        Uri path = getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+        exportParams.outputPath = path.toString();
+      }
 
       dismiss();
       mOnDialogItemListener.onConfirmExport(exportParams);

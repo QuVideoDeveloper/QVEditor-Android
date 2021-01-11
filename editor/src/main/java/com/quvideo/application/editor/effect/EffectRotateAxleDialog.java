@@ -263,7 +263,7 @@ public class EffectRotateAxleDialog extends BaseEffectMenuView {
     mFakeApi.setTarget(mPosDraw, effectPosInfo);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-      @Override public void onEffectMoving() {
+      @Override public void onEffectMoving(float pointX, float pointY) {
         FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
         BaseEffect baseEffect = mWorkSpace.getEffectAPI().getEffect(groupId, effectIndex);
         EffectPosInfo targetPosInfo = ((FloatEffect) baseEffect).mEffectPosInfo;

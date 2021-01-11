@@ -185,7 +185,7 @@ public class EffectChromaDialog extends BaseEffectMenuView {
     mCustomSeekbarPop.setVisibility(View.INVISIBLE);
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
-      @Override public void onEffectMoving() {
+      @Override public void onEffectMoving(float pointX, float pointY) {
         if (mChromaColor == null) {
           return;
         }

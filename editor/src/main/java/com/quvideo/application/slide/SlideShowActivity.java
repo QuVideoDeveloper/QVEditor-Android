@@ -1,7 +1,12 @@
 package com.quvideo.application.slide;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,6 +49,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,19 +120,17 @@ public class SlideShowActivity extends AppCompatActivity {
 
                   @Override public void onNext(Boolean result) {
                     Bitmap bitmap = mSlideWorkSpace.getProjectThumbnail();
-                    // TODO 用于兼容target 29
-                    //if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
-                    FileUtils.saveBitmap(thumbnail, bitmap, 80);
-                    //} else {
-                    //  ContentValues contentValues = new ContentValues();
-                    //  contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
-                    //  contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
-                    //  contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
-                    //  contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
-                    //  Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-                    //  thumbnail = path.toString();
-                    //  FileUtils.saveBitmap(thumbnail, bitmap, 100);
-                    //}
+                    if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
+                      FileUtils.saveBitmap(thumbnail, bitmap, 80);
+                    } else {
+                      ContentValues contentValues = new ContentValues();
+                      contentValues.put(MediaStore.Downloads.DATE_TAKEN, 0);
+                      contentValues.put(MediaStore.Downloads.DISPLAY_NAME, FileUtils.getFileNameWithExt(thumbnail));
+                      contentValues.put(MediaStore.Downloads.TITLE, FileUtils.getFileNameWithExt(thumbnail));
+                      contentValues.put(MediaStore.Downloads.RELATIVE_PATH, "Download" + File.separator + "ExportTest");
+                      Uri path = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                      FileUtils.saveBitmap(path.toString(), bitmap, 100);
+                    }
                     if (bitmap != null) {
                       bitmap.recycle();
                     }
