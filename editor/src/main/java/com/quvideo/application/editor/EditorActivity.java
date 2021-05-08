@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,12 +32,14 @@ import com.quvideo.application.EditorConst;
 import com.quvideo.application.camera.CameraActivity;
 import com.quvideo.application.camera.recorder.RecorderClipInfo;
 import com.quvideo.application.db.DraftInfoDao;
+import com.quvideo.application.dialog.LoadingDialog;
 import com.quvideo.application.draft.DraftModel;
 import com.quvideo.application.editor.base.BaseMenuLayer;
 import com.quvideo.application.editor.base.ItemOnClickListener;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.edit.EditEditDialog;
 import com.quvideo.application.editor.effect.EditEffectDialog;
+import com.quvideo.application.editor.effect.ElementDialog;
 import com.quvideo.application.editor.fake.FakeView;
 import com.quvideo.application.editor.sound.EditSoundMainDialog;
 import com.quvideo.application.editor.theme.EditThemeDialog;
@@ -63,6 +66,7 @@ import com.quvideo.mobile.engine.model.effect.EffectAddItem;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
 import com.quvideo.mobile.engine.model.export.ExportParams;
 import com.quvideo.mobile.engine.player.EditorPlayerView;
+import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
 import com.quvideo.mobile.engine.project.QEStoryBoardResult;
 import com.quvideo.mobile.engine.project.QEWorkSpaceListener;
@@ -111,12 +115,16 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
   private boolean isAddWaterMarkAfterInit = false;
 
+  private LoadingDialog mLoadingDialog;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_edit);
     initView();
     String draftUrl = getIntent().getStringExtra(EditorConst.INTENT_EXT_KEY_DRAFT);
+    mLoadingDialog = new LoadingDialog();
+    mLoadingDialog.showDownloading(this);
     if (!TextUtils.isEmpty(draftUrl)) {
       QEEngineClient.loadProject(draftUrl, new QEWorkSpaceListener() {
         @Override public void onSuccess(IQEWorkSpace qeWorkSpace) {
@@ -124,6 +132,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
           isAddWaterMarkAfterInit = true;
           mWorkSpace = qeWorkSpace;
           mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
+          mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
           mWorkSpace.addObserver(mProjectObserver);
           if (mPlayerControllerView != null) {
             mPlayerControllerView.setPlayerAPI(mWorkSpace.getPlayerAPI());
@@ -131,6 +140,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         }
 
         @Override public void onError(QEStoryBoardResult error) {
+          if (mLoadingDialog != null) {
+            mLoadingDialog.dismissLoading();
+          }
           ToastUtils.show(EditorActivity.this, "Load Project fail", Toast.LENGTH_LONG);
           EditorActivity.this.finish();
         }
@@ -146,6 +158,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
             // 它来自Camera
             mWorkSpace = qeWorkSpace;
             mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
+            mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
             List<ClipAddItem> list = new ArrayList<>();
             for (RecorderClipInfo clipInfo : recorderClipInfos) {
               int length = clipInfo.getRecorderPos()[1] - clipInfo.getRecorderPos()[0];
@@ -163,6 +176,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
             // 它来自相册
             mWorkSpace = qeWorkSpace;
             mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, 0);
+            mWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
             List<ClipAddItem> list = new ArrayList<>();
             for (String path : albumChoose) {
               ClipAddItem item = new ClipAddItem();
@@ -172,6 +186,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
             ClipOPAdd clipOPAdd = new ClipOPAdd(0, list);
             mWorkSpace.handleOperation(clipOPAdd);
           } else {
+            if (mLoadingDialog != null) {
+              mLoadingDialog.dismissLoading();
+            }
             ToastUtils.show(EditorActivity.this, "No Video or Pic selected", Toast.LENGTH_LONG);
             EditorActivity.this.finish();
             return;
@@ -190,6 +207,9 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
         }
 
         @Override public void onError(QEStoryBoardResult error) {
+          if (mLoadingDialog != null) {
+            mLoadingDialog.dismissLoading();
+          }
           ToastUtils.show(EditorActivity.this, "Create Project fail", Toast.LENGTH_LONG);
           EditorActivity.this.finish();
         }
@@ -257,6 +277,23 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     });
   }
 
+  private QEPlayerListener mPlayerListener = new QEPlayerListener() {
+    @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
+      if (playerStatus == PlayerStatus.STATUS_READY) {
+        if (mLoadingDialog != null) {
+          mLoadingDialog.dismissLoading();
+          mLoadingDialog = null;
+        }
+      }
+    }
+
+    @Override public void onPlayerRefresh() {
+    }
+
+    @Override public void onSizeChanged(Rect resultRect) {
+    }
+  };
+
   private void initView() {
     rlTitle = findViewById(R.id.title_layout);
     btnBack = findViewById(R.id.btn_back);
@@ -284,21 +321,14 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
 
     mEditOperates = new ArrayList<EditOperate>() {{
       add(new EditOperate(R.drawable.edit_icon_crop_n, getString(R.string.mn_edit_title_edit)));
-      add(new EditOperate(R.drawable.edit_icon_sticker_nor,
-          getString(R.string.mn_edit_title_sticker)));
+      add(new EditOperate(R.drawable.edit_icon_sticker_nor, getString(R.string.mn_edit_title_effect)));
       add(new EditOperate(R.drawable.edit_icon_effect_nor, getString(R.string.mn_edit_title_fx)));
-      add(new EditOperate(R.drawable.edit_icon_midpic_nor,
-          getString(R.string.mn_edit_title_collages)));
-      add(new EditOperate(R.drawable.edit_icon_watermark_nor,
-          getString(R.string.mn_edit_title_watermark)));
-      add(new EditOperate(R.drawable.edit_icon_mosaic_nor,
-          getString(R.string.mn_edit_title_mosaic)));
-      add(new EditOperate(R.drawable.edit_icon_text_nor,
-          getString(R.string.mn_edit_title_subtitle)));
-      add(new EditOperate(R.drawable.edit_icon_theme_nor, getString(R.string.mn_edit_title_theme)));
       add(new EditOperate(R.drawable.edit_icon_music_nor, getString(R.string.mn_edit_title_music)));
+      add(new EditOperate(R.drawable.edit_icon_watermark_nor, getString(R.string.mn_edit_title_watermark)));
+      add(new EditOperate(R.drawable.edit_icon_theme_nor, getString(R.string.mn_edit_title_theme)));
       add(new EditOperate(R.drawable.edit_icon_pic_nor, getString(R.string.mn_edit_title_ratio)));
     }};
+    SuperEditManager.addAdvancedFunc(this, mEditOperates);
 
     mRecyclerView = findViewById(R.id.edit_enter_recyclerview);
     mRecyclerView.setLayoutManager(new GridLayoutManager(this, 5));
@@ -310,34 +340,25 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     if (mWorkSpace == null || mWorkSpace.getPlayerAPI() == null || !mWorkSpace.getPlayerAPI().isPlayerReady()) {
       return;
     }
+    if (SuperEditManager.clickAdvancedFunc(this, operate, mMenuLayout, mWorkSpace, mFakeView)) {
+      return;
+    }
     if (operate.getResId() == R.drawable.edit_icon_crop_n) {
       new EditEditDialog(this, mMenuLayout, mWorkSpace, this, mCropImageView, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_sticker_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER,
-          mFakeView);
+      new ElementDialog(this, mMenuLayout, mWorkSpace, mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_effect_nor) {
       new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_STICKER_FX, mFakeView);
-    } else if (operate.getResId() == R.drawable.edit_icon_midpic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_COLLAGES,
-          mFakeView);
-    } else if (operate.getResId() == R.drawable.edit_icon_watermark_nor) {// 水印
+    } else if (operate.getResId() == R.drawable.edit_icon_watermark_nor) { // 水印
       if (mWorkSpace.getEffectAPI().getEffect(QEGroupConst.GROUP_ID_WATERMARK, 0)
           != null) {
         EffectOPDel effectOPDel = new EffectOPDel(QEGroupConst.GROUP_ID_WATERMARK, 0);
         mWorkSpace.handleOperation(effectOPDel);
       } else {
-        if (!SuperEditManager.isHadSuperEdit()) {
-          addWaterMarkWithRes(AssetConstants.WATERMARK_LOG_PATH);
-        } else {
-          choosePhoto4WaterMark();
-        }
+        addWaterMarkWithRes(AssetConstants.WATERMARK_LOG_PATH);
+        // 自定义水印
+        //choosePhoto4WaterMark();
       }
-    } else if (operate.getResId() == R.drawable.edit_icon_mosaic_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_MOSAIC,
-          mFakeView);
-    } else if (operate.getResId() == R.drawable.edit_icon_text_nor) {
-      new EditEffectDialog(this, mMenuLayout, mWorkSpace, QEGroupConst.GROUP_ID_SUBTITLE,
-          mFakeView);
     } else if (operate.getResId() == R.drawable.edit_icon_theme_nor) {
       new EditThemeDialog(this, mMenuLayout, mWorkSpace, this);
     } else if (operate.getResId() == R.drawable.edit_icon_music_nor) {
@@ -350,7 +371,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
   }
 
   /**
-   * 替换数据源
+   * 替换自定义水印
    */
   public void choosePhoto4WaterMark() {
     //update settings
@@ -429,9 +450,7 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     @Override public void onChange(BaseOperate operate) {
       if (operate instanceof ClipOPAdd) {
         if (!isAddWaterMarkAfterInit) {
-          if (!SuperEditManager.isHadSuperEdit()) {
-            addWaterMarkWithRes(AssetConstants.WATERMARK_LOG_PATH);
-          }
+          addWaterMarkWithRes(AssetConstants.WATERMARK_LOG_PATH);
           isAddWaterMarkAfterInit = true;
         }
       }
@@ -494,12 +513,13 @@ public class EditorActivity extends AppCompatActivity implements ItemOnClickList
     super.onDestroy();
     // TODO 释放掉播放器和workspace的绑定
     if (mWorkSpace != null) {
-      mWorkSpace.destory();
+      mWorkSpace.destory(true);
       mWorkSpace = null;
     }
     if (editorPlayerView != null) {
       editorPlayerView = null;
     }
+    GalleryClient.getInstance().destory();
   }
 
   @Override

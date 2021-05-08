@@ -6,6 +6,7 @@ import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
+import com.quvideo.mobile.engine.slide.SlidePosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
 import xiaoying.engine.base.QTransformInfo
 
@@ -82,6 +83,40 @@ object FakePosUtils {
     maskInfo.radiusY = fakePosInfo.height / 2
     maskInfo.rotation = fakePosInfo.degrees
     return maskInfo
+  }
+
+  /**
+   * FakePosInfo转SlidePosInfo
+   */
+  fun updateSlidePosByFakePos(
+    fakePosInfo: FakePosInfo?,
+    slidePosInfo: SlidePosInfo?
+  ) {
+    if (fakePosInfo == null || slidePosInfo == null) {
+      return
+    }
+    slidePosInfo.centerX = fakePosInfo.centerX
+    slidePosInfo.centerY = fakePosInfo.centerY
+    slidePosInfo.width = fakePosInfo.width
+    slidePosInfo.height = fakePosInfo.height
+    slidePosInfo.mAngle = calcSlideRotation(fakePosInfo.degrees.toInt())
+  }
+
+  /**
+   * 确保角度在0~360
+   */
+  private fun calcSlideRotation(rotation: Int): Int {
+    var rotation = rotation
+    while (true) {
+      if (rotation > 360) {
+        rotation -= 360
+      } else if (rotation < 0) {
+        rotation += 360
+      } else {
+        break
+      }
+    }
+    return rotation
   }
 
   /**

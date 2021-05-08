@@ -10,6 +10,8 @@ public class DateUtils {
 
   public static final String FORMAT_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
+  public static final String FORMAT_MM_DD_HH_MM = "MM-dd HH:mm";
+
   /**
    * 按照指定格式获得时间字符串
    */
@@ -22,6 +24,13 @@ public class DateUtils {
    */
   public static String formatFullDate(long date) {
     return formatDateCustom(new Date(date), DateUtils.FORMAT_YYYY_MM_DD_HH_MM_SS);
+  }
+
+  /**
+   * 按照"MM-dd hh:mm"格式格式化时间
+   */
+  public static String formatMDHMDate(long date) {
+    return formatDateCustom(new Date(date), DateUtils.FORMAT_MM_DD_HH_MM);
   }
 
   // duration in million second

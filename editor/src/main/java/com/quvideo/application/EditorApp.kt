@@ -9,6 +9,7 @@ import com.quvideo.application.db.DraftDBHelper
 import com.quvideo.application.glidedecoder.EffectThumbParams
 import com.quvideo.application.glidedecoder.XytModelLoaderFactory
 import com.quvideo.application.sp.DemoSharedPref
+import com.quvideo.application.superedit.SuperEditManager
 import com.quvideo.application.utils.FileUtils
 import com.quvideo.mobile.component.template.XytInstallListener
 import com.quvideo.mobile.component.template.XytManager
@@ -35,6 +36,7 @@ class EditorApp private constructor() {
 
     DraftDBHelper.setAppContext(app)
     QEEngineClient.init(app, Builder(licensePath).build())
+    SuperEditManager.initAIComponent(app)
     val lastCersionCode = DemoSharedPref.getInstance()
         .lastVersionCode
     val currentVersion: Long = getVersionCode(app)
@@ -66,9 +68,9 @@ class EditorApp private constructor() {
           zipPaths.add(zipPath)
         }
       }
-//      for (zipPath in zipPaths) {
-        XytManager.install(zipPaths, null)
-//      }
+      //      for (zipPath in zipPaths) {
+      XytManager.install(zipPaths, null)
+      //      }
       DemoSharedPref.getInstance().saveLastVersion(currentVersion)
     }
     // 使用Glide加载素材缩略图

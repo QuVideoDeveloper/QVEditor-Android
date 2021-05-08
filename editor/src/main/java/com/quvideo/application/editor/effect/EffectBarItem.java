@@ -32,13 +32,31 @@ public class EffectBarItem {
   public static final int ACTION_COLLAGE_TIMESCALE = 28;
   public static final int ACTION_COLLAGE_RESERVE = 29;
   public static final int ACTION_COLLAGE_UP_TO_TOP = 30;
+  public static final int ACTION_SUBTITLE_PENETRATE_HUMAN = 31;
 
   // 暂不对外的操作
   public static final int ACTION_BGM_DOT = 101;
   // 音频变速
   public static final int ACTION_AUDIO_SPEED = 102;
   // 画面拼贴
-  public static final int ACTION_COLLAGE_MOTION= 103;
+  public static final int ACTION_COLLAGE_MOTION = 103;
+  // 涂抹抠像
+  public static final int ACTION_SMEAR = 106;
+  // 播放器缩放
+  public static final int ACTION_PLAYER_SCALE = 107;
+  // 字幕动画
+  public static final int ACTION_SUBTITLE_ANIM = 108;
+  // 保存至xml
+  public static final int ACTION_SAVE_XML = 110;
+  // 导入xml
+  public static final int ACTION_ADD_XML = 111;
+
+  // 编辑组管理
+  public static final int ACTION_EFFECT_GROUP_MANAGER = 121;
+  // 编辑组解散
+  public static final int ACTION_EFFECT_GROUP_DISSOLVE = 122;
+  // 编辑组位置
+  public static final int ACTION_EFFECT_GROUP_LOCATION = 123;
 
   private int action;
   private int resId;

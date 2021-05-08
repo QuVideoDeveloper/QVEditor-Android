@@ -23,16 +23,17 @@ public class CollageAdjustDialog extends BaseMenuView {
   private int effectIndex = 0;
 
   private static final int[] ADJUST_ITEM_TITLE_RES = new int[] {
-      R.string.mn_edit_adjust_luminance,
+      R.string.mn_edit_adjust_brightness,
       R.string.mn_edit_adjust_contrast,
-      R.string.mn_edit_adjust_saturation,
       R.string.mn_edit_adjust_sharpness,
-      R.string.mn_edit_adjust_colortemp,
+      R.string.mn_edit_adjust_saturation,
+      R.string.mn_edit_adjust_temperature,
       R.string.mn_edit_adjust_vignette,
       R.string.mn_edit_adjust_shadow,
+      R.string.mn_edit_adjust_fade,
       R.string.mn_edit_adjust_hue,
       R.string.mn_edit_adjust_highlight,
-      R.string.mn_edit_adjust_fade,
+      R.string.mn_edit_adjust_noise,
   };
 
   public CollageAdjustDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
@@ -117,36 +118,39 @@ public class CollageAdjustDialog extends BaseMenuView {
       if (paramAdjust == null) {
         paramAdjust = new ParamAdjust();
       }
-      if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_luminance) {
-        int luminance = paramAdjust.luminance;
-        holder.seekBarController.setSeekBarProgress(luminance);
+      if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_brightness) {
+        int brightness = paramAdjust.brightness;
+        holder.seekBarController.setSeekBarProgress(brightness);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_contrast) {
         int contrast = paramAdjust.contrast;
         holder.seekBarController.setSeekBarProgress(contrast);
-      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_saturation) {
-        int saturation = paramAdjust.saturation;
-        holder.seekBarController.setSeekBarProgress(saturation);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_sharpness) {
         int sharpness = paramAdjust.sharpness;
         holder.seekBarController.setSeekBarProgress(sharpness);
-      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_colortemp) {
-        int colourTemp = paramAdjust.colourTemp;
-        holder.seekBarController.setSeekBarProgress(colourTemp);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_saturation) {
+        int saturation = paramAdjust.saturation;
+        holder.seekBarController.setSeekBarProgress(saturation);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_temperature) {
+        int temperature = paramAdjust.temperature;
+        holder.seekBarController.setSeekBarProgress(temperature);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_vignette) {
         int vignette = paramAdjust.vignette;
         holder.seekBarController.setSeekBarProgress(vignette);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_shadow) {
         int shadow = paramAdjust.shadow;
         holder.seekBarController.setSeekBarProgress(shadow);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_fade) {
+        int fade = paramAdjust.fade;
+        holder.seekBarController.setSeekBarProgress(fade);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_hue) {
         int hue = paramAdjust.hue;
         holder.seekBarController.setSeekBarProgress(hue);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_highlight) {
         int highlight = paramAdjust.highlight;
         holder.seekBarController.setSeekBarProgress(highlight);
-      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_fade) {
-        int fade = paramAdjust.fade;
-        holder.seekBarController.setSeekBarProgress(fade);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_noise) {
+        int noise = paramAdjust.noise;
+        holder.seekBarController.setSeekBarProgress(noise);
       }
     }
 
@@ -156,26 +160,28 @@ public class CollageAdjustDialog extends BaseMenuView {
       if (paramAdjust == null) {
         paramAdjust = new ParamAdjust();
       }
-      if (titleRes == R.string.mn_edit_adjust_luminance) {
-        paramAdjust.luminance = value;
+      if (titleRes == R.string.mn_edit_adjust_brightness) {
+        paramAdjust.brightness = value;
       } else if (titleRes == R.string.mn_edit_adjust_contrast) {
         paramAdjust.contrast = value;
-      } else if (titleRes == R.string.mn_edit_adjust_saturation) {
-        paramAdjust.saturation = value;
       } else if (titleRes == R.string.mn_edit_adjust_sharpness) {
         paramAdjust.sharpness = value;
-      } else if (titleRes == R.string.mn_edit_adjust_colortemp) {
-        paramAdjust.colourTemp = value;
+      } else if (titleRes == R.string.mn_edit_adjust_saturation) {
+        paramAdjust.saturation = value;
+      } else if (titleRes == R.string.mn_edit_adjust_temperature) {
+        paramAdjust.temperature = value;
       } else if (titleRes == R.string.mn_edit_adjust_vignette) {
         paramAdjust.vignette = value;
       } else if (titleRes == R.string.mn_edit_adjust_shadow) {
         paramAdjust.shadow = value;
+      } else if (titleRes == R.string.mn_edit_adjust_fade) {
+        paramAdjust.fade = value;
       } else if (titleRes == R.string.mn_edit_adjust_hue) {
         paramAdjust.hue = value;
       } else if (titleRes == R.string.mn_edit_adjust_highlight) {
         paramAdjust.highlight = value;
-      } else if (titleRes == R.string.mn_edit_adjust_fade) {
-        paramAdjust.fade = value;
+      } else if (titleRes == R.string.mn_edit_adjust_noise) {
+        paramAdjust.noise = value;
       }
       EffectOPParamAdjust effectOPParamAdjust = new EffectOPParamAdjust(groupId, effectIndex, paramAdjust);
       mWorkSpace.handleOperation(effectOPParamAdjust);

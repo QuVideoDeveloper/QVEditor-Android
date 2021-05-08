@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.quvideo.application.camera.CameraActivity;
 import com.quvideo.application.draft.DraftActivity;
 import com.quvideo.application.editor.EditorActivity;
+import com.quvideo.application.frame.CaptureProcessorActivity;
 import com.quvideo.application.gallery.GalleryClient;
 import com.quvideo.application.gallery.GallerySettings;
 import com.quvideo.application.gallery.model.GalleryDef;
@@ -21,6 +22,7 @@ import com.quvideo.application.permission.PermissionHelper;
 import com.quvideo.application.permission.PermissionProxyActivity;
 import com.quvideo.application.slide.SlideTemplateDialog;
 import com.quvideo.application.template.SimpleTemplate;
+import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import java.util.ArrayList;
@@ -58,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
   public void gotoDraft(View view) {
     Intent intent = new Intent(this, DraftActivity.class);
+    startActivity(intent);
+  }
+
+  public void gotoFrame(View view) {
+    Intent intent = new Intent(this, CaptureProcessorActivity.class);
     startActivity(intent);
   }
 
@@ -115,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         PermissionHelper.startPermissionProxyActivity(this, deniedPermissions,
             PermissionProxyActivity.MODE_RATIONALE, new PermissionProxyActivity.PermissionListener() {
               @Override public void onPermissionGrant() {
-                Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT);
               }
 
               @Override public void onPermissionDenied(List<String> deniedList) {

@@ -14,6 +14,7 @@ import com.quvideo.application.editor.fake.draw.PosDraw
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
+import com.quvideo.mobile.engine.slide.SlidePosInfo
 import com.quvideo.mobile.engine.utils.QESizeUtil
 import xiaoying.engine.base.QTransformInfo
 
@@ -77,6 +78,25 @@ class FakeView @JvmOverloads constructor(
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
+  override fun setSlideClipTarget(iFakeDraw: IFakeDraw?, slidePosInfo: SlidePosInfo?, size: VeMSize) {
+    val fakeLimitPos = FakeLimitPos(RectF(offsetX.toFloat(), offsetY.toFloat(),
+        (measuredWidth - offsetX).toFloat(), (measuredHeight - offsetY).toFloat()),
+        0F,
+        ((measuredWidth - 2 * offsetX) * 2).toFloat(),
+        ((measuredHeight - 2 * offsetY) * 2).toFloat())
+    if (slidePosInfo == null) {
+      this.setTarget(iFakeDraw, null, fakeLimitPos)
+      return
+    }
+    var fakePosInfo = FakePosInfo(
+        slidePosInfo.centerX * scaleWidth + offsetX,
+        slidePosInfo.centerY * scaleHeight + offsetY,
+        slidePosInfo.width * scaleWidth,
+        slidePosInfo.height * scaleHeight,
+        slidePosInfo.mAngle.toFloat(), 0f, 0f)
+    this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
+  }
+
   override fun setClipTarget(iFakeDraw: IFakeDraw?, clipPosInfo: ClipPosInfo?, size: VeMSize) {
     val fakeLimitPos = FakeLimitPos(RectF(offsetX.toFloat() - (measuredWidth - 2 * offsetY),
         offsetY.toFloat() - (measuredHeight - 2 * offsetY),
@@ -95,6 +115,40 @@ class FakeView @JvmOverloads constructor(
         clipPosInfo.widthScale * size.width * scaleWidth,
         clipPosInfo.heightScale * size.height * scaleHeight,
         clipPosInfo.degree, 0F, 0F)
+    this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
+  }
+
+  override fun setPlayerTarget(iFakeDraw: IFakeDraw?, transform: QTransformInfo, size: VeMSize) {
+    val fakeLimitPos = FakeLimitPos(RectF(-50F * measuredWidth,
+        -50F * measuredHeight,
+        50F * measuredWidth,
+        50F * measuredHeight),
+        0F,
+        ((measuredWidth - 2 * offsetX) * 50).toFloat(),
+        ((measuredHeight - 2 * offsetY) * 50).toFloat())
+    var fakePosInfo = FakePosInfo(
+        transform.mShiftX * size.width * scaleWidth + offsetX,
+        transform.mShiftY * size.height * scaleHeight + offsetY,
+        transform.mScaleX * size.width * scaleWidth,
+        transform.mScaleY * size.height * scaleHeight,
+        transform.mAngleZ, 0F, 0F)
+    this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
+  }
+
+  override fun setPaintTarget(iFakeDraw: IFakeDraw?, size: VeMSize) {
+    val fakeLimitPos = FakeLimitPos(RectF(-Float.MAX_VALUE,
+        -Float.MAX_VALUE,
+        Float.MAX_VALUE,
+        Float.MAX_VALUE),
+        0F,
+        Float.MAX_VALUE,
+        Float.MAX_VALUE)
+    var fakePosInfo = FakePosInfo(
+        size.width / 2F,
+        size.height / 2F,
+        size.width.toFloat(),
+        size.height.toFloat(),
+        0F, 0F, 0F)
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -229,6 +283,12 @@ class FakeView @JvmOverloads constructor(
     // 计算比例
     scaleWidth = fitInSize.width.toFloat() / size.width
     scaleHeight = fitInSize.height.toFloat() / size.height
+  }
+
+  override fun trans2StreamPoint(pointX: Float, pointY: Float): PointF {
+    val resultX = (pointX - offsetX) / scaleWidth;
+    val resultY = (pointY - offsetY) / scaleHeight;
+    return PointF(resultX, resultY)
   }
 
   override fun setFakeViewListener(listener: IFakeViewListener?) {

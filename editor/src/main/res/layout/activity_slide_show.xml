@@ -91,4 +91,11 @@
       android:layout_above="@id/edit_enter_play_controller"
       />
 
+  <com.quvideo.application.editor.fake.FakeView
+      android:id="@+id/editor_fake_layer"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/edit_enter_play_controller"
+      android:layout_below="@+id/title_layout" />
+
 </RelativeLayout>

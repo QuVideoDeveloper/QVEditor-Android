@@ -4,6 +4,7 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.edit.EditFilterTemplate;
 import com.quvideo.application.editor.sound.AudioTemplate;
 import com.quvideo.application.slide.SlideTemplate;
+import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import com.quvideo.mobile.engine.QEXytUtil;
@@ -35,6 +36,8 @@ public class AssetConstants {
   public static ArrayList<String> mSubtitleTemplateList = new ArrayList<>();
   // 组合字幕
   public static ArrayList<String> mMultiSubtitleTemplateList = new ArrayList<>();
+  // 字幕动画
+  public static ArrayList<String> mSubtitleAnimTemplateList = new ArrayList<>();
   // 马赛克
   public static ArrayList<String> mMosaicTemplateList = new ArrayList<>();
   // 效果插件
@@ -98,8 +101,6 @@ public class AssetConstants {
     mStickerTemplateList.add("assets_android://quvideo/sticker/0x0500000000000484.xyt");
     // subtitle
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000000.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B3.xyt");
-    mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x09000000000000B4.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028A.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x090000000000028B.xyt");
     mSubtitleTemplateList.add("assets_android://quvideo/subtitle/0x0900000000000133.xyt");
@@ -138,14 +139,17 @@ public class AssetConstants {
     mScanTemplateList.addAll(mFxFilterTemplateList);
     mScanTemplateList.addAll(mTransTemplateList);
     mScanTemplateList.addAll(mSubtitleTemplateList);
+    mScanTemplateList.addAll(mSubtitleAnimTemplateList);
     mScanTemplateList.addAll(mStickerTemplateList);
     mScanTemplateList.addAll(mMosaicTemplateList);
     mScanTemplateList.addAll(mOverlayTemplateList);
+    mScanTemplateList.addAll(SuperEditManager.mSuperXytList);
 
     mScanZipTemplateList.addAll(mPluginTemplateList);
     mScanZipTemplateList.addAll(mSlideTemplateList);
     mScanZipTemplateList.addAll(mThemeTemplateList);
     mScanZipTemplateList.addAll(mMultiSubtitleTemplateList);
+    mScanZipTemplateList.addAll(SuperEditManager.mSuperZipList);
   }
 
   public static final long[] TEST_CAM_FILTER_TID = new long[] {
@@ -178,7 +182,7 @@ public class AssetConstants {
       new AudioTemplate(StorageUtils.getTemplatePath(EditorApp.Companion.getInstance().getApp()) + "quvideo/music/music_3.mp3",
           "Music3", R.drawable.music_3),
       new AudioTemplate(null,
-          EditorApp.Companion.getInstance().app.getString(R.string.mn_edit_audio_direct), R.drawable.gallery_folder_entrance_icon1)
+          EditorApp.Companion.getInstance().app.getString(R.string.mn_edit_audio_direct), R.drawable.editor_icon_tool_music_direct)
   };
 
   public static final String[] TEST_FONT_TID = new String[] {
@@ -270,6 +274,14 @@ public class AssetConstants {
         return xytInfo.ttidHexStr.contains("0x03");
       case Subtitle:
         return xytInfo.ttidHexStr.contains("0x09");
+      case SubtitleAnimIn:
+        return xytInfo.ttidHexStr.contains("0x16")
+            && !xytInfo.ttidHexStr.contains("0x160000000008")
+            && !xytInfo.ttidHexStr.contains("0x16000000001");
+      case SubtitleAnimOut:
+        return xytInfo.ttidHexStr.contains("0x160000000008");
+      case SubtitleAnimLoop:
+        return xytInfo.ttidHexStr.contains("0x16000000001");
       case Fx:
       case SubFx:
         return xytInfo.ttidHexStr.contains("0x06");
@@ -284,6 +296,9 @@ public class AssetConstants {
     Transition,
     Sticker,
     Subtitle,
+    SubtitleAnimIn,
+    SubtitleAnimOut,
+    SubtitleAnimLoop,
     Fx,
     SubFx,
     FxPlugin,

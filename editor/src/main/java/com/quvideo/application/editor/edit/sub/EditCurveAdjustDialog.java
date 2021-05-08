@@ -4,13 +4,16 @@ import android.content.Context;
 import android.os.Looper;
 import android.os.MessageQueue;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
+import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.application.widget.curve.CurveData;
 import com.quvideo.application.widget.curve.SpecialCurveLineView;
 import com.quvideo.mobile.engine.entity.VeRange;
+import com.quvideo.mobile.engine.entity.XmlType;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.ColorCurveInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -76,6 +79,21 @@ public class EditCurveAdjustDialog extends BaseMenuView {
       @Override public boolean queueIdle() {
         initData();
         return false;
+      }
+    });
+    ImageView ivSaveXml = view.findViewById(R.id.ivSaveXml);
+    ivSaveXml.setVisibility(SuperEditManager.isHadSuperEdit() ? VISIBLE : GONE);
+    ivSaveXml.setOnClickListener(new OnClickListener() {
+      @Override public void onClick(View v) {
+        SuperEditManager.saveCurveColor2Xml(getContext(), mWorkSpace, clipIndex);
+      }
+    });
+    ImageView ivAddXml = view.findViewById(R.id.ivAddXml);
+    ivAddXml.setVisibility(SuperEditManager.isHadSuperEdit() ? VISIBLE : GONE);
+    ivAddXml.setOnClickListener(new OnClickListener() {
+      @Override public void onClick(View v) {
+        SuperEditManager.gotoAddXml(getContext(), mMenuContainer, mWorkSpace, XmlType.TYPE_CURVE_ADJUST, clipIndex);
+        dismissMenu();
       }
     });
   }

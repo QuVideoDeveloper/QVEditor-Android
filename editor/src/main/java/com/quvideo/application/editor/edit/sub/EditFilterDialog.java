@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.base.SimpleTemplateAdapter;
 import com.quvideo.application.editor.edit.EditFilterTemplate;
+import com.quvideo.application.superedit.SuperEditManager;
 import com.quvideo.application.superedit.ZXingManager;
 import com.quvideo.application.template.SimpleTemplate;
 import com.quvideo.application.utils.ToastUtils;
@@ -29,12 +31,11 @@ import com.quvideo.application.widget.seekbar.DoubleSeekbar;
 import com.quvideo.mobile.component.template.XytManager;
 import com.quvideo.mobile.component.template.model.XytInfo;
 import com.quvideo.mobile.engine.QEXytUtil;
+import com.quvideo.mobile.engine.entity.XmlType;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.FilterInfo;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
-import com.quvideo.mobile.engine.work.operate.clip.ClipOPFilterAdd;
-import com.quvideo.mobile.engine.work.operate.clip.ClipOPFilterDel;
-import com.quvideo.mobile.engine.work.operate.clip.ClipOPFilterUpdate;
+import com.quvideo.mobile.engine.work.operate.clip.ClipOPFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,8 @@ public class EditFilterDialog extends BaseMenuView {
 
   private SimpleTemplateAdapter adapter;
   private RecyclerView clipRecyclerView;
+  private ImageView ivAddXml;
+  private ImageView ivSaveXml;
 
   public EditFilterDialog(Context context, MenuContainer container,
       IQEWorkSpace workSpace, int clipIndex) {
@@ -67,7 +70,11 @@ public class EditFilterDialog extends BaseMenuView {
 
   @Override protected void initCustomMenu(Context context, View view) {
     mCustomSeekbarPop = view.findViewById(R.id.seekbar);
+    ivSaveXml = view.findViewById(R.id.ivSaveXml);
+    ivAddXml = view.findViewById(R.id.ivAddXml);
     mCustomSeekbarPop.setVisibility(INVISIBLE);
+    ivAddXml.setVisibility(SuperEditManager.isHadSuperEdit() ? VISIBLE : GONE);
+    ivSaveXml.setVisibility(GONE);
     clipRecyclerView = view.findViewById(R.id.clip_recyclerview);
     clipRecyclerView.setLayoutManager(
         new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
@@ -107,25 +114,37 @@ public class EditFilterDialog extends BaseMenuView {
             curFilterLevel = progress;
             ClipData oldClipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
             if (oldClipData != null) {
-              ArrayList<FilterInfo> filterInfos = oldClipData.getFilterInfos();
-              if (filterInfos != null && filterInfos.size() > 0) {
-                filterInfos.get(0).filterLevel = curFilterLevel;
-                ClipOPFilterUpdate clipOPFilter = new ClipOPFilterUpdate(clipIndex, 0, filterInfos.get(0));
+              FilterInfo filterInfo = oldClipData.getFilterInfo();
+              if (filterInfo != null) {
+                filterInfo.filterLevel = curFilterLevel;
+                ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
                 mWorkSpace.handleOperation(clipOPFilter);
               }
             }
           }
         }));
+    ivAddXml.setOnClickListener(new OnClickListener() {
+      @Override public void onClick(View v) {
+        SuperEditManager.gotoAddXml(getContext(), mMenuContainer, mWorkSpace, XmlType.TYPE_FILTER, clipIndex);
+        dismissMenu();
+      }
+    });
+    ivSaveXml.setOnClickListener(new OnClickListener() {
+      @Override public void onClick(View v) {
+        SuperEditManager.saveFilter2Xml(getContext(), mWorkSpace, clipIndex, 0);
+      }
+    });
 
     ClipData clipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
-    if (clipData.getFilterInfos() != null && clipData.getFilterInfos().size() > 0) {
-      FilterInfo filterInfo = clipData.getFilterInfos().get(0);
+    if (clipData.getFilterInfo() != null) {
+      FilterInfo filterInfo = clipData.getFilterInfo();
       XytInfo xytInfo = XytManager.getXytInfo(filterInfo.filterPath);
       int select = 0;
       for (SimpleTemplate editFilterTemplate : filterTemplates) {
         if (editFilterTemplate.getTemplateId() == xytInfo.getTtidLong()) {
           adapter.changeFocus(select);
           mCustomSeekbarPop.setVisibility(select == 0 ? INVISIBLE : VISIBLE);
+          ivSaveXml.setVisibility(select == 0 || !SuperEditManager.isHadSuperEdit() ? GONE : VISIBLE);
           curFilterLevel = filterInfo.filterLevel;
           break;
         }
@@ -199,22 +218,16 @@ public class EditFilterDialog extends BaseMenuView {
       curFilterLevel = 100;
       mCustomSeekbarPop.setProgress(curFilterLevel);
       mCustomSeekbarPop.setVisibility(INVISIBLE);
-      ClipOPFilterDel clipOPFilterDel = new ClipOPFilterDel(clipIndex, 0);
-      mWorkSpace.handleOperation(clipOPFilterDel);
+      ivSaveXml.setVisibility(INVISIBLE);
     } else {
-      ClipData clipData = mWorkSpace.getClipAPI().getClipByIndex(clipIndex);
       XytInfo info = XytManager.getXytInfo(template.getTemplateId());
       filterInfo = new FilterInfo(info.getFilePath());
       filterInfo.filterLevel = curFilterLevel;
       mCustomSeekbarPop.setVisibility(VISIBLE);
-      if (clipData.getFilterInfos() != null && clipData.getFilterInfos().size() > 0) {
-        ClipOPFilterUpdate clipOPFilterUpdate = new ClipOPFilterUpdate(clipIndex, 0, filterInfo);
-        mWorkSpace.handleOperation(clipOPFilterUpdate);
-      } else {
-        ClipOPFilterAdd clipOPFilterAdd = new ClipOPFilterAdd(clipIndex, filterInfo);
-        mWorkSpace.handleOperation(clipOPFilterAdd);
-      }
+      ivSaveXml.setVisibility(!SuperEditManager.isHadSuperEdit() ? GONE : VISIBLE);
     }
+    ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
+    mWorkSpace.handleOperation(clipOPFilter);
   }
 
   @Override public void onClick(View v) {

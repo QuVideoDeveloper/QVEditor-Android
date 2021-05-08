@@ -101,17 +101,21 @@ public class EditEffectAdapter extends RecyclerView.Adapter<EditEffectAdapter.Te
       for (AudioTemplate audio : AssetConstants.TEST_MUSIC_TID) {
         if (audio.getAudioPath() != null && audio.getAudioPath().equals(item.mEffectPath)) {
           thumbRes = audio.getThumbnailResId();
+          isFind = true;
           break;
         }
       }
-      for (AudioTemplate audio : AssetConstants.TEST_DUB_TID) {
-        if (audio.getAudioPath().equals(item.mEffectPath)) {
-          thumbRes = audio.getThumbnailResId();
-          break;
+      if (!isFind) {
+        for (AudioTemplate audio : AssetConstants.TEST_DUB_TID) {
+          if (audio.getAudioPath().equals(item.mEffectPath)) {
+            thumbRes = audio.getThumbnailResId();
+            isFind = true;
+            break;
+          }
         }
       }
       if (!TextUtils.isEmpty(item.mEffectPath) && !isFind) {
-        thumbRes = R.drawable.gallery_folder_entrance_icon1;
+        thumbRes = R.drawable.editor_icon_tool_music_direct;
       }
       if (thumbRes != 0) {
         Glide.with(holder.mImageView)

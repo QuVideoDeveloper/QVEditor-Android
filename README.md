@@ -116,7 +116,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'https://dl.bintray.com/quvideo/release'
+            url 'https://serverless-1533657941-maven.pkg.coding.net/repository/app-sdk-pub/bintray/'
         }
     }
 }
@@ -147,18 +147,22 @@ android {
 
 dependencies {
     //剪辑SDK
-    implementation "com.quvideo.mobile.external:sdk-engine:2.0.4"
+    implementation "com.quvideo.mobile.external:sdk-engine:4.0.1"
 }
 ```
 
 #### 3. 剪辑SDK初始化
 在开始使用剪辑功能前，必须对剪辑SDK初始化
+
 ```
 QEInitData.Builder builder = new QEInitData.Builder(licensePath);
 QEEngineClient.init(context, builder.build());
 ```
 
+
 QEInitData参数说明：
+
+
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | licensePath | license文件路径地址,可以是assets目录。（注意：android 10以上只支持放在私有目录中,请保证使用完整绝对路径） | String | 必须 |
@@ -181,7 +185,8 @@ QEInitData参数说明：
 注意:
 1.assets目录下的素材安装，每次需要完整列表重新安装，会进行增删处理。对于asset目录下的素材，升级时如有需要，可以完整重新安装一次，用于素材变更。
 2.android 10 以上只支持放在私有目录中，所有素材请保证使用完整绝对路径
-``
+
+```
 /** 安装单个素材文件,zip包或者xyt文件 */
 XytManager.install(xytZipPath, xytInstallListener);
 
@@ -195,7 +200,10 @@ XytManager.installAsset(assetPathList, xytInstallListener);
 XytManager.unInstall(ttid, xytInstallListener);
 ```
 
+
 XytInstallListener接口信息：
+
+
 ```
 public interface XytInstallListener {
 
@@ -209,12 +217,16 @@ public interface XytInstallListener {
 }
 ```
 
+
 #### 2. 素材信息查询
+
+
 ```
 /**
 * 通过素材id查询素材信息
 */
 XytInfo xytInfo = XytManager.getXytInfo(ttidLong);
+
 
 /**
 * 通过素材路径查询素材信息
@@ -222,7 +234,9 @@ XytInfo xytInfo = XytManager.getXytInfo(ttidLong);
 XytInfo xytInfo = XytManager.getXytInfo(xytPath);
 ```
 
+
 XytInfo参数说明：
+
 
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
@@ -232,6 +246,8 @@ XytInfo参数说明：
 
 
 #### 3. 素材工具
+
+
 ```
  /**
    * Long转成16进制ttid字符串
@@ -287,10 +303,16 @@ XytInfo参数说明：
 1）初始化。
 
 创建XYCamreaEngine实例。
+
+
 ```
 XYCameraEngine mXYCamera = new XYCameraEngine(activity, screenSize, ICameraEventCallback);
 ```
+
+
 ICameraEventCallback说明：
+
+
 ```
 public interface ICameraEventCallback {
 
@@ -369,16 +391,23 @@ public interface ICameraEventCallback {
 
 初始化Preview
 需要传入FrameLayout作为SurfaceView的父布局，内部会自动创建SurfaceView  add到FrameLayout中
+
+
 ```
 mXYCamera.initPreview(mSurfaceContainer);
 ```
 
+
 连接Camera
+
+
 ```
 mXYCamera.openCamera();
 ```
 
 注意：连接Camera之前需要确保已申请过Camera权限，如果没有需要向用户申请
+
+
 ```
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -386,6 +415,8 @@ mXYCamera.openCamera();
 
 启动预览
 在Camera连接成功的回调中启动预览
+
+
 ```
 @Override public void onConnectResult(boolean isConnected) {
   if (isConnected) {
@@ -397,27 +428,35 @@ XYCameraConst.CameraDegrees.DEGREES_PORTRAIT);
 }
 ```
 
+
 关闭Camera
 ```
 mXYCamera.closeCamera();
 ```
 
 停止预览，在Camera断开连接的回调中停止预览
+
+
 ```
 @Override public void onDisConnect() {
   mXYCamera.stopPreview();
 }
 ```
 
+
 3) Camera 录制
 
 开始录制需要传递XYRecorderParam参数，该参数可以自定义一些录制参数。
+
+
 ```
 mXYCamera.startRecording(new XYRecorderParam(filePath,mXYCamera.getOutPutSize(),mXYCamera.getCurCameraId() == XYCameraConst.CameraId.CAMERA_FRONT));
 ```
 
 
 XYRecorderParam参数说明：
+
+
 | 名称 | 解释 | 类型 |
 | :-: | :-: | :-: |
 | outputFilePath | 视频录制文件路径 | String |
@@ -426,17 +465,25 @@ XYRecorderParam参数说明：
 
 
 暂停录制会返回当次录制的start位置与end位置，这样可以知道本次录制在mp4文件中的range
+
+
 ```
 int[] range = mXYCamera.pauseRecording();
 ```
 
+
 继续录制
+
+
 ```
 mXYCamera.resumeRecording();
 ```
 
+
 停止录制
 停止录制同样会返回当次录制的start位置与end位置，如果在当前本来就是暂停录制状态，则可以忽略该range
+
+
 ```
 int[] range = mXYCamera.stopRecording();
 ```
@@ -444,6 +491,8 @@ int[] range = mXYCamera.stopRecording();
 设置录制方向
 需要固定Activity的屏幕方向android:screenOrientation="portrait"
 如果需要横屏录制，可以用以下接口设置。参考XYCameraConst.CameraDegrees
+
+
 ```
 mXYCamera.setDeviceIsPortrait(true, XYCameraConst.CameraDegrees.DEGREES_PORTRAIT);
 ```
@@ -451,16 +500,19 @@ mXYCamera.setDeviceIsPortrait(true, XYCameraConst.CameraDegrees.DEGREES_PORTRAIT
 4) Camera设置
 
 切换镜头，参数参见XYCameraConst. CameraId
+
 ```
 mXYCamera.switchCameraId(XYCameraConst.CameraId.CAMERA_FRONT);
 ```
 
 闪光灯，参数参见XYCameraConst.FlashMode
+
 ```
 mXYCamera.getCameraDevice().setFlashMode(XYCameraConst.FlashMode.FLASH_TORCH);
 ```
 
 对焦
+
 ```
 mXYCamera.getCameraDevice().autoFocus(new Camera.AutoFocusCallback() {
   @Override public void onAutoFocus(boolean success, Camera camera) {
@@ -470,19 +522,25 @@ mXYCamera.getCameraDevice().autoFocus(new Camera.AutoFocusCallback() {
 ```
 
 焦距调节
+
 ```
 mXYCamera.getCameraDevice().setCameraZoom(zoomValue);
 ```
+
 焦距范围0～max
+
 ```
 mXYCamera.getCameraDevice().getCameraZoomMax();
 ```
 
 曝光调节
+
 ```
 mXYCamera.getCameraDevice().setCameraExposure(value);
 ```
+
 曝光参数获取
+
 ```
 mXYCamera.getCameraDevice().getCameraExposureStep();
 mXYCamera.getCameraDevice().getCameraExposureMin();
@@ -491,11 +549,14 @@ mXYCamera.getCameraDevice().getCameraExposureMax();
 
 比例调节
 参数参见XYCameraConst.RatioMode，第2个参数为距离屏幕上边的距离，用于调节SurfaceView的区域
+
+
 ```
 mXYCamera.setRatio(XYCameraConst.RatioMode.RATIO_4_3, 200);
 ```
 
 其他Camera设置，可以使用Camera Parameters来设置
+
 ```
 mXYCamera.getCameraDevice().getParameters();
 mXYCamera.getCameraDevice().setParameters();
@@ -504,20 +565,26 @@ mXYCamera.getCameraDevice().setParameters();
 5) Camera预览效果设置
 
 滤镜设置
+
 ```
 mXYCamera.setEffect(effectPath);
 ```
 
 美颜设置
 开启美颜，value为默认指。范围为0～100
+
 ```
 mXYCamera.initFaceBeautyMode(value);
 ```
+
 美颜参数调节
+
 ```
 mXYCamera.setFaceBeautyParam(value);
 ```
+
 关闭美颜
+
 ```
 mXYCamera.clearFaceBeautyParam();
 ```
@@ -526,10 +593,13 @@ mXYCamera.clearFaceBeautyParam();
 
 传入照片保存路径。
 注意：该照片分辨率为preview size。
+
 ```
 mXYCamera.takePicture(filePath);
 ```
+
 接收拍照完成回调
+
 ```
 @Override public void onCaptureDone(String filePath) {
 }
@@ -546,17 +616,20 @@ mXYCamera.takePicture(filePath);
 #### 2. 音频录制
 
 初始化
+
 ```
 XYAudioRecorder.init()
 ```
 
 开始录制
+
 ```
 // audioFilePath表示录音文件路径
 XYAudioRecorder.startRecord(audioFilePath);
 ```
 
 停止录制
+
 ```
 XYAudioRecorder.stopRecord();
 ```
@@ -569,6 +642,7 @@ XYAudioRecorder.getRecordDuration()
 ### 六、剪辑工程功能开发接入
 #### 1. 剪辑工程
 ##### 创建和加载
+
 ```
   /**
    * 创建新的工程
@@ -583,13 +657,16 @@ XYAudioRecorder.getRecordDuration()
 
 ##### 工程删除
 方式一:
+
 ```
   /**
    * 删除工程
    */
   QEEngineClient.deleteProject(String projectPath)
 ```
+
 方式二：
+
 ```
   /**
    * 删除工程
@@ -599,13 +676,17 @@ XYAudioRecorder.getRecordDuration()
 
 ##### 工程释放
 工程编辑结束，需要完整释放工程。
+
 ```
   /**
    * 释放工程缓存
+   * param needSave 是否需要保存工程
    */
-  IQEWorkSpace.destory()
+  IQEWorkSpace.destory(needSave)
 ```
+
 如果只是想临时释放工程注册的各项监听器，则调用：
+
 ```
   /**
    * 销毁播放器和注册的监听器，播放器监听和操作队列监听
@@ -616,6 +697,7 @@ XYAudioRecorder.getRecordDuration()
 
 #### 2. 播放器
 1）在Activity的layout中添加播放器View
+
 ```
   <com.quvideo.mobile.engine.player.EditorPlayerView
       android:id="@+id/editor_play_view"
@@ -623,17 +705,28 @@ XYAudioRecorder.getRecordDuration()
       android:layout_height="match_parent"
       />
 ```
+
 2）在工程加载成功后，可以绑定工程和播放器
+
+
 ```
  //
  // initTime为初始博翻墙需要定位的时间点，默认0即可
  mWorkSpace.getPlayerAPI().bindPlayerView(editorPlayerView, initTime);
 ```
+
+
 3）获取播放器控制器
+
+
 ```
 IPlayerController playerController = mWorkSpace.getPlayerAPI().getPlayerController();
 ```
+
+
 IPlayerController 说明：
+
+
 ```
 public interface IPlayerController {
   /** 是否播放中 */
@@ -654,8 +747,6 @@ public interface IPlayerController {
   void seek(int time);
   /** 异步seek到时间点，playAfterSeek为seek后自动播放 */
   void seek(int time, boolean playAfterSeek);
-  /** 同步seek到时间点 */
-  int synSeek(int time);
   /** 获取当前时间 */
   int getCurrentPlayerTime();
   /** 获取播放器总时长 */
@@ -667,16 +758,23 @@ public interface IPlayerController {
 }
 ```
 
+
 4）注册播放器监听器
 注册：
+
 ```
 mWorkSpace.getPlayerAPI().registerListener(QEPlayerListener);
 ```
+
+
 注销：
+
 ```
 mWorkSpace.getPlayerAPI().unregisterListener(QEPlayerListener);
 ```
+
 QEPlayerListener说明：
+
 ```
 public interface QEPlayerListener {
 
@@ -700,6 +798,7 @@ public interface QEPlayerListener {
 5) 关于PlayerAPI
 
 通过mWorkSpace.getPlayerAPI()可以获取PlayerAPI播放器相关接口
+
 ```
 public interface PlayerAPI {
   /** 绑定播放器 */
@@ -844,9 +943,9 @@ public class QEGroupConst {
 
 ##### 数据结构说明
 1) 片段Clip相关
-
-
 ClipData参数说明：
+
+
 | 名称 | 解释 | 类型 |
 | :-: | :-: | :-: |
 | uniqueId | clip的唯一识别码 | String |
@@ -868,7 +967,7 @@ ClipData参数说明：
 | bReversed | 是否倒放 | boolean |
 | isPicAnimOn | 是否开启图片动画，只允许对图片clip设置 | boolean |
 | crossInfo | 转场，null表示无。当前片段和下一个片段的转场数据{@see CrossInfo} | CrossInfo |
-| filterInfos | 滤镜信息列表 | FilterInfo列表 |
+| filterInfo | 滤镜信息 | FilterInfo |
 | fxFilterInfo | 特效滤镜信息，null表示无{@see FxFilterInfo} | FxFilterInfo |
 | mParamAdjust | 参数调节信息{@see ParamAdjust} | ParamAdjust |
 | mClipPosInfo | 片段位置信息{@see ClipPosInfo} | ClipPosInfo |
@@ -877,13 +976,18 @@ ClipData参数说明：
 
 
 ClipData.ClipType参数说明：
+
+
 | 名称  | 解释 |
 | :-: | :-: |
 | NORMAL | 正常clip |
 | THEME_COVER | 主题片头 |
 | THEME_BACKCOVER | 主题片尾 |
 
+
 ClipData.Mirror参数说明：
+
+
 | 名称  | 解释  |
 | :-: | :-: |
 | CLIP_FLIP_NONE | 正常 |
@@ -891,40 +995,57 @@ ClipData.Mirror参数说明：
 | CLIP_FLIP_Y | 沿Y方向镜像 |
 | CLIP_FLIP_XY | 沿XY方向镜像 |
 
+
 CrossInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | crossPath | 转场路径 | String |
 | duration | 转场时长 | int |
 | cfgIndex | 转场效果样式，有些素材包含多种效果，表示使用第几个效果，默认0 | int |
 
+
 FilterInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | filterPath | 滤镜路径 | String |
 | filterLevel | 滤镜程度,0~100 | int  |
 | externalSource | 滤镜外部图片源数据，依赖模板支持(如3D LUT滤镜模板) | String  |
 
+
 FxFilterInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | filterPath | 特效滤镜路径 | String |
 
+
+
 ParamAdjust参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
-| luminance | 亮度,0~100,默认50 | int |
+| brightness | 亮度,0~100,默认50 | int |
 | contrast | 对比度,0~100,默认50 | int  |
-| saturation | 饱和度,0~100,默认50 | int|
 | sharpness | 锐度,0~100,默认50 | int |
-| colourTemp | 色温,0~100,默认50 | int |
+| saturation | 饱和度,0~100,默认50 | int|
+| temperature | 色温,0~100,默认50 | int |
 | vignette | 暗角,0~100,默认50| int |
-| hue | 色调,0~100,默认50| int |
+| hue | 色相,0~100,默认50| int |
+| fade | 褪色,0~100,默认0| int |
 | shadow | 阴影,0~100,默认50| int |
 | highlight | 高光,0~100,默认50| int |
-| fade | 褪色,0~100,默认0| int |
+| noise | 颗粒,0~100,默认0| int |
+
 
 ClipPosInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | centerPosX | 中心点-X，在streamSize的坐标系中 | int |
@@ -933,7 +1054,10 @@ ClipPosInfo参数说明：
 | heightScale | 高放大倍数，默认1 | float |
 | degree | 旋转角度，0~359度 | float |
 
+
 ClipBgData参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | clipBgType | 背景类型 | ClipBgType |
@@ -943,6 +1067,8 @@ ClipBgData参数说明：
 | imagePath | 图片背景，自定义图片背景使用 | String |
 
 ClipBgData.ClipBgType参数说明：
+
+
 | 名称  | 解释  |
 | :-: | :-: |
 | BLUR | 模糊背景 |
@@ -951,12 +1077,16 @@ ClipBgData.ClipBgType参数说明：
 
 
 ColorCurveInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | mColorCurveItems | 曲线调色详情{@see ColorCurveItem} | ColorCurveItem |
 
 
 ColorCurveItem参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | ts | 曲线调色点的相对时间 | int |
@@ -977,6 +1107,8 @@ ColorCurveItem参数说明：
 <img src="https://github.com/QuVideoDeveloper/QVEditor-Android/blob/master/IMG/image_effect.png" width="633" height="261" align="center">
 
 BaseEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | uniqueId | effect的唯一识别码 | String |
@@ -991,11 +1123,15 @@ BaseEffect参数说明：
 | audioVolume | 音量 | int |
 
 AudioEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | mAudioInfo | 音频数据信息 {@see EffectAudioInfo} | EffectAudioInfo |
 
 EffectAudioInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | isRepeat | 是否循环,默认开始 | boolean |
@@ -1006,24 +1142,32 @@ EffectAudioInfo参数说明：
 | musicMsg | 音乐信息,开发者可以用于存储音乐相关的信息 | String |
 
 AudioFade参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | type | 渐入渐入类型 {@see AudioFade.Type} | AudioFade.Type |
 | duration | 渐变时长,0则无效果 | int |
 
 AudioFade.Type参数说明：
+
+
 | 名称  | 解释  |
 | :-: | :-: |
 | FadeIn | 渐入 |
 | FadeOut | 渐出 |
 
 AudioLyric参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | lyricPath | 歌曲字幕lyric文件路径 | string |
 | lyricTtid | 歌词模板的素材id | long |
 
 FloatEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | alpha | 透明度 0~100 | int |
@@ -1031,6 +1175,8 @@ FloatEffect参数说明：
 | mEffectPosInfo | 效果位置数据信息 {@see EffectPosInfo} | EffectPosInfo |
 
 FloatEffect.Mirror参数说明：
+
+
 | 名称  | 解释  |
 | :-: | :-: |
 | EFFECT_FLIP_NONE | 正常 |
@@ -1039,6 +1185,8 @@ FloatEffect.Mirror参数说明：
 | EFFECT_FLIP_XY | 沿XY方向镜像 |
 
 EffectPosInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | center | 中心点，实际为锚点坐标，{@see Ve3DDataF} 只是默认在中心点,(0,0,0)为效果以streamsize的中心点，x/y左上角为0，右下角为1，z为屏幕上为0，向屏幕里为正，向屏幕外为负 | Ve3DDataF |
@@ -1047,6 +1195,8 @@ EffectPosInfo参数说明：
 | anchorOffset | 锚点相对中心点的偏移，默认(0,0,0) | Ve3DDataF |
 
 Ve3DDataF参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | x | x轴方向信息 | float |
@@ -1055,6 +1205,8 @@ Ve3DDataF参数说明：
 
 
 AnimEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | mEffectOverlayInfo | 混合模式信息数据 {@see EffectOverlayInfo} | EffectOverlayInfo |
@@ -1069,6 +1221,8 @@ AnimEffect参数说明：
 
 
 EffectOverlayInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | overlayPath | 混合模式素材路径 | String |
@@ -1076,6 +1230,8 @@ EffectOverlayInfo参数说明：
 
 
 EffectMaskInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | maskType | 蒙版类型{@see EffectMaskInfo.MaskType} | MaskType |
@@ -1090,6 +1246,8 @@ EffectMaskInfo参数说明：
 
 
 EffectMaskInfo.MaskType
+
+
 | 名称  | 解释 |
 | :-: | :-: |
 | MASK_NONE | 无蒙版 |
@@ -1100,6 +1258,8 @@ EffectMaskInfo.MaskType
 
 
 MaskKeyFrameInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | maskPosList | 蒙版位置关键帧信息列表{@see KeyMaskPosInfo} | KeyMaskPosInfo列表 |
@@ -1109,6 +1269,8 @@ MaskKeyFrameInfo参数说明：
 
 
 KeyMaskPosInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | centerX | 中心点-X，中心点尽量保持在素材位置内。相对画中画的万分比坐标(字幕比较特殊,需要相对streamsize的万分比坐标) | float |
@@ -1118,12 +1280,16 @@ KeyMaskPosInfo参数说明：
 
 
 KeyBAttrInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | attrValue | 属性关键帧：属性值 | boolean |
 
 
 EffectChromaInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | enable | 是否开启 | boolean |
@@ -1131,7 +1297,11 @@ EffectChromaInfo参数说明：
 | accuracy | 抠色的精度（0~5000） | int|
 
 
+
+
 EffectSubFx参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | subFxPath | 子特效素材路径 | String |
@@ -1140,6 +1310,8 @@ EffectSubFx参数说明：
 
 
 EffectKeyFrameInfo参数说明：（由于功能复杂，后期可能调整数据结构）
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | positionList | 位置关键帧列表 {@see KeyPosInfo} | KeyPosInfo |
@@ -1149,6 +1321,8 @@ EffectKeyFrameInfo参数说明：（由于功能复杂，后期可能调整数�
 
 
 BaseKeyFrame参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | keyFrameType | 关键帧类型 | KeyFrameType |
@@ -1160,6 +1334,8 @@ BaseKeyFrame参数说明：
 
 
 KeyFrameType参数说明：
+
+
 | 名称  | 解释 |
 | :-: | :-: |
 | Position | 位置关键帧 |
@@ -1172,6 +1348,8 @@ KeyFrameType参数说明：
 
 
 KeyBezierCurve参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | start | 贝塞尔缓动曲线起点,需固定（ 0，0） | QPoint |
@@ -1181,6 +1359,8 @@ KeyBezierCurve参数说明：
 
 
 KeyPosInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | center | 位置信息，在streamSize的坐标系中{@see Ve3DDataF} | Ve3DDataF |
@@ -1188,6 +1368,8 @@ KeyPosInfo参数说明：
 
 
 KeyAnchorOffset参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | anchorOffset | 锚点位置偏移信息，在streamSize的坐标系中{@see Ve3DDataF} | Ve3DDataF |
@@ -1195,6 +1377,8 @@ KeyAnchorOffset参数说明：
 
 
 KeyScaleInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | scale | 缩放信息 {@see Ve3DDataF} | Ve3DDataF |
@@ -1202,6 +1386,8 @@ KeyScaleInfo参数说明：
 
 
 KeyRotationInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | rotation | 角度信息 {@see Ve3DDataF} | Ve3DDataF |
@@ -1209,12 +1395,16 @@ KeyRotationInfo参数说明：
 
 
 KeyAlphaInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | alpha | 不透明度 0~100 | int |
 
 
 CollageEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | timeScale | 变速值，默认1.0f | float |
@@ -1223,22 +1413,31 @@ CollageEffect参数说明：
 
 
 MosaicEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | mosaicInfo | 马赛克模糊程度数据信息 {@see MosaicInfo} | MosaicInfo |
 
+
 MosaicInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | horValue | 水平模糊程度 | int |
 | verValue | 垂直模糊程度 | int |
 
 SubtitleEffect参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | textBubbleInfo | 字幕数据信息 {@see TextBubbleInfo} | TextBubbleInfo |
 
 TextBubbleInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | bSupportAnim | 是否支持动画 | boolean |
@@ -1249,6 +1448,8 @@ TextBubbleInfo参数说明：
 
 
 TextBubble参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | bSupportAnim | 是否支持动画 | boolean |
@@ -1267,6 +1468,8 @@ TextBubble参数说明：
 
 
 ShadowInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | enable | 是否开启阴影 | boolean |
@@ -1276,6 +1479,8 @@ ShadowInfo参数说明：
 | shadowBlurRadius | 阴影宽度，百分比小数值，0表示无阴影，0~1，不可小于0 | float |
 
 StrokeInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | strokeWPersent | 描边，百分比小数值,0表示无描边,1表示描边宽度和文字高度相同，不可小于0 | float |
@@ -1333,6 +1538,8 @@ setNeedSavePrj(isNeedSavePrj);
 ```
 
 ThemeSubtitleEffect参数说明：
+
+
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | mGroupType | 字幕类型 | GroupType | 必须 |
@@ -1350,7 +1557,10 @@ ThemeSubtitleEffect参数说明：
 	ClipOPAdd clipOPAdd = new ClipOPAdd(clipIndex, list);
 	mWorkSpace.handleOperation(clipOPAdd);
 ```
+
 ClipAddItem参数说明：
+
+
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | clipFilePath | 文件地址 | String | 必须 |
@@ -1570,32 +1780,15 @@ ClipBgData构造器
 ```
 
 
-23）新增滤镜
+23）修改滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
-	// filterInfo滤镜信息
-	ClipOPFilterAdd clipOPFilterAdd = new ClipOPFilterAdd(clipIndex, filterInfo);
-	mWorkSpace.handleOperation(clipOPFilterAdd);
+	// filterInfo滤镜信息，null表示无滤镜
+	ClipOPFilter clipOPFilter = new ClipOPFilter(clipIndex, filterInfo);
+	mWorkSpace.handleOperation(clipOPFilter);
 ```
 
-24）修改滤镜
-```
-	// clipIndex表示第几个片段，从0开始
-	// filterIndex表示删除第几个滤镜
-	// filterInfo滤镜信息
-	ClipOPFilterUpdate clipOPFilterUpdate = new ClipOPFilterUpdate(clipIndex, filterIndex, filterInfo);
-	mWorkSpace.handleOperation(clipOPFilterUpdate);
-```
-
-25）删除滤镜
-```
-	// clipIndex表示第几个片段，从0开始
-	// filterIndex表示删除第几个滤镜
-	ClipOPFilterDel clipOPFilterDel = new ClipOPFilterDel(clipIndex, filterIndex);
-	mWorkSpace.handleOperation(clipOPFilterDel);
-```
-
-26）特效滤镜
+24）特效滤镜
 ```
 	// clipIndex表示第几个片段，从0开始
 	// fxFilterInfo特效滤镜信息 {@see FxFilterInfo}，null表示不使用特效滤镜
@@ -1603,7 +1796,8 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPFxFilter);
 ```
 
-27）转场
+
+25）转场
 ```
 	// clipIndex表示第几个片段，从0开始
 	// crossInfo转场信息 {@see CrossInfo}，null表示不使用转场
@@ -1611,14 +1805,18 @@ ClipBgData构造器
 	mWorkSpace.handleOperation(clipOPTrans);
 ```
 
-28）替换clip
+
+26）替换clip
 ```
 	// clipIndex为clip添加的位置，0为第一个
 	// 替换的数据 clipReplaceItem;
 	ClipOPReplace clipOPReplace = new ClipOPReplace(clipIndex, clipReplaceItem);
 	mWorkSpace.handleOperation(clipOPReplace);
 ```
+
 ClipReplaceItem：
+
+
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | clipFilePath | 文件地址 | String | 必须 |
@@ -1636,7 +1834,10 @@ ClipReplaceItem：
 	EffectOPAdd effectOPAdd = new EffectOPAdd(groupId, effectIndex, effectAddItem);
 	mWorkSpace.handleOperation(effectOPAdd);
 ```
+
 EffectAddItem参数说明：
+
+
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | mEffectPath | 素材资源路径 | String | 必须 |
@@ -1854,7 +2055,9 @@ EffectAddItem参数说明：
 	EffectOPReplace effectOPReplace = new EffectOPReplace(groupId, effectIndex, effectReplaceItem);
 	mWorkSpace.handleOperation(effectOPReplace);
 ```
+
 EffectReplaceItem参数说明：
+
 | 名称  | 解释 | 类型 | 是否必须 |
 | :-: | :-: | :-: | :-: |
 | mEffectPath | 素材资源路径 | String | 必须 |
@@ -2285,6 +2488,8 @@ chromaColor.recycle();
   IExportController controller = workSpace.startExport(ExportParams params, IExportListener listener);
 ```
 ExportParams参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | outputPath | 导出文件路径，需要带后缀，提取音频则只支持m4a（android 10以上请使用有完整读写权限的私有目录绝对路径或content的uri路径） | String |
@@ -2297,7 +2502,10 @@ ExportParams参数说明：
 | isFullKeyFrame | 是否纯i帧，只支持转码时使用 | boolean |
 | exportRange | 导出时间区域 | VeRange |
 | customLimitSize | 自定义的导出分辨率限制，使用自定义的话，expType就不重要了，只会判断是否gif | VeMSize |
+
+
 IExportController导出控制器说明：
+
 ```
 public interface IExportController {
   /** 切换后台导出，降低导出时的cpu使用率，导出时间将拉长，存在失败风险 */
@@ -2412,6 +2620,8 @@ operate.isDoingUndo();
 BaseOperate.EngineWorkType type = operate.getOperateType();
 ```
 BaseOperate.EngineWorkType参数说明：
+
+
 | 名称  | 解释 |
 | :-: | :-: |
 | normal | 正常|
@@ -2452,10 +2662,14 @@ BaseOperate.EngineWorkType参数说明：
 【详情请参看剪辑工程播放器相关。】
 
 #### 3. 获取片段节点信息
+
 ```
 ArrayList<SlideInfo> slideInfos = workspace.getSlideInfoList();
 ```
+
 SlideInfo参数说明：
+
+
 | 名称  | 解释 | 类型 |
 | :-: | :-: | :-: |
 | filePath | 片段文件路径 | String |
@@ -2463,12 +2677,29 @@ SlideInfo参数说明：
 | index | 索引 | int |
 | duration | 片段时长 | int |
 | previewPos | 预览位置 | int |
+| mSlidePosInfo | 位置信息{@see SlidePosInfo} | SlidePosInfo |
+
 
 SlideInfo.Type参数说明：
+
+
 | 名称  | 解释 |
 | :-: | :-: |
 | Image | 图片|
 | Video | 视频 |
+
+
+SlidePosInfo参数说明：
+
+
+| 名称  | 解释 | 类型 |
+| :-: | :-: | :-: |
+| mAngle | 旋转角度(0~360) | int |
+| width | 宽，相对于streamsize | float |
+| height | 高，相对于streamsize | float |
+| centerX | 中心点x，相对于streamsize | float |
+| centerY | 中心点y，相对于streamsize | float |
+
 
 #### 4. 卡点视频剪辑功能接口
 1）排序
@@ -2484,6 +2715,14 @@ SlideInfo.Type参数说明：
 	// filePath表示视频/图片路径
 	SlideOPReplace slideOPReplace = new SlideOPReplace(clipIndex, filePath);
 	mWorkSpace.handleOperation(slideOPReplace);
+```
+
+3）修改片段位置
+```
+	// clipIndex表示第几个片段，从0开始
+	// slidePosInfo表示位置信息
+	SlideOPPosition slideOPPosition = new SlideOPPosition(clipIndex, slidePosInfo);
+	mWorkSpace.handleOperation(slideOPPosition);
 ```
 
 #### 5. 导出
@@ -2518,6 +2757,7 @@ SlideInfo.Type参数说明：
 
 ##### 2.素材缩略图获取
 工具：QEThumbnailTools
+
 ```
 
   /**

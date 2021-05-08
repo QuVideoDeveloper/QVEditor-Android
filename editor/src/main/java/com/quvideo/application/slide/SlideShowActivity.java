@@ -2,6 +2,8 @@ package com.quvideo.application.slide;
 
 import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.quvideo.application.EditorConst;
 import com.quvideo.application.editor.R;
+import com.quvideo.application.editor.fake.FakePosInfo;
+import com.quvideo.application.editor.fake.FakePosUtils;
+import com.quvideo.application.editor.fake.FakeView;
+import com.quvideo.application.editor.fake.IFakeViewListener;
+import com.quvideo.application.editor.fake.draw.PosDraw;
 import com.quvideo.application.export.ExportChooseDialog;
 import com.quvideo.application.export.ExportDialog;
 import com.quvideo.application.gallery.GalleryClient;
@@ -35,14 +42,17 @@ import com.quvideo.mobile.engine.QEEngineClient;
 import com.quvideo.mobile.engine.error.SDKErrCode;
 import com.quvideo.mobile.engine.model.export.ExportParams;
 import com.quvideo.mobile.engine.player.EditorPlayerView;
+import com.quvideo.mobile.engine.player.QEPlayerListener;
 import com.quvideo.mobile.engine.project.observer.BaseObserver;
 import com.quvideo.mobile.engine.slide.ISlideWorkSpace;
 import com.quvideo.mobile.engine.slide.QESlideShowResult;
 import com.quvideo.mobile.engine.slide.QESlideWorkSpaceListener;
 import com.quvideo.mobile.engine.slide.SlideInfo;
+import com.quvideo.mobile.engine.slide.SlidePosInfo;
 import com.quvideo.mobile.engine.utils.MediaFileUtils;
 import com.quvideo.mobile.engine.work.BaseOperate;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPMove;
+import com.quvideo.mobile.engine.work.operate.slide.SlideOPPosition;
 import com.quvideo.mobile.engine.work.operate.slide.SlideOPReplace;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -67,12 +77,13 @@ public class SlideShowActivity extends AppCompatActivity {
 
   private SlideAdapter adapter;
 
+  private FakeView mFakeView;
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_slide_show);
     initView();
-    ArrayList<String> albumChoose =
-        getIntent().getStringArrayListExtra(EditorConst.INTENT_EXT_KEY_ALBUM);
+    ArrayList<String> albumChoose = getIntent().getStringArrayListExtra(EditorConst.INTENT_EXT_KEY_ALBUM);
     long themeId = getIntent().getLongExtra(EditorConst.INTENT_EXT_KEY_SLIDE_THEMEID, 0L);
     if (themeId == 0) {
       ToastUtils.show(this, R.string.mn_edit_tips_template_theme_error, Toast.LENGTH_LONG);
@@ -92,6 +103,10 @@ public class SlideShowActivity extends AppCompatActivity {
             initData();
           }
         });
+        mSlideWorkSpace.getPlayerAPI().registerListener(mPlayerListener);
+        if (mFakeView != null) {
+          mFakeView.setStreamSize(mSlideWorkSpace.getSlideStreamSize());
+        }
       }
 
       @Override public void onError(QESlideShowResult error) {
@@ -161,6 +176,7 @@ public class SlideShowActivity extends AppCompatActivity {
     mPlayerControllerView = findViewById(R.id.edit_enter_play_controller);
     editorPlayerView = findViewById(R.id.editor_play_view);
     mRecyclerView = findViewById(R.id.edit_enter_recyclerview);
+    mFakeView = findViewById(R.id.editor_fake_layer);
 
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
     adapter = new SlideAdapter(this, new SlideAdapter.OnSlideClickListener() {
@@ -171,6 +187,30 @@ public class SlideShowActivity extends AppCompatActivity {
         if (mPlayerControllerView != null) {
           mPlayerControllerView.seekPlayer(item.previewPos);
         }
+        if (mFakeView != null && item.mSlidePosInfo != null) {
+          // 设置选中情况
+          mFakeView.setSlideClipTarget(new PosDraw(), item.mSlidePosInfo, mSlideWorkSpace.getSlideStreamSize());
+          mFakeView.setFakeViewListener(new IFakeViewListener() {
+
+            @Override public void onEffectMoving(float pointX, float pointY) {
+              FakePosInfo curFakePos = mFakeView.getFakePosInfo();
+              SlidePosInfo slidePosInfo = new SlidePosInfo();
+              FakePosUtils.INSTANCE.updateSlidePosByFakePos(curFakePos, slidePosInfo);
+
+              SlideOPPosition slideOPPosition = new SlideOPPosition(item.index, slidePosInfo);
+              mSlideWorkSpace.handleOperation(slideOPPosition);
+            }
+
+            @Override public void onEffectMoveStart() {
+            }
+
+            @Override public void onEffectMoveEnd(boolean moved) {
+            }
+
+            @Override public void checkEffectTouchHit(PointF pointF) {
+            }
+          });
+        }
       }
 
       @Override public void onReplaceClick(SlideInfo item) {
@@ -178,6 +218,9 @@ public class SlideShowActivity extends AppCompatActivity {
           return;
         }
         replaceSlideNode(item.index);
+        if (mFakeView != null) {
+          mFakeView.setTarget(null, null);
+        }
       }
     });
     mRecyclerView.setAdapter(adapter);
@@ -218,12 +261,33 @@ public class SlideShowActivity extends AppCompatActivity {
     }
   }
 
+  private QEPlayerListener mPlayerListener = new QEPlayerListener() {
+    @Override public void onPlayerCallback(PlayerStatus playerStatus, int progress) {
+      if (playerStatus == PlayerStatus.STATUS_STOP
+          || playerStatus == PlayerStatus.STATUS_SEEKING
+          || playerStatus == PlayerStatus.STATUS_PLAYING) {
+        if (mFakeView != null) {
+          mFakeView.setTarget(null, null);
+        }
+      }
+    }
+
+    @Override public void onPlayerRefresh() {
+    }
+
+    @Override public void onSizeChanged(Rect resultRect) {
+    }
+  };
+
   /**
    * 交换顺序
    */
   public void moveSlideNode(int fromPos, int toPos) {
     SlideOPMove slideOPMove = new SlideOPMove(fromPos, toPos);
     mSlideWorkSpace.handleOperation(slideOPMove);
+    if (mFakeView != null) {
+      mFakeView.setTarget(null, null);
+    }
   }
 
   /**
@@ -264,11 +328,16 @@ public class SlideShowActivity extends AppCompatActivity {
     super.onDestroy();
     // TODO 释放掉播放器和workspace的绑定
     if (mSlideWorkSpace != null) {
-      mSlideWorkSpace.destory();
+      mSlideWorkSpace.destory(true);
       mSlideWorkSpace = null;
     }
     if (editorPlayerView != null) {
       editorPlayerView = null;
+    }
+    if (mFakeView != null) {
+      mFakeView.setTarget(null, null);
+      mFakeView.setFakeViewListener(null);
+      mFakeView = null;
     }
   }
 }

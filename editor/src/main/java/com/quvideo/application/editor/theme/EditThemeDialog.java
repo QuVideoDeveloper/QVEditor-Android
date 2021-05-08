@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.quvideo.application.AssetConstants;
 import com.quvideo.application.DPUtils;
 import com.quvideo.application.EditorApp;
+import com.quvideo.application.dialog.LoadingDialog;
 import com.quvideo.application.download.DownloadDialog;
 import com.quvideo.application.editor.EditorActivity;
 import com.quvideo.application.editor.R;
@@ -43,6 +44,8 @@ public class EditThemeDialog extends BaseMenuView {
   private SimpleTemplateAdapter adapter;
   private RecyclerView clipRecyclerView;
   private View vThemeEdit;
+
+  private LoadingDialog mLoadingDialog = new LoadingDialog();
 
   public EditThemeDialog(Context context, MenuContainer container, IQEWorkSpace workSpace,
       ItemOnClickListener l) {
@@ -118,6 +121,7 @@ public class EditThemeDialog extends BaseMenuView {
     @Override public void onChange(BaseOperate operate) {
       if (operate instanceof ThemeOPApply) {
         changeThemeSubtitleView();
+        mLoadingDialog.dismissLoading();
       }
     }
   };
@@ -177,6 +181,7 @@ public class EditThemeDialog extends BaseMenuView {
   }
 
   private void applyTemplate(SimpleTemplate template) {
+    mLoadingDialog.showDownloading(getActivity());
     XytInfo xytInfo = XytManager.getXytInfo(template.getTemplateId());
     String themePath = xytInfo != null ? xytInfo.getFilePath() : null;
     ThemeOPApply themeOPApply = new ThemeOPApply(themePath);

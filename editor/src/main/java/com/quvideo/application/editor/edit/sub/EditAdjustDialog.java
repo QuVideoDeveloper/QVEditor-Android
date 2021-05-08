@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +13,8 @@ import com.quvideo.application.editor.R;
 import com.quvideo.application.editor.base.BaseMenuView;
 import com.quvideo.application.editor.base.MenuContainer;
 import com.quvideo.application.editor.control.EditSeekBarController;
+import com.quvideo.application.superedit.SuperEditManager;
+import com.quvideo.mobile.engine.entity.XmlType;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.ParamAdjust;
 import com.quvideo.mobile.engine.project.IQEWorkSpace;
@@ -20,16 +23,17 @@ import com.quvideo.mobile.engine.work.operate.clip.ClipOPParamAdjust;
 public class EditAdjustDialog extends BaseMenuView {
 
   private static final int[] ADJUST_ITEM_TITLE_RES = new int[] {
-      R.string.mn_edit_adjust_luminance,
+      R.string.mn_edit_adjust_brightness,
       R.string.mn_edit_adjust_contrast,
-      R.string.mn_edit_adjust_saturation,
       R.string.mn_edit_adjust_sharpness,
-      R.string.mn_edit_adjust_colortemp,
+      R.string.mn_edit_adjust_saturation,
+      R.string.mn_edit_adjust_temperature,
       R.string.mn_edit_adjust_vignette,
       R.string.mn_edit_adjust_shadow,
+      R.string.mn_edit_adjust_fade,
       R.string.mn_edit_adjust_hue,
       R.string.mn_edit_adjust_highlight,
-      R.string.mn_edit_adjust_fade,
+      R.string.mn_edit_adjust_noise,
   };
 
   private int clipIndex = 0;
@@ -54,6 +58,22 @@ public class EditAdjustDialog extends BaseMenuView {
     recyclerView.setAdapter(new AdjustListAdapter());
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+
+    ImageView ivSaveXml = view.findViewById(R.id.ivSaveXml);
+    ivSaveXml.setVisibility(SuperEditManager.isHadSuperEdit() ? VISIBLE : GONE);
+    ivSaveXml.setOnClickListener(new OnClickListener() {
+      @Override public void onClick(View v) {
+        SuperEditManager.saveAdjust2Xml(getContext(), mWorkSpace, clipIndex);
+      }
+    });
+    ImageView ivAddXml = view.findViewById(R.id.ivAddXml);
+    ivAddXml.setVisibility(SuperEditManager.isHadSuperEdit() ? VISIBLE : GONE);
+    ivAddXml.setOnClickListener(new OnClickListener() {
+      @Override public void onClick(View v) {
+        SuperEditManager.gotoAddXml(getContext(), mMenuContainer, mWorkSpace, XmlType.TYPE_ADJUST, clipIndex);
+        dismissMenu();
+      }
+    });
   }
 
   @Override protected void releaseAll() {
@@ -111,20 +131,20 @@ public class EditAdjustDialog extends BaseMenuView {
 
     private void initAdjustProgress(ItemViewHolder holder, int position) {
       ClipData clipData = mWorkSpace.getClipAPI().getClipList().get(clipIndex);
-      if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_luminance) {
-        int luminance = clipData.getParamAdjust().luminance;
-        holder.seekBarController.setSeekBarProgress(luminance);
+      if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_brightness) {
+        int brightness = clipData.getParamAdjust().brightness;
+        holder.seekBarController.setSeekBarProgress(brightness);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_contrast) {
         int contrast = clipData.getParamAdjust().contrast;
         holder.seekBarController.setSeekBarProgress(contrast);
-      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_saturation) {
-        int saturation = clipData.getParamAdjust().saturation;
-        holder.seekBarController.setSeekBarProgress(saturation);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_sharpness) {
         int sharpness = clipData.getParamAdjust().sharpness;
         holder.seekBarController.setSeekBarProgress(sharpness);
-      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_colortemp) {
-        int colourTemp = clipData.getParamAdjust().colourTemp;
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_saturation) {
+        int saturation = clipData.getParamAdjust().saturation;
+        holder.seekBarController.setSeekBarProgress(saturation);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_temperature) {
+        int colourTemp = clipData.getParamAdjust().temperature;
         holder.seekBarController.setSeekBarProgress(colourTemp);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_vignette) {
         int vignette = clipData.getParamAdjust().vignette;
@@ -132,41 +152,46 @@ public class EditAdjustDialog extends BaseMenuView {
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_shadow) {
         int shadow = clipData.getParamAdjust().shadow;
         holder.seekBarController.setSeekBarProgress(shadow);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_fade) {
+        int fade = clipData.getParamAdjust().fade;
+        holder.seekBarController.setSeekBarProgress(fade);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_hue) {
         int hue = clipData.getParamAdjust().hue;
         holder.seekBarController.setSeekBarProgress(hue);
       } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_highlight) {
         int highlight = clipData.getParamAdjust().highlight;
         holder.seekBarController.setSeekBarProgress(highlight);
-      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_fade) {
-        int fade = clipData.getParamAdjust().fade;
-        holder.seekBarController.setSeekBarProgress(fade);
+      } else if (ADJUST_ITEM_TITLE_RES[position] == R.string.mn_edit_adjust_noise) {
+        int noise = clipData.getParamAdjust().noise;
+        holder.seekBarController.setSeekBarProgress(noise);
       }
     }
 
     private void onAdjustChanged(int titleRes, int value) {
       ParamAdjust paramAdjust =
           mWorkSpace.getClipAPI().getClipList().get(clipIndex).getParamAdjust();
-      if (titleRes == R.string.mn_edit_adjust_luminance) {
-        paramAdjust.luminance = value;
+      if (titleRes == R.string.mn_edit_adjust_brightness) {
+        paramAdjust.brightness = value;
       } else if (titleRes == R.string.mn_edit_adjust_contrast) {
         paramAdjust.contrast = value;
-      } else if (titleRes == R.string.mn_edit_adjust_saturation) {
-        paramAdjust.saturation = value;
       } else if (titleRes == R.string.mn_edit_adjust_sharpness) {
         paramAdjust.sharpness = value;
-      } else if (titleRes == R.string.mn_edit_adjust_colortemp) {
-        paramAdjust.colourTemp = value;
+      } else if (titleRes == R.string.mn_edit_adjust_saturation) {
+        paramAdjust.saturation = value;
+      } else if (titleRes == R.string.mn_edit_adjust_temperature) {
+        paramAdjust.temperature = value;
       } else if (titleRes == R.string.mn_edit_adjust_vignette) {
         paramAdjust.vignette = value;
       } else if (titleRes == R.string.mn_edit_adjust_shadow) {
         paramAdjust.shadow = value;
+      } else if (titleRes == R.string.mn_edit_adjust_fade) {
+        paramAdjust.fade = value;
       } else if (titleRes == R.string.mn_edit_adjust_hue) {
         paramAdjust.hue = value;
       } else if (titleRes == R.string.mn_edit_adjust_highlight) {
         paramAdjust.highlight = value;
-      } else if (titleRes == R.string.mn_edit_adjust_fade) {
-        paramAdjust.fade = value;
+      } else if (titleRes == R.string.mn_edit_adjust_noise) {
+        paramAdjust.noise = value;
       }
       ClipOPParamAdjust clipOPParamAdjust = new ClipOPParamAdjust(clipIndex, paramAdjust);
       mWorkSpace.handleOperation(clipOPParamAdjust);

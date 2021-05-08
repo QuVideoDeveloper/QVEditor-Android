@@ -21,7 +21,7 @@ ext {
     downloadVersion = "1.0.2"
 
     //---------输出组件版本号
-    vivaSDKVersion = '2.0.4'
+    vivaSDKVersion = '4.0.1'
 
     //该文件设计打包脚本处理，参数格式正常情况不做特别修改
     android = [
@@ -49,12 +49,12 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url 'https://dl.bintray.com/quvideo/release'
-        }
         // Could not find common.jar（android/arch/core/common/1.0.0/common-1.0.0.jar） if below（jcenter()  ）
         google()
         jcenter()
         mavenCentral()
+        maven {
+          url 'https://serverless-1533657941-maven.pkg.coding.net/repository/app-sdk-pub/bintray/'
+        }
     }
 }

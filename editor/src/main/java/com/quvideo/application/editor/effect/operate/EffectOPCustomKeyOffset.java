@@ -3,6 +3,7 @@ package com.quvideo.application.editor.effect.operate;
 import com.quvideo.mobile.engine.entity.Ve3DDataF;
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo;
 import com.quvideo.mobile.engine.work.IEngine;
+import com.quvideo.mobile.engine.work.ModifyData;
 import com.quvideo.mobile.engine.work.PlayerRefreshListener;
 import com.quvideo.mobile.engine.work.operate.effect.BaseEffectOperate;
 import com.quvideo.mobile.engine.work.operate.effect.EffectOPKeyFrameUpdateOffsetAll;
@@ -61,5 +62,11 @@ public class EffectOPCustomKeyOffset extends BaseEffectOperate {
     PlayerRefreshListener.RefreshEvent event = new PlayerRefreshListener.RefreshEvent();
     event.refreshType = PlayerRefreshListener.OperaRefreshType.TYPE_REFRESH_DISPLAY;
     return event;
+  }
+
+  @Override protected ModifyData getModifyData() {
+    ModifyData modifyData = new ModifyData();
+    modifyData.mEffectModifyData = new ModifyData.EffectModifyData(ModifyData.ModifyType.MODIFY_TYPE_UPDATE, groupId, effectIndex);
+    return modifyData;
   }
 }

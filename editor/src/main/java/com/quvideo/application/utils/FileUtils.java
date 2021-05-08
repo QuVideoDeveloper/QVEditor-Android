@@ -8,7 +8,6 @@ import com.quvideo.application.EditorApp;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -130,13 +129,6 @@ public class FileUtils {
         in = new BufferedInputStream(in, 16 * 1024);
         in.mark(1024);
       }
-
-      String newFileName = destFile;
-      File f = new File(newFileName);
-      if (f.exists() && isSameData(in, f)) {
-        return false;// same file and data, do not need copy
-      }
-
       in.reset();
       fout = new FileOutputStream(destFile);
       byte[] buffer = new byte[2048];
@@ -178,61 +170,6 @@ public class FileUtils {
     return true;
   }
 
-  private static boolean isSameData(InputStream is, File file) {
-    boolean bIsSame = true;
-
-    long lSrcLen = 0;
-    long lDstLen = 0;
-    try {
-      lSrcLen = is.available();
-      lDstLen = file.length();
-      if (lSrcLen != lDstLen) {
-        return false;
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
-    }
-
-    long lFileSize = lSrcLen;
-    byte[] bufferSrc = new byte[128];
-    byte[] bufferDst = new byte[128];
-    FileInputStream dst = null;
-    try {
-      dst = new FileInputStream(file);
-      // check header
-      lDstLen = dst.read(bufferDst);
-      lSrcLen = is.read(bufferSrc);
-      if (lSrcLen != lDstLen) {
-        return false;
-      }
-
-      for (int i = 0; i < lSrcLen; i++) {
-        if (bufferDst[i] != bufferSrc[i]) {
-          return false;
-        }
-      }
-    } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } finally {
-      if (dst != null) {
-        try {
-          dst.close();
-        } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-    }
-
-    bIsSame = true;
-    return true;
-  }
-
   public static String getFileParentPath(String path) {
     if (FilePathUtils.isContentUri(path)) {
       path = FilePathUtils.transUriPath2FilePath(path);
@@ -271,7 +208,6 @@ public class FileUtils {
     }
     return strFileName;
   }
-
 
   public static String getFileNameWithExt(String fullFilePath) {
     if (FilePathUtils.isContentUri(fullFilePath)) {
@@ -316,7 +252,11 @@ public class FileUtils {
     }
     String strFile = fullPath.toUpperCase(Locale.US);
     Bitmap.CompressFormat cf = Bitmap.CompressFormat.JPEG;
-    if (strFile.endsWith(".PNG")) cf = Bitmap.CompressFormat.PNG;
+    if (strFile.endsWith(".PNG")) {
+      cf = Bitmap.CompressFormat.PNG;
+    } else if (strFile.endsWith(".WEBP")) {
+      cf = Bitmap.CompressFormat.WEBP;
+    }
 
     bitmap.compress(cf, nQuality, fOut);
     try {

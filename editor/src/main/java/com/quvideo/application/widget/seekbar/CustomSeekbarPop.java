@@ -42,6 +42,8 @@ public class CustomSeekbarPop extends RelativeLayout {
   private int dp1px;
   private int dp2px;
 
+  private boolean showPop = true;
+
   public CustomSeekbarPop(Context context) {
     super(context);
     mContext = context;
@@ -72,6 +74,10 @@ public class CustomSeekbarPop extends RelativeLayout {
 
     dp1px = DeviceSizeUtil.getFitPxFromDp(1);
     dp2px = dp1px * 2;
+  }
+
+  public void setShowPop(boolean showPop) {
+    this.showPop = showPop;
   }
 
   public void init(InitBuilder initBuilder) {
@@ -157,7 +163,7 @@ public class CustomSeekbarPop extends RelativeLayout {
    * @param seekbarXPos 进度条进度
    */
   private void updateTipPosition(float seekbarXPos) {
-    if (progressPopupWin.isShowing()) {
+    if (progressPopupWin.isShowing() && showPop) {
       progressPopupWin.update(getThumbCenterX(seekbarXPos), getThumbTopY(),
           LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
@@ -192,7 +198,9 @@ public class CustomSeekbarPop extends RelativeLayout {
   private int getTipHalfW() {
     if (tipHalfW == 0) {
       Rect rectP = new Rect();
-      progressPopupWin.getPopView().getGlobalVisibleRect(rectP);
+      if (showPop) {
+        progressPopupWin.getPopView().getGlobalVisibleRect(rectP);
+      }
       if (rectP.right > rectP.left) {
         tipHalfW = (rectP.right - rectP.left) / 2;
       } else {
@@ -216,9 +224,11 @@ public class CustomSeekbarPop extends RelativeLayout {
         @Override public void onSeekStart(boolean isFirst, int progress) {
           float seekbarXPos = mSeekBar.getSeekbarPos(isFirst);
           updateTipPosition(seekbarXPos);
-          progressPopupWin.showAtLocation(CustomSeekbarPop.this,
-              Gravity.LEFT | Gravity.START | Gravity.TOP,
-              getThumbCenterX(seekbarXPos), getThumbTopY());
+          if (showPop) {
+            progressPopupWin.showAtLocation(CustomSeekbarPop.this,
+                Gravity.LEFT | Gravity.START | Gravity.TOP,
+                getThumbCenterX(seekbarXPos), getThumbTopY());
+          }
           if (mSeekOverListener != null) {
             mSeekOverListener.onSeekStart(isFirst, progress);
           }
@@ -228,7 +238,9 @@ public class CustomSeekbarPop extends RelativeLayout {
           updateProgress(progress);
           CustomSeekbarPop.this.postDelayed(new Runnable() {
             @Override public void run() {
-              progressPopupWin.dismiss();
+              if (showPop) {
+                progressPopupWin.dismiss();
+              }
             }
           }, 250);
           if (mSeekOverListener != null) {

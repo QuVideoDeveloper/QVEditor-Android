@@ -61,6 +61,9 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     EffectSubtitleShadow, // effect字幕阴影
     EffectSubtitleStroke, // effect字幕描边
     EffectSubtitleAlign, // effect字幕对齐
+    EffectSubtitleAnim, // 字幕动画
+    EffectSubtitleAnimModify, // 字幕动画修改
+    EffectSubtitleAnimDuration, // 字幕动画时长修改
     EffectAlpha, // effect透明度
     EffectTone, // effect变声
     EffectTrim, // effect裁切
@@ -88,5 +91,12 @@ public abstract class BaseMenuLayer extends RelativeLayout {
     AudioDots, // 音频踩点显示
     EffectEditPaint, // effect画笔
     PlayerPosInfo, // player位置
+    EffectXmlAdd, // 通过xml添加/设置effect
+    PlayerSetting, // 播放器设置
+    AeGroupEdit, //
+    AeGroupManager, //
+    AeGroupAdd, //
+    AeGroupChroma, // effect抠色
+    AeGroupSmear, // 涂抹
   }
 }

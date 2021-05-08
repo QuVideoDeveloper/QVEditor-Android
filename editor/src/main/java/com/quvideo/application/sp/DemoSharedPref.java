@@ -18,9 +18,13 @@ public class DemoSharedPref {
 
   private static volatile DemoSharedPref INSTANCE = null;
 
-  public synchronized static DemoSharedPref getInstance() {
+  public static DemoSharedPref getInstance() {
     if (null == INSTANCE) {
-      INSTANCE = new DemoSharedPref();
+      synchronized (DemoSharedPref.class) {
+        if (null == INSTANCE) {
+          INSTANCE = new DemoSharedPref();
+        }
+      }
     }
     return INSTANCE;
   }

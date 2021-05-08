@@ -10,11 +10,20 @@ public class StorageUtils {
   private static final String PATH_ROOT = ".demo/";
   private static final String PATH_TEMPLATE = ".template/";
   private static final String PATH_AUDIODOT = "audioDot/";
+  private static final String PATH_SEG_MASK = "segMask/";
+  private static final String PATH_PAINT_GROUP = "paintGroup/";
+  private static final String PATH_EFFECT_XML = "effectXml/";
 
   // 素材目录
   private static String mTemplatePath;
   // 踩点目录
   private static String mAudioAppDir;
+  // 人体分割目录
+  private static String mSegMaskAppDir;
+  // 画笔临时目录
+  private static String mPaintGroupAppDir;
+  // EffectXml文件目录
+  private static String mEffectXmlDir;
 
   private static String outerAppDir;
 
@@ -36,10 +45,18 @@ public class StorageUtils {
     }
     mTemplatePath = outerAppDir + PATH_ROOT + PATH_TEMPLATE;
     mAudioAppDir = outerAppDir + PATH_ROOT + PATH_AUDIODOT;
+    mSegMaskAppDir = outerAppDir + PATH_ROOT + PATH_SEG_MASK;
+    mPaintGroupAppDir = outerAppDir + PATH_ROOT + PATH_PAINT_GROUP;
+    mEffectXmlDir = outerAppDir + PATH_ROOT + PATH_EFFECT_XML;
     FileUtils.createMultilevelDirectory(mTemplatePath);
     FileUtils.createNoMediaFileInPath(mTemplatePath);
     FileUtils.createMultilevelDirectory(mAudioAppDir);
     FileUtils.createNoMediaFileInPath(mAudioAppDir);
+    FileUtils.createMultilevelDirectory(mSegMaskAppDir);
+    FileUtils.createNoMediaFileInPath(mSegMaskAppDir);
+    FileUtils.createMultilevelDirectory(mPaintGroupAppDir);
+    FileUtils.createNoMediaFileInPath(mPaintGroupAppDir);
+    FileUtils.createMultilevelDirectory(mEffectXmlDir);
   }
 
   public static synchronized String getAppPath(Context context) {
@@ -61,5 +78,26 @@ public class StorageUtils {
       init(context);
     }
     return mAudioAppDir;
+  }
+
+  public static synchronized String getSegMaskAppDir(Context context) {
+    if (TextUtils.isEmpty(mSegMaskAppDir)) {
+      init(context);
+    }
+    return mSegMaskAppDir;
+  }
+
+  public static synchronized String getPaintGroupAppDir(Context context) {
+    if (TextUtils.isEmpty(mPaintGroupAppDir)) {
+      init(context);
+    }
+    return mPaintGroupAppDir;
+  }
+
+  public static synchronized String getEffectXmlDir(Context context) {
+    if (TextUtils.isEmpty(mEffectXmlDir)) {
+      init(context);
+    }
+    return mEffectXmlDir;
   }
 }

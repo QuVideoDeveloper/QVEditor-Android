@@ -6,6 +6,7 @@ import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
 import com.quvideo.mobile.engine.model.effect.EffectPosInfo
+import com.quvideo.mobile.engine.slide.SlidePosInfo
 import xiaoying.engine.base.QTransformInfo
 
 interface IFakeViewApi {
@@ -15,6 +16,14 @@ interface IFakeViewApi {
 
   /** 设置对应的clip */
   fun setClipTarget(iFakeDraw: IFakeDraw?, clipPosInfo: ClipPosInfo?, size: VeMSize)
+
+  /** 设置对应的slideclip */
+  fun setSlideClipTarget(iFakeDraw: IFakeDraw?, slidePosInfo: SlidePosInfo?, size: VeMSize)
+
+  /** 设置播放器的尺寸 */
+  fun setPlayerTarget(iFakeDraw: IFakeDraw?, transform: QTransformInfo, size: VeMSize)
+
+  fun setPaintTarget(iFakeDraw: IFakeDraw?, size: VeMSize)
 
   /** 设置对应的Effect */
   fun setTarget(iFakeDraw: IFakeDraw?, effectPosInfo: EffectPosInfo?)
@@ -41,6 +50,8 @@ interface IFakeViewApi {
    * 用于转换effect position
    */
   fun setStreamSize(size: VeMSize)
+
+  fun trans2StreamPoint(pointX: Float, pointY: Float): PointF
 
   /** 设置回调 */
   fun setFakeViewListener(listener: IFakeViewListener?)

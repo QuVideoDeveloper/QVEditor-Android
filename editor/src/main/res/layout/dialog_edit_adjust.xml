@@ -27,6 +27,28 @@
       app:layout_constraintTop_toTopOf="@+id/viewBg"
       />
 
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/ivAddXml"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_gravity="center"
+      app:layout_constraintBottom_toBottomOf="@+id/recycler_adjust"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_margin="5dp"
+      android:visibility="gone"
+      android:src="@drawable/editor_effect_xml_list"/>
+
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/ivSaveXml"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_gravity="center"
+      app:layout_constraintBottom_toBottomOf="@+id/recycler_adjust"
+      app:layout_constraintEnd_toStartOf="@+id/ivAddXml"
+      android:layout_margin="5dp"
+      android:visibility="gone"
+      android:src="@drawable/editor_effect_save2xml_icon"/>
+
   <include
       layout="@layout/view_edit_dialog_bottom"
       android:id="@+id/layout_bottom"

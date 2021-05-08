@@ -177,10 +177,6 @@ public class EditEditDialog extends BaseMenuView {
           getContext().getString(R.string.mn_edit_title_change_voice)));
       add(new EditOperate(R.drawable.edit_icon_speed_nor,
           getContext().getString(R.string.mn_edit_title_speed)));
-      if (SuperEditManager.isHadSuperEdit()) {
-        add(new EditOperate(R.drawable.editor_tool_speed_icon_nor,
-            getContext().getString(R.string.mn_edit_title_curve_speed)));
-      }
       add(new EditOperate(R.drawable.edit_icon_adjust_nor,
           getContext().getString(R.string.mn_edit_title_adjust)));
       add(new EditOperate(R.drawable.editor_tool_adjust_curve,
@@ -196,6 +192,7 @@ public class EditEditDialog extends BaseMenuView {
       add(new EditOperate(R.drawable.editor_tool_keyframeanimator_icon,
           getContext().getString(R.string.mn_edit_keyframe_animator_title)));
     }};
+    SuperEditManager.addClipOPFunc(getContext(), list);
     if (mOperateAdapter != null) {
       mOperateAdapter.updateDatas(list);
     }
@@ -306,6 +303,9 @@ public class EditEditDialog extends BaseMenuView {
 
   @Override public void onClick(View view, EditOperate operate) {
     int selIndex = clipAdapter.getSelClipIndex();
+    if (SuperEditManager.clickClipOPFunc(getActivity(), operate, selIndex, mMenuContainer, mWorkSpace, mFakeApi)) {
+      return;
+    }
     if (operate.getResId() == R.drawable.edit_icon_trim_n) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditTrimDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
@@ -348,13 +348,6 @@ public class EditEditDialog extends BaseMenuView {
     } else if (operate.getResId() == R.drawable.edit_icon_speed_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditSpeedDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
-      if (SuperEditManager.isHadSuperEdit()) {
-        ToastUtils.show(getContext(), "曲线变速后，再设置定制变速可能有问题哦！",
-            Toast.LENGTH_LONG);
-      }
-    } else if (operate.getResId() == R.drawable.editor_tool_speed_icon_nor) {
-      mWorkSpace.getPlayerAPI().getPlayerControl().pause();
-      SuperEditManager.gotoEditCurveSpeedDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);
     } else if (operate.getResId() == R.drawable.edit_icon_filter_nor) {
       mWorkSpace.getPlayerAPI().getPlayerControl().pause();
       new EditFilterDialog(getContext(), mMenuContainer, mWorkSpace, selIndex);

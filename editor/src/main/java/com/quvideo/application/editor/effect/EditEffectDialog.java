@@ -146,7 +146,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
           || operate instanceof EffectOPAudioReplace
           || operate instanceof EffectOPAudioRepeat
           || operate instanceof EffectOPAudioFade
-          || operate instanceof ThemeOPBgmReset) {
+          || operate instanceof ThemeOPBgmReset
+          || SuperEditManager.isSuperRefreshOP(operate)) {
         // 刷新数据
         if (mWorkSpace.getPlayerAPI() != null
             && mWorkSpace.getPlayerAPI().getPlayerControl() != null) {
@@ -529,6 +530,10 @@ public class EditEffectDialog extends BaseEffectMenuView {
         return;
       }
       int index = mEffectAdapter.getSelectIndex();
+      if (SuperEditManager.clickEffectOPFunc(getActivity(), operate, groupId, index,
+          mMenuContainer, mWorkSpace, mFakeApi)) {
+        return;
+      }
       if (index < 0) {
         ToastUtils.show(EditorApp.Companion.getInstance().getApp(),
             R.string.mn_edit_tips_cannot_operate, Toast.LENGTH_LONG);
@@ -660,9 +665,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_COLLAGE_CURVE_ADJUST:
           new CollageCurveAdjustDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
           break;
-        case EffectBarItem.ACTION_COLLAGE_MOTION:
-          SuperEditManager.gotoEditCollageMotionDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
-          break;
         case EffectBarItem.ACTION_KEYFRAME:
           mWorkSpace.getPlayerAPI().getPlayerControl().pause();
           new EffectKeyFrameDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index, mFakeApi);
@@ -700,16 +702,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
         case EffectBarItem.ACTION_DEL:
           EffectOPDel effectOPDel = new EffectOPDel(groupId, index);
           mWorkSpace.handleOperation(effectOPDel);
-          break;
-        //case EffectBarItem.ACTION_BGM_DOT:
-        //  if (SuperEditManager.isHadSuperEdit()) {
-        //    SuperEditManager.gotoEditAudioDotDialog(getActivity(), mMenuContainer, mWorkSpace, groupId, index);
-        //  }
-        //  break;
-        case EffectBarItem.ACTION_AUDIO_SPEED:
-          if (SuperEditManager.isHadSuperEdit()) {
-            SuperEditManager.gotoEditAudioSpeedDialog(getContext(), mMenuContainer, mWorkSpace, groupId, index);
-          }
           break;
         case EffectBarItem.ACTION_COLLAGE_UP_TO_TOP:
           // 置顶
@@ -905,7 +897,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
   private void setEffectLayerToTop(int effectIndex, float oldLayerId) {
     float maxLayerId = getMaxLayer();
     if (oldLayerId != maxLayerId) {
-      EffectOPLayerId effectOPLayerId = new EffectOPLayerId(groupId, effectIndex, maxLayerId + 0.005f);
+      EffectOPLayerId effectOPLayerId = new EffectOPLayerId(groupId, effectIndex, maxLayerId + 0.05f);
       mWorkSpace.handleOperation(effectOPLayerId);
     }
   }
@@ -916,6 +908,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
     maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_STICKER));
     maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_COLLAGES));
     maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_MOSAIC));
+    maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_PAINT));
+    maxLayerId = Math.max(maxLayerId, getMaxLayer(QEGroupConst.GROUP_ID_AE_EFFECT_GROUP));
     return maxLayerId;
   }
 
@@ -987,6 +981,8 @@ public class EditEffectDialog extends BaseEffectMenuView {
     if (groupId == QEGroupConst.GROUP_ID_SUBTITLE) {
       list.add(new EffectBarItem(EffectBarItem.ACTION_SUBTITLE_EDIT, R.drawable.edit_icon_key_nor,
           getContext().getString(R.string.mn_edit_subtitle_input), isOpEnabled));
+      list.add(new EffectBarItem(EffectBarItem.ACTION_SUBTITLE_ANIM, R.drawable.editor_title_subtitle_anim_icon,
+          getContext().getString(R.string.mn_edit_subtitle_anim), isOpEnabled));
     }
     if (groupId == QEGroupConst.GROUP_ID_BGMUSIC
         || groupId == QEGroupConst.GROUP_ID_DUBBING
@@ -1062,11 +1058,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_COLLAGE_CURVE_ADJUST, R.drawable.editor_tool_adjust_curve,
               getContext().getString(R.string.mn_edit_title_adjust_curve), isOpEnabled));
-      if (SuperEditManager.isHadSuperEdit()) {
-        list.add(
-            new EffectBarItem(EffectBarItem.ACTION_COLLAGE_MOTION, R.drawable.editor_icon_tool_motion_tile,
-                getContext().getString(R.string.mn_edit_collage_motion), isOpEnabled));
-      }
     }
     if (groupId == QEGroupConst.GROUP_ID_STICKER
         || groupId == QEGroupConst.GROUP_ID_SUBTITLE
@@ -1120,13 +1111,6 @@ public class EditEffectDialog extends BaseEffectMenuView {
       list.add(
           new EffectBarItem(EffectBarItem.ACTION_BGM_REPEAT, R.drawable.editor_tool_effect_sound_icon,
               getContext().getString(R.string.mn_edit_title_bgm_repeat), isOpEnabled));
-      if (SuperEditManager.isHadSuperEdit()) {
-        list.add(new EffectBarItem(EffectBarItem.ACTION_AUDIO_SPEED, R.drawable.edit_icon_speed_nor,
-            getContext().getString(R.string.mn_edit_title_speed), isOpEnabled));
-        //list.add(
-        //    new EffectBarItem(EffectBarItem.ACTION_BGM_DOT, R.drawable.editor_icon_music_dot,
-        //        getContext().getString(R.string.mn_edit_title_bgm_dot), isOpEnabled));
-      }
       if (mWorkSpace.getStoryboardAPI().getThemeId() != 0) {
         list.add(
             new EffectBarItem(EffectBarItem.ACTION_BGM_RESET_TO_THEME, R.drawable.editor_icon_collage_tool_chroma_reset,
@@ -1135,6 +1119,7 @@ public class EditEffectDialog extends BaseEffectMenuView {
     }
     list.add(new EffectBarItem(EffectBarItem.ACTION_DEL, R.drawable.edit_icon_delete_nor,
         getContext().getString(R.string.mn_edit_title_delete), isOpEnabled));
+    SuperEditManager.addEffectOPFunc(getContext(), list, groupId, isOpEnabled);
     return list;
   }
 }

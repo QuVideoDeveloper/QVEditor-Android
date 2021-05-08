@@ -14,6 +14,7 @@ import com.quvideo.application.camera.recorder.IRecorderListener;
 import com.quvideo.application.camera.recorder.RecorderClipInfo;
 import com.quvideo.application.camera.recorder.RecorderMgr;
 import com.quvideo.application.camera.recorder.RecorderMusicMgr;
+import com.quvideo.application.utils.ToastUtils;
 import com.quvideo.mobile.engine.camera.XYCameraConst;
 import com.quvideo.mobile.engine.camera.XYCameraEngine;
 import com.quvideo.mobile.engine.camera.XYRecorderParam;
@@ -111,7 +112,7 @@ class CameraMgr implements LifecycleObserver {
 
     @Override public void onCaptureDone(String filePath) {
       super.onCaptureDone(filePath);
-      Toast.makeText(mActivity, "onCaptureDone = " + filePath, Toast.LENGTH_SHORT).show();
+      ToastUtils.show(mActivity, "onCaptureDone = " + filePath, Toast.LENGTH_SHORT);
     }
 
     @Override public void onRecorderRunning(long duration) {

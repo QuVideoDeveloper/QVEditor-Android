@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -238,7 +239,11 @@ public class MediaManager {
     item.mediaType = mediaType;
     item.mediaId = cursor.getInt(0);
     item.title = item.displayTitle = cursor.getString(1);
-    item.path = Uri.withAppendedPath(baseUri, "" + item.mediaId).toString();
+    if (Build.VERSION.SDK_INT < 29 || Environment.isExternalStorageLegacy()) {
+      item.path = cursor.getString(2);
+    } else {
+      item.path = Uri.withAppendedPath(baseUri, "" + item.mediaId).toString();
+    }
     item.date = cursor.getLong(3);
     if (String.valueOf(item.date).length() <= 10) {
       //to mill seconds
