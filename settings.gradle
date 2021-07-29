@@ -1,1 +1,4 @@
-include ':app', ':editor'
+include ':app'
+include ':biz-editor'
+include ':biz-common', ':biz-gallery'
+

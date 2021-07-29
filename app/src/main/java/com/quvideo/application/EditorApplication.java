@@ -26,6 +26,7 @@ public class EditorApplication extends Application {
       return;
     }
     //
+    BaseApp.Companion.getInstance().init(this);
     EditorApp.Companion.getInstance().init(this, ASSETS_ANDROID_XIAOYING_LICENCE);
     initApplicationOver = true;
   }

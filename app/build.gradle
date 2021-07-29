@@ -58,5 +58,5 @@ dependencies {
   implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxAndroidVersion"
   implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
 
-  implementation project(":editor")
+  implementation project(':biz-editor')
 }

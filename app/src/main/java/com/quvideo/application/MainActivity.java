@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.quvideo.application.camera.CameraActivity;
 import com.quvideo.application.draft.DraftActivity;
 import com.quvideo.application.editor.EditorActivity;
-import com.quvideo.application.frame.CaptureProcessorActivity;
 import com.quvideo.application.gallery.GalleryClient;
 import com.quvideo.application.gallery.GallerySettings;
 import com.quvideo.application.gallery.model.GalleryDef;
@@ -60,11 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
   public void gotoDraft(View view) {
     Intent intent = new Intent(this, DraftActivity.class);
-    startActivity(intent);
-  }
-
-  public void gotoFrame(View view) {
-    Intent intent = new Intent(this, CaptureProcessorActivity.class);
     startActivity(intent);
   }
 
