@@ -10,7 +10,7 @@ import com.quvideo.application.editor.fake.FakePosInfo;
 import com.quvideo.application.editor.fake.FakePosUtils;
 import com.quvideo.application.editor.fake.IFakeViewApi;
 import com.quvideo.application.editor.fake.IFakeViewListener;
-import com.quvideo.application.editor.fake.draw.ClipPosDraw;
+import com.quvideo.application.editor.fake.draw.PosDraw;
 import com.quvideo.mobile.engine.entity.VeMSize;
 import com.quvideo.mobile.engine.model.ClipData;
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo;
@@ -62,19 +62,16 @@ public class EditClipPosInfoDialog extends BaseMenuView {
     initFakeView();
   }
 
+  private final PosDraw mPosDraw = new PosDraw();
+
   private void initFakeView() {
     mFakeApi.setStreamSize(mWorkSpace.getStoryboardAPI().getStreamSize());
     ClipPosInfo clipPosInfo = mWorkSpace.getClipAPI().getClipByIndex(clipIndex).getClipPosInfo();
-    mFakeApi.setClipTarget(new ClipPosDraw(), clipPosInfo, mWorkSpace.getStoryboardAPI().getStreamSize());
+    mFakeApi.setClipTarget(mPosDraw, clipPosInfo, mWorkSpace.getStoryboardAPI().getStreamSize());
     mFakeApi.setFakeViewListener(new IFakeViewListener() {
 
       @Override public void onEffectMoving(float pointX, float pointY) {
-        FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
-        ClipPosInfo targetClipPosInfo = new ClipPosInfo();
-        FakePosUtils.INSTANCE.updateClipPos2FakePos(curFakePos, targetClipPosInfo,
-            mWorkSpace.getStoryboardAPI().getStreamSize(), clipSourceSize);
-        ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, targetClipPosInfo);
-        mWorkSpace.handleOperation(clipOPPosInfo);
+        updatePosInfo(null);
       }
 
       @Override public void onEffectMoveStart() {
@@ -86,6 +83,19 @@ public class EditClipPosInfoDialog extends BaseMenuView {
       @Override public void checkEffectTouchHit(PointF pointF) {
       }
     });
+  }
+
+  private void updatePosInfo(Integer rotation) {
+    FakePosInfo curFakePos = mFakeApi.getFakePosInfo();
+    ClipPosInfo targetClipPosInfo = new ClipPosInfo();
+    FakePosUtils.INSTANCE.updateClipPos2FakePos(curFakePos, targetClipPosInfo,
+        mWorkSpace.getStoryboardAPI().getStreamSize(), clipSourceSize);
+    // 更新旋转角度
+    if (rotation != null) targetClipPosInfo.degree = rotation;
+    ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, targetClipPosInfo);
+    mWorkSpace.handleOperation(clipOPPosInfo);
+    mPosDraw.setNormalFake(0, targetClipPosInfo.degree);
+    mFakeApi.getHostView().invalidate();
   }
 
   private OnClickListener mOnClickListener = new OnClickListener() {
@@ -121,6 +131,8 @@ public class EditClipPosInfoDialog extends BaseMenuView {
         int rotate = clipData.getRotateAngle();
         ClipOPRotate clipOPRotate = new ClipOPRotate(clipIndex, rotate + 90);
         mWorkSpace.handleOperation(clipOPRotate);
+        // 通过镜头参数的方式更新
+        //updatePosInfo((int) ((clipData.getClipPosInfo().degree + 90) % 360));
       } else if (v.equals(btnFitIn)) {
         ClipOPPosInfo clipOPPosInfo = new ClipOPPosInfo(clipIndex, false);
         mWorkSpace.handleOperation(clipOPPosInfo);

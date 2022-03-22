@@ -761,7 +761,7 @@ class SpecialCurveLineView @JvmOverloads constructor(
     return isPointAroundPath(x, y, rightSlideBtnPath)
   }
 
-  fun isPointAroundPath(x: Float, y: Float, path: Path?): Boolean {
+  fun isPointAroundPath(x: Float, y: Float, path: Path): Boolean {
     val fixSize = DeviceSizeUtil.dpToPixel(9f)
     val tempPath = Path()
     tempPath.moveTo(x, y)

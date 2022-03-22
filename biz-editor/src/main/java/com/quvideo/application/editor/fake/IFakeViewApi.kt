@@ -2,6 +2,7 @@ package com.quvideo.application.editor.fake
 
 import android.graphics.PointF
 import android.graphics.Rect
+import android.view.View
 import com.quvideo.application.editor.effect.mask.FakeMaskPosData
 import com.quvideo.mobile.engine.entity.VeMSize
 import com.quvideo.mobile.engine.model.clip.ClipPosInfo
@@ -55,4 +56,6 @@ interface IFakeViewApi {
 
   /** 设置回调 */
   fun setFakeViewListener(listener: IFakeViewListener?)
+
+  fun getHostView(): View
 }

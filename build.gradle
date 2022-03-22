@@ -21,14 +21,14 @@ ext {
     downloadVersion = "1.0.2"
 
     //---------输出组件版本号
-    vivaSDKVersion = '4.5.0'
+    vivaSDKVersion = '5.0.0-bate02'
 
     //该文件设计打包脚本处理，参数格式正常情况不做特别修改
     android = [
-            compileSdkVersion: 29,
+            compileSdkVersion: 30,
             buildToolsVersion: "28.0.3",
             minSdkVersion    : 21,
-            targetSdkVersion : 29]
+            targetSdkVersion : 30]
 }
 
 buildscript {

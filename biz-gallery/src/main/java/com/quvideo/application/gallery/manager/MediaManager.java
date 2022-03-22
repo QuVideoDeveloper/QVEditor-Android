@@ -199,7 +199,7 @@ public class MediaManager {
       projection = new String[] {
           MediaStore.Video.Media._ID, MediaStore.Video.Media.TITLE, MediaStore.Video.Media.DATA,
           MediaStore.Video.Media.DATE_MODIFIED, MediaStore.Video.Media.DURATION,
-          //				MediaStore.Video.Media.RESOLUTION,
+          // MediaStore.Video.Media.RESOLUTION,
       };
       strWhere = getQuerySelect(BROWSE_TYPE.VIDEO);
     } else if (uri.equals(MediaStore.Images.Media.EXTERNAL_CONTENT_URI)) {

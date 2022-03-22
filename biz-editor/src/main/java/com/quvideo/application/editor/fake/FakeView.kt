@@ -6,6 +6,7 @@ import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.quvideo.application.editor.effect.mask.FakeMaskPosData
@@ -162,12 +163,13 @@ class FakeView @JvmOverloads constructor(
       this.setTarget(iFakeDraw, null, fakeLimitPos)
       return
     }
-    var fakePosInfo = FakePosInfo(
+    val fakePosInfo = FakePosInfo(
         effectPosInfo.center.x * scaleWidth + offsetX,
         effectPosInfo.center.y * scaleHeight + offsetY,
         effectPosInfo.size.x * scaleWidth,
         effectPosInfo.size.y * scaleHeight,
         effectPosInfo.degree.z, effectPosInfo.anchorOffset.x * scaleWidth, effectPosInfo.anchorOffset.y * scaleHeight)
+      Log.d(TAG, "setTarget() fake pos: $fakePosInfo, fake limit: $fakeLimitPos")
     this.setTarget(iFakeDraw, fakePosInfo, fakeLimitPos)
   }
 
@@ -295,6 +297,8 @@ class FakeView @JvmOverloads constructor(
     fakeViewListener = listener
   }
 
+  override fun getHostView(): View = this
+
   override fun onDraw(canvas: Canvas?) {
     super.onDraw(canvas)
     if (canvas == null || iFakeDraw == null || iFakeDraw?.fakePosInfo == null) {
@@ -316,4 +320,8 @@ class FakeView @JvmOverloads constructor(
     this.iFakeDraw = null
     this.fakeViewListener = null
   }
+
+    companion object {
+        private const val TAG = "FakeView"
+    }
 }

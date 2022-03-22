@@ -47,6 +47,7 @@ public class MediaUtils {
   public static final int FILE_TYPE_PNG = 303;
   public static final int FILE_TYPE_BMP = 304;
   public static final int FILE_TYPE_WBMP = 305;
+  public static final int FILE_TYPE_WEBP = 306;
   private static final int FIRST_IMAGE_FILE_TYPE = FILE_TYPE_JPEG;
   private static final int LAST_IMAGE_FILE_TYPE = 399;
   // Playlist file types
@@ -121,6 +122,7 @@ public class MediaUtils {
     addFileType("PNG", FILE_TYPE_PNG, "image/png");
     addFileType("BMP", FILE_TYPE_BMP, "image/x-ms-bmp");
     addFileType("WBMP", FILE_TYPE_WBMP, "image/vnd.wap.wbmp");
+    addFileType("WEBP", FILE_TYPE_WEBP, "image/webp");
     // Playlist
     addFileType("M3U", FILE_TYPE_M3U, "audio/x-mpegurl");
     addFileType("PLS", FILE_TYPE_PLS, "audio/x-scpls");

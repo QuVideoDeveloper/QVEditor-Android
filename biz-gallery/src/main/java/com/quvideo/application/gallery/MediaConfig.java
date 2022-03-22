@@ -13,7 +13,7 @@ public class MediaConfig {
   /**
    * media gif source available
    */
-  public static boolean GIF_AVAILABLE = false;
+  public static boolean GIF_AVAILABLE = true;
 
   public static void init() {
     StorageInfo.init();

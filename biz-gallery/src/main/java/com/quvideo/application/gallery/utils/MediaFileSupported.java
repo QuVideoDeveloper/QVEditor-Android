@@ -4,7 +4,7 @@ public class MediaFileSupported {
   private final static String[] SUPPORTED_MUSICS_EXT = { "MP3", "M4A", "AAC" };
   private final static String[] SUPPORTED_VIDEOS_EXT =
       { "MP4", "3GP", "3G2", "M4V", "3GPP", "MOV" };
-  private final static String[] SUPPORTED_PHOTOS_EXT = { "JPG", "BMP", "JPEG", "PNG", "GIF" };
+  private final static String[] SUPPORTED_PHOTOS_EXT = { "JPG", "BMP", "JPEG", "PNG", "GIF", "WEBP" };
 
   //refer to http://linglong117.blog.163.com/blog/static/27714547200991410139472/
   private final static String[] SUPPORTED_MUSICS_MIMETYPE = {
@@ -95,6 +95,7 @@ public class MediaFileSupported {
       "image/jpeg2000-image",//	JPEG 2000 Image 2	QuickTime
       "image/x-bmp",//	Windows or OS/2 Bitmap Image 2	QuickTime
       "image/x-png",//	PNG Image 2	Handled Internally 4
+      "image/webp",//	PNG Image 2	Handled Internally 4
 	/*
 		"image/c4",//	JEDMICS C4	CPC Lite
 		"image/cals",//	CALS Type 1 Raster	CPC Lite

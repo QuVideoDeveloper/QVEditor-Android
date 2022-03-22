@@ -16,7 +16,7 @@ public class GallerySettings {
   /**
    * media gif source available
    */
-  public static boolean GIF_AVAILABLE = false;
+  public static boolean GIF_AVAILABLE = true;
 
   private String countryCode = "";
   private @GalleryDef.ShowMode int showMode;

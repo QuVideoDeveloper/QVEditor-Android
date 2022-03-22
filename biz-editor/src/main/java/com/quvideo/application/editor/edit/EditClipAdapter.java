@@ -82,9 +82,9 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
     onClipClickListener = listener;
   }
 
-  private void loadCacheBitmap(int position, final String clipKey) {
-    if (!loadingCache.containsKey(clipKey)) {
-      loadingCache.put(clipKey, clipKey);
+  private void loadCacheBitmap(int position, final String filePath) {
+    if (!loadingCache.containsKey(filePath)) {
+      loadingCache.put(filePath, filePath);
       Observable.just(true)
           .subscribeOn(Schedulers.newThread())
           .observeOn(Schedulers.newThread())
@@ -98,14 +98,14 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
 
             @Override public void onNext(Bitmap bitmap) {
               if (bitmap != null) {
-                thumbnailCache.put(clipKey, bitmap);
+                thumbnailCache.put(filePath, bitmap);
                 notifyDataSetChanged();
               }
-              loadingCache.remove(clipKey);
+              loadingCache.remove(filePath);
             }
 
             @Override public void onError(Throwable e) {
-              loadingCache.remove(clipKey);
+              loadingCache.remove(filePath);
             }
 
             @Override public void onComplete() {
@@ -151,14 +151,14 @@ public class EditClipAdapter extends RecyclerView.Adapter<EditClipAdapter.Templa
     } else {
       holder.mImageView.setBackground(null);
       ClipData clipData = mClipData.get(position);
-      Bitmap bitmap = thumbnailCache.get(clipData.getUniqueId());
+      Bitmap bitmap = thumbnailCache.get(clipData.getClipFilePath());
       if (bitmap != null) {
         Glide.with(holder.mImageView)
             .load(bitmap)
             .apply(RequestOptions.bitmapTransform(new RoundedCorners(thumbRoundedCorners)))
             .into(holder.mImageView);
       } else {
-        loadCacheBitmap(position, clipData.getUniqueId());
+        loadCacheBitmap(position, clipData.getClipFilePath());
       }
       holder.mImageFocus.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     }

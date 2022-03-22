@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.RectF
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.quvideo.application.EditorApp
 import com.quvideo.application.editor.R
@@ -51,6 +52,7 @@ class PosDraw : IFakeDraw() {
     canvas: Canvas,
     fakePosInfo: FakePosInfo
   ) {
+    Log.d(logTag, "drawView() fake pos: $fakePosInfo")
     // 框出范围
     canvas.save()
     if (posFakeMode == 0 || posFakeMode == 1) {
@@ -67,6 +69,7 @@ class PosDraw : IFakeDraw() {
           fakePosInfo.centerX - fakePosInfo.anchorOffsetX + fakePosInfo.width / 2,
           fakePosInfo.centerY - fakePosInfo.anchorOffsetY + fakePosInfo.height / 2
       )
+      Log.d(logTag, "drawView() draw rect $rectDraw")
       // 画矩形
       canvas.drawRoundRect(rectDraw, dp2px, dp2px, targetRectPaint)
     } else {

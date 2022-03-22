@@ -2,7 +2,7 @@ package com.quvideo.application.editor.fake
 
 import com.quvideo.application.editor.fake.FakePosInfo.FakePosType.Position
 
-class FakePosInfo(
+data class FakePosInfo(
   var centerX: Float,
   var centerY: Float,
   var width: Float,

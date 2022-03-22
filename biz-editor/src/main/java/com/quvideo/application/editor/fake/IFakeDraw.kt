@@ -11,6 +11,8 @@ abstract class IFakeDraw {
   protected var dp2px = 2 * dp1px
   protected var dp6px = 6 * dp1px
 
+  protected val logTag: String = javaClass.simpleName
+
   /****************** 手势信息参数部分  */
   private val SINGLE_MODE_MOVE = 0
   private val SINGLE_MODE_SCALE_Y_TOP = 1
